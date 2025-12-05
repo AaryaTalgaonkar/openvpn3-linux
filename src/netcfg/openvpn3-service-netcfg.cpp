@@ -259,11 +259,8 @@ int netcfg_main(ParsedArgs::Ptr args)
 
         netcfgsrv->Run();
 
-        if (logservice)
-        {
-            logservice->Detach(Constants::GenInterface("netcfg"));
-            logservice->Detach(Constants::GenInterface("netcfg.core"));
-        }
+        logservice->Detach(Constants::GenInterface("netcfg"));
+        logservice->Detach(Constants::GenInterface("netcfg.core"));
 
         // Explicitly restore the resolv.conf file, if configured
         try
