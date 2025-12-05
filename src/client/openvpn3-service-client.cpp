@@ -986,13 +986,13 @@ class BackendClientObject : public DBus::Object::Base
                 client_thread.reset();
             }
             client_thread.reset(new std::thread(
-                [vpnconfig = this->vpnconfig, vpnclient = this->vpnclient, signal = this->signal]()
+                [vpnconfig = &(this->vpnconfig), vpnclient = this->vpnclient, signal = this->signal]()
                 {
                     asio::detail::signal_blocker sigblock; // Block signals in client thread
                     try
                     {
                         signal->Debug(std::string("[Connect] DCO flag: ")
-                                      + (vpnconfig.dco ? "enabled" : "disabled"));
+                                      + (vpnconfig->dco ? "enabled" : "disabled"));
                         signal->StatusChange(Events::Status(StatusMajor::CONNECTION,
                                                             StatusMinor::CONN_CONNECTING));
                         ClientAPI::Status status = vpnclient->connect();
