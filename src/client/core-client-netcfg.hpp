@@ -463,7 +463,7 @@ class NetCfgTunBuilder : public T
     {
         if (!dco)
         {
-            NetCfgProxyException(__func__, "Lost link to DCO device");
+            throw NetCfgProxyException(__func__, "Lost link to DCO device");
         }
 
         dco->NewPeer(peer_id, transport_fd, sa, salen, vpn4, vpn6);
@@ -475,7 +475,7 @@ class NetCfgTunBuilder : public T
     {
         if (!dco)
         {
-            NetCfgProxyException(__func__, "Lost link to DCO device");
+            throw NetCfgProxyException(__func__, "Lost link to DCO device");
         }
 
         dco->NewKey(key_slot, kc);
@@ -491,7 +491,7 @@ class NetCfgTunBuilder : public T
 
         if (!dco)
         {
-            NetCfgProxyException(__func__, "Lost link to DCO device");
+            throw NetCfgProxyException(__func__, "Lost link to DCO device");
         }
 
         try
@@ -515,7 +515,7 @@ class NetCfgTunBuilder : public T
     {
         if (!dco)
         {
-            NetCfgProxyException(__func__, "Lost link to DCO device");
+            throw NetCfgProxyException(__func__, "Lost link to DCO device");
         }
 
         dco->SwapKeys(peer_id);
@@ -528,7 +528,7 @@ class NetCfgTunBuilder : public T
     {
         if (!dco)
         {
-            NetCfgProxyException(__func__, "Lost link to DCO device");
+            throw NetCfgProxyException(__func__, "Lost link to DCO device");
         }
 
         dco->SetPeer(peer_id, keepalive_interval, keepalive_timeout);
