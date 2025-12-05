@@ -32,7 +32,7 @@ TunnelRecord::TunnelRecord(const DBus::Object::Path &cfgpath,
                            const uid_t owner_uid,
                            const std::optional<std::string> &session_path_arg)
     : session_path(session_path_arg ? *session_path_arg : generate_path_uuid(Constants::GenPath("sessions"), 's')),
-      config_path(std::move(cfgpath)),
+      config_path(cfgpath),
       owner(owner_uid)
 {
 }

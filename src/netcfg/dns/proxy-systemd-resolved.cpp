@@ -133,7 +133,7 @@ Error::Message::List Storage::GetErrors(const std::string &link)
 //  NetCfg::DNS::resolved::SearchDomain
 //
 SearchDomain::SearchDomain(const std::string &srch, const bool rout)
-    : search(std::move(srch)), routing(rout)
+    : search(srch), routing(rout)
 {
 }
 

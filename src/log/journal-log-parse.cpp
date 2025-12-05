@@ -211,7 +211,7 @@ const Json::Value LogEntries::GetJSON() const
 //
 
 Parse::Exception::Exception(const std::string &err)
-    : errmsg(std::move(err))
+    : errmsg(err)
 {
 }
 

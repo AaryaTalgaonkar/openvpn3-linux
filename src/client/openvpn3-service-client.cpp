@@ -71,7 +71,7 @@ class ClientException : public DBus::Object::Method::Exception
                     GError *gliberr = nullptr)
         : DBus::Object::Method::Exception(msg, gliberr)
     {
-        DBus::Exception::error_domain = std::move(err_domain);
+        DBus::Exception::error_domain = err_domain;
     }
 };
 

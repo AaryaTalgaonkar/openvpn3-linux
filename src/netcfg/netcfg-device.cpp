@@ -50,7 +50,7 @@ NetCfgDevice::NetCfgDevice(DBus::Connection::Ptr dbuscon_,
       creator_pid(creator_pid_),
       resolver(resolver),
       logwr(logwr_),
-      options(std::move(options))
+      options(options)
 {
     signals = NetCfgSignals::Create(dbuscon_,
                                     LogGroup::NETCFG,

@@ -43,7 +43,7 @@ class ReadyException : public DBus::Object::Method::Exception
                    GError *gliberr = nullptr)
         : DBus::Object::Method::Exception(extract_error(msg), gliberr)
     {
-        DBus::Exception::error_domain = std::move(err_domain);
+        DBus::Exception::error_domain = err_domain;
     }
 
   private:
@@ -79,9 +79,9 @@ Session::Session(DBus::Connection::Ptr dbuscon,
                  const DBus::Object::Path &cfg_path,
                  const unsigned int loglev,
                  LogWriter::Ptr logwr)
-    : DBus::Object::Base(std::move(sespath), Constants::GenInterface("sessions")),
+    : DBus::Object::Base(sespath, Constants::GenInterface("sessions")),
       dbus_conn(dbuscon), object_mgr(objmgr), creds_qry(creds_qry_),
-      sig_sessmgr(sig_sessionmgr), config_path(std::move(cfg_path))
+      sig_sessmgr(sig_sessionmgr), config_path(cfg_path)
 {
     be_target = DBus::Proxy::TargetPreset::Create(Constants::GenPath("backends/session"),
                                                   Constants::GenInterface("backends"));
