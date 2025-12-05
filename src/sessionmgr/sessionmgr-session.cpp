@@ -717,8 +717,16 @@ const std::string Session::GetConfigName() const noexcept
 
 const std::string Session::GetDeviceName() const noexcept
 {
-    validate_vpn_backend("device_name");
-    return be_prx->GetProperty<std::string>(be_target, "device_name");
+    try
+    {
+        validate_vpn_backend("device_name");
+        return be_prx->GetProperty<std::string>(be_target, "device_name");
+    }
+    catch (const DBus::Exception &excp)
+    {
+        sig_session->LogError("Failed to retrieve device name: " + std::string(excp.GetRawError()));
+    }
+    return "";
 }
 
 
