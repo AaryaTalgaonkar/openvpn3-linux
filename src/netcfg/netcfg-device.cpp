@@ -250,7 +250,7 @@ NetCfgDevice::NetCfgDevice(DBus::Connection::Ptr dbuscon_,
                   this->method_destroy(args);
               });
 
-    signals->LogVerb2("Network device '" + devname + "' prepared");
+    signals->LogVerb2("Network device '" + device_name + "' prepared");
 }
 
 
