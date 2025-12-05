@@ -57,16 +57,16 @@ class OpenVPN3ConfigurationProxy
     using Ptr = std::shared_ptr<OpenVPN3ConfigurationProxy>;
 
     [[nodiscard]] static Ptr Create(DBus::Connection::Ptr con,
-                                    DBus::Object::Path object_path,
+                                    const DBus::Object::Path &object_path,
                                     bool force_feature_load = false)
     {
         return Ptr(new OpenVPN3ConfigurationProxy(std::move(con),
-                                                  std::move(object_path),
+                                                  object_path,
                                                   force_feature_load));
     }
 
     OpenVPN3ConfigurationProxy(DBus::Connection::Ptr con,
-                               DBus::Object::Path object_path,
+                               const DBus::Object::Path &object_path,
                                bool force_feature_load = false)
     {
         auto prxqry = DBus::Proxy::Utils::DBusServiceQuery::Create(con);
