@@ -333,7 +333,12 @@ void Parse::AddFilter(const FilterType ft, const std::string &fval) const
             }
 
             // The journald granularity is microseconds, not seconds
-            uint64_t seek_point = ::mktime(&t) * 1000000;
+            auto mkt = ::mktime(&t);
+            if (mkt < 0)
+            {
+                throw FilterException("Date/timestamp value could not be computed");
+            }
+            uint64_t seek_point =  mkt * 1000000;
             r = sd_journal_seek_realtime_usec(journal, seek_point);
             if (r < 0)
             {
