@@ -534,7 +534,7 @@ void Session::Ready()
     {
         std::string err(excp.what());
 
-        if (err.find("net.openvpn.v3.error.ready"))
+        if (err.find("net.openvpn.v3.error.ready") != std::string::npos)
         {
 
             throw ReadyException(excp.what());

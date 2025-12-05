@@ -333,7 +333,7 @@ bool Link::SetDefaultRoute(const bool route)
     catch (const DBus::Proxy::Exception &excp)
     {
         std::string err(excp.what());
-        if (err.find("GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod") > 0)
+        if (err.find("GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod") != std::string::npos)
         {
             feature_set_default_route = false;
             return false;
@@ -524,7 +524,7 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
                                           << "object_path=" << bgdata->path
                                           << ": " << excp.what());
                         std::string err = excp.what();
-                        if (!err.find("Timeout was reached") || attempts < 1)
+                        if ((err.find("Timeout was reached") != std::string::npos) || attempts < 1)
                         {
                             SD_RESOLVED_BG_LOG("Background systemd-resolved call failed: object_path=" << bgdata->path << ", method=" << bgdata->method << ": " << err);
                         }
