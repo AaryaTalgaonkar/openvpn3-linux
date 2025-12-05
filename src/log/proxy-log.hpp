@@ -91,7 +91,7 @@ class LogProxy
     [[nodiscard]] static LogProxy::Ptr Create(DBus::Connection::Ptr connection,
                                               const DBus::Object::Path &path)
     {
-        return LogProxy::Ptr(new LogProxy(connection, path));
+        return LogProxy::Ptr(new LogProxy(std::move(connection), path));
     }
 
 
@@ -203,7 +203,7 @@ class LogServiceProxy
 
     [[nodiscard]] static LogServiceProxy::Ptr Create(DBus::Connection::Ptr dbuscon)
     {
-        return LogServiceProxy::Ptr(new LogServiceProxy(dbuscon));
+        return LogServiceProxy::Ptr(new LogServiceProxy(std::move(dbuscon)));
     }
 
     /**

@@ -82,7 +82,7 @@ AttachedService::AttachedService(DBus::Connection::Ptr conn,
         });
 
     status_handler = Signals::ReceiveStatusChange::Create(
-        submgr,
+        std::move(submgr),
         src_target,
         [&](const std::string &sender,
             const DBus::Object::Path &path,

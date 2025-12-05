@@ -183,7 +183,7 @@ class CoreVPNClient : public CLIENTBASECLASS
                   const std::string &enterprise_id)
         : CLIENTBASECLASS(dbusconn, signal_, session_tok),
           disabled_socket_protect_fd(false),
-          userinputq(userinputq_),
+          userinputq(std::move(userinputq_)),
           failed_signal_sent(false),
           run_status(StatusMinor::CONN_INIT)
     {

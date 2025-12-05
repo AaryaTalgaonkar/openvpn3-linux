@@ -729,7 +729,7 @@ int SingleCommand::RunCommand(const std::string &arg0, unsigned int skip, int ar
     ParsedArgs::Ptr cmd_args = parse_commandline(arg0, skip, argc, argv);
 
     // Run the callback function.
-    return cmd_args->GetCompleted() ? command_func(cmd_args) : 0;
+    return cmd_args->GetCompleted() ? command_func(std::move(cmd_args)) : 0;
 }
 
 

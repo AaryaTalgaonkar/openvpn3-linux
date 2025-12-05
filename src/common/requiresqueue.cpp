@@ -167,7 +167,7 @@ void RequiresQueue::QueueSetup(DBus::Object::Base *object_ptr,
 
 void RequiresQueue::AddCallback(const CallbackType type, Callbacks::CBFunction func)
 {
-    callbacks.AddCallback(type, func);
+    callbacks.AddCallback(type, std::move(func));
 }
 
 

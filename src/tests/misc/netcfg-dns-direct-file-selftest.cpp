@@ -206,7 +206,7 @@ int main()
 
     backuptest_new->Debug_Write();
     backuptest_new->SetFilename("backuptest-new.conf");
-    backuptest_new->Apply(settings);
+    backuptest_new->Apply(std::move(settings));
     backuptest_new->Debug_Write();
     backuptest_new.reset();
 
@@ -221,7 +221,7 @@ int main()
     backuptest_start->Debug_Fetch();
     std::cout << "DUMP OF backuptest_start [1] " << std::endl
               << backuptest_start->Dump();
-    backuptest_start->Apply(settings2);
+    backuptest_start->Apply(std::move(settings2));
     std::cout << "DUMP OF backuptest_start [2] " << std::endl
               << backuptest_start->Dump();
     backuptest_start->Commit(nullptr);

@@ -45,7 +45,7 @@ class RegistrationRequest : public DBus::Signals::Signal
     using Ptr = std::shared_ptr<RegistrationRequest>;
 
     RegistrationRequest(DBus::Signals::Emit::Ptr emitter)
-        : DBus::Signals::Signal(emitter, "RegistrationRequest")
+        : DBus::Signals::Signal(std::move(emitter), "RegistrationRequest")
     {
         SetArguments({{"busname", glib2::DataType::DBus<std::string>()},
                       {"token", glib2::DataType::DBus<std::string>()},
@@ -131,7 +131,7 @@ class BackendSignals : public LogSender
                                                     std::string session_token,
                                                     LogWriter *logwr)
     {
-        return BackendSignals::Ptr(new BackendSignals(conn,
+        return BackendSignals::Ptr(new BackendSignals(std::move(conn),
                                                       lgroup,
                                                       session_token,
                                                       logwr));
@@ -143,7 +143,7 @@ class BackendSignals : public LogSender
         {
             return;
         }
-        mainloop = ml;
+        mainloop = std::move(ml);
     }
 
     void RegistrationRequest(const std::string &busname,

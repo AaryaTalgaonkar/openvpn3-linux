@@ -392,7 +392,7 @@ Json::Value File::Generate()
             }
             std::string comment = std::string("//  Option --")
                                   + e.option + " :: " + e.description;
-            ret[e.field_label].setComment(comment,
+            ret[e.field_label].setComment(std::move(comment),
                                           Json::CommentPlacement::commentBefore);
         }
     }

@@ -22,7 +22,7 @@ namespace Signals {
 Log::Log(DBus::Signals::Emit::Ptr emitter,
          DBus::Signals::SubscriptionManager::Ptr subscr,
          DBus::Signals::Target::Ptr subscr_tgt)
-    : DBus::Signals::Signal(emitter, "Log"),
+    : DBus::Signals::Signal(std::move(emitter), "Log"),
       target(subscr_tgt)
 {
     SetArguments(Events::Log::SignalDeclaration());
@@ -81,8 +81,8 @@ ReceiveLog::Ptr ReceiveLog::Create(DBus::Signals::SubscriptionManager::Ptr subsc
                                    DBus::Signals::Target::Ptr subscr_tgt,
                                    LogCallback callback)
 {
-    return ReceiveLog::Ptr(new ReceiveLog(subscr,
-                                          subscr_tgt,
+    return ReceiveLog::Ptr(new ReceiveLog(std::move(subscr),
+                                          std::move(subscr_tgt),
                                           std::move(callback)));
 }
 
@@ -90,7 +90,7 @@ ReceiveLog::Ptr ReceiveLog::Create(DBus::Signals::SubscriptionManager::Ptr subsc
 ReceiveLog::ReceiveLog(DBus::Signals::SubscriptionManager::Ptr subscr,
                        DBus::Signals::Target::Ptr subscr_tgt,
                        LogCallback callback)
-    : subscriptionmgr(subscr), target(subscr_tgt),
+    : subscriptionmgr(std::move(subscr)), target(std::move(subscr_tgt)),
       log_callback(std::move(callback))
 {
     if (!subscriptionmgr || !target)

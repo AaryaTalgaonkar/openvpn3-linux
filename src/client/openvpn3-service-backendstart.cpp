@@ -77,7 +77,7 @@ class BackendStarterSignals : public LogSender
      */
     void ProvideStatusChangeSender(::Signals::StatusChange::Ptr sig)
     {
-        sig_statuschg = sig;
+        sig_statuschg = std::move(sig);
     }
 
 

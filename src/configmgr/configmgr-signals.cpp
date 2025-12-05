@@ -35,7 +35,7 @@ Log::Ptr Log::Create(DBus::Connection::Ptr conn,
                      const std::string &object_path,
                      LogWriter::Ptr logwr)
 {
-    return Log::Ptr(new Log(conn, lgroup, object_path, logwr));
+    return Log::Ptr(new Log(std::move(conn), lgroup, object_path, std::move(logwr)));
 }
 
 
@@ -71,7 +71,7 @@ Log::Log(DBus::Connection::Ptr conn,
 namespace Signals {
 
 ConfigurationManagerEvent::ConfigurationManagerEvent(DBus::Signals::Emit::Ptr emitter)
-    : DBus::Signals::Signal(emitter, "ConfigurationManagerEvent")
+    : DBus::Signals::Signal(std::move(emitter), "ConfigurationManagerEvent")
 {
     SetArguments(ConfigManager::Event::SignalDeclaration());
 }

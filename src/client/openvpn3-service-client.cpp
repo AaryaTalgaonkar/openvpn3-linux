@@ -513,7 +513,7 @@ class BackendClientObject : public DBus::Object::Base
      */
     void SetMainLoop(DBus::MainLoop::Ptr ml)
     {
-        mainloop = ml;
+        mainloop = std::move(ml);
     }
 
 
@@ -1483,7 +1483,7 @@ class ClientService : public DBus::Service
 
             DBus::Object::Path object_path = Constants::GenPath("backends/session");
             be_obj = CreateServiceHandler<BackendClientObject>(dbuscon,
-                                                               object_path,
+                                                               std::move(object_path),
                                                                session_token,
                                                                default_log_level,
                                                                logwr,

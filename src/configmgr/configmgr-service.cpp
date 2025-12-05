@@ -34,7 +34,7 @@ ConfigHandler::ConfigHandler(DBus::Connection::Ptr dbuscon,
                              uint8_t loglevel,
                              LogWriter::Ptr logwr)
     : DBus::Object::Base(PATH_CONFIGMGR, INTERFACE_CONFIGMGR),
-      dbuscon_(dbuscon), object_manager_(object_manager),
+      dbuscon_(dbuscon), object_manager_(std::move(object_manager)),
       creds_qry_(DBus::Credentials::Query::Create(dbuscon)),
       logwr_(logwr)
 {
@@ -371,7 +371,7 @@ void ConfigHandler::method_search_by_owner(DBus::Object::Method::Arguments::Ptr 
     GVariant *params = args->GetMethodParameters();
 
     auto str_owner = glib2::Value::Extract<std::string>(params, 0);
-    uid_t owner = get_userid(str_owner);
+    uid_t owner = get_userid(std::move(str_owner));
 
     auto configs = helper_retrieve_configs(args->GetCallerBusName(),
                                            [owner](Configuration::Ptr obj)

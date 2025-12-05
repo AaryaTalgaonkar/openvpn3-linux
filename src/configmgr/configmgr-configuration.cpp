@@ -39,8 +39,8 @@ Configuration::Configuration(DBus::Connection::Ptr dbuscon,
                              uint8_t loglevel,
                              LogWriter::Ptr logwr)
     : DBus::Object::Base(config_path, INTERFACE_CONFIGMGR),
-      object_manager_(object_manager), creds_qry_(creds_qry),
-      sig_configmgr_(sig_configmgr), state_dir_(state_dir),
+      object_manager_(std::move(object_manager)), creds_qry_(std::move(creds_qry)),
+      sig_configmgr_(std::move(sig_configmgr)), state_dir_(state_dir),
       prop_name_(filter_ctrl_chars(name, true)),
       prop_persistent_(persistent), prop_single_use_(single_use),
       prop_import_timestamp_(std::time(nullptr))
@@ -53,7 +53,7 @@ Configuration::Configuration(DBus::Connection::Ptr dbuscon,
     signals_ = ConfigManager::Log::Create(dbuscon,
                                           LogGroup::CONFIGMGR,
                                           GetPath(),
-                                          logwr);
+                                          std::move(logwr));
     signals_->SetLogLevel(loglevel);
 
     // Prepare the object handling access control lists
@@ -97,8 +97,8 @@ Configuration::Configuration(DBus::Connection::Ptr dbuscon,
                              uint8_t loglevel,
                              LogWriter::Ptr logwr)
     : DBus::Object::Base(profile["object_path"].asString(), INTERFACE_CONFIGMGR),
-      object_manager_(object_manager), creds_qry_(creds_qry),
-      sig_configmgr_(sig_configmgr), persistent_file_(filename)
+      object_manager_(std::move(object_manager)), creds_qry_(std::move(creds_qry)),
+      sig_configmgr_(std::move(sig_configmgr)), persistent_file_(filename)
 {
     prop_persistent_ = !persistent_file_.empty();
 
@@ -107,7 +107,7 @@ Configuration::Configuration(DBus::Connection::Ptr dbuscon,
     signals_ = ConfigManager::Log::Create(dbuscon,
                                           LogGroup::CONFIGMGR,
                                           GetPath(),
-                                          logwr);
+                                          std::move(logwr));
     signals_->SetLogLevel(loglevel);
 
     // Prepare the object handling access control lists
@@ -782,7 +782,7 @@ void Configuration::method_add_tag(DBus::Object::Method::Arguments::Ptr args)
         throw DBus::Object::Method::Exception("Tag already exists");
     }
 
-    prop_tags_.push_back(tag);
+    prop_tags_.push_back(std::move(tag));
     update_persistent_file();
 }
 
@@ -960,7 +960,7 @@ Override Configuration::set_override(const std::string &key, GVariant *value)
         }
 
         std::string v = filter_ctrl_chars(glib2::Value::Get<std::string>(value), true);
-        return set_override(key, v);
+        return set_override(key, std::move(v));
     }
     else if ("b" == g_type)
     {

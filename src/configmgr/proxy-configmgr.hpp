@@ -60,7 +60,7 @@ class OpenVPN3ConfigurationProxy
                                     DBus::Object::Path object_path,
                                     bool force_feature_load = false)
     {
-        return Ptr(new OpenVPN3ConfigurationProxy(con,
+        return Ptr(new OpenVPN3ConfigurationProxy(std::move(con),
                                                   std::move(object_path),
                                                   force_feature_load));
     }

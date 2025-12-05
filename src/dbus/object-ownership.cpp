@@ -28,7 +28,7 @@ ACLException::ACLException(const std::string &msg)
 
 ACL::Ptr ACL::Create(DBus::Connection::Ptr conn, const uid_t owner)
 {
-    return ACL::Ptr(new ACL(conn, owner));
+    return ACL::Ptr(new ACL(std::move(conn), owner));
 }
 
 
@@ -134,7 +134,7 @@ const bool ACL::CheckOwnerAccess(const std::string &caller) const
 ACL::ACL(DBus::Connection::Ptr conn, const uid_t owner_)
     : owner(owner_)
 {
-    creds_qry = DBus::Credentials::Query::Create(conn);
+    creds_qry = DBus::Credentials::Query::Create(std::move(conn));
 }
 
 } // namespace GDBusPP::Object::Extension

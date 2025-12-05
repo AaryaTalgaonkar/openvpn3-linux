@@ -39,8 +39,8 @@ class NetCfgTunBuilder : public T
                      BackendSignals::Ptr signals_,
                      const std::string &session_token_)
         : disabled_dns_config(false),
-          signals(signals_),
-          netcfgmgr(NetCfgProxy::Manager::Create(dbuscon)),
+          signals(std::move(signals_)),
+          netcfgmgr(NetCfgProxy::Manager::Create(std::move(dbuscon))),
           session_token(session_token_),
           session_name("")
     {
