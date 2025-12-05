@@ -109,9 +109,14 @@ int main(int argc, char **argv)
         std::cout << "            " << excp.debug_details() << std::endl;
         return 2;
     }
-    catch (CommandException &excp)
+    catch (const CommandException &excp)
     {
         std::cout << excp.what() << std::endl;
+        return 2;
+    }
+    catch (const std::exception &excp)
+    {
+        std::cout << "** ERROR **" << excp.what() << std::endl;
         return 2;
     }
 }
