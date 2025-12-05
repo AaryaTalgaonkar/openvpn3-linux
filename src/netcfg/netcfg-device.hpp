@@ -104,9 +104,9 @@ class Network : public IPAddr
         return fmt::format("{}/{}", address, prefix_size);
     }
 
-    uint32_t prefix_size;
-    int32_t metric;
-    bool exclude;
+    uint32_t prefix_size = 0;
+    int32_t metric = 0;
+    bool exclude = false;
 };
 
 

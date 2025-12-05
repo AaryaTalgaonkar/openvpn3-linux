@@ -131,10 +131,10 @@ class Network
                                 bool ipv6);
 
     std::string address;
-    uint32_t prefix_size;
-    int metric;
-    bool ipv6;
-    bool exclude;
+    uint32_t prefix_size = 0;
+    int metric = 0;
+    bool ipv6 = false;
+    bool exclude = false;
 
   private:
     Network(const std::string &networkAddress_,

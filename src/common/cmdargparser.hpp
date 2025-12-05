@@ -533,8 +533,8 @@ class SingleCommandOption
     const argHelperFunc arg_helper_func;
     const std::string help_text;
     std::string alias;
-    struct option getopt_option;
-    struct option getopt_alias;
+    struct option getopt_option = {};
+    struct option getopt_alias = {};
 
     /**
      *  Registers an option, both short and long options, which does not take
@@ -1037,7 +1037,7 @@ class Commands
                        char **argv);
 
       private:
-        Commands *commands;
+        Commands *commands = nullptr;
 
         /**
          *  Helper command to be used by various command completion
