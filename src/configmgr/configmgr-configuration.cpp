@@ -924,7 +924,10 @@ void Configuration::method_remove()
 
     if (!persistent_file_.empty())
     {
-        std::remove(persistent_file_.c_str());
+        if (std::remove(persistent_file_.c_str()) != 0)
+        {
+            signals_->LogError("Failed to delete profile file: " + std::string(::strerror(errno)));
+        };
     }
 
     sig_configmgr_->Send(GetPath(),
