@@ -67,7 +67,7 @@ class RequiresQueueException : public DBus::Exception
      *
      * @param err   A string containing the error message
      */
-    RequiresQueueException(std::string err);
+    RequiresQueueException(const std::string &err);
 
     /**
      *  Used for both state signalling and errors
@@ -75,7 +75,7 @@ class RequiresQueueException : public DBus::Exception
      * @param errname  A string containing a "tag name" of the state/error
      * @param errmsg   A string describing the event
      */
-    RequiresQueueException(std::string errname, std::string errmsg);
+    RequiresQueueException(const std::string &errname, const std::string &errmsg);
 
     virtual ~RequiresQueueException() noexcept = default;
 };
@@ -187,8 +187,8 @@ class RequiresQueue
      */
     uint32_t RequireAdd(ClientAttentionType type,
                         ClientAttentionGroup group,
-                        std::string name,
-                        std::string descr,
+                        const std::string &name,
+                        const std::string &descr,
                         bool hidden_input);
 
     /**
@@ -222,7 +222,7 @@ class RequiresQueue
     void UpdateEntry(ClientAttentionType type,
                      ClientAttentionGroup group,
                      uint32_t id,
-                     std::string newvalue);
+                     const std::string &newvalue);
 
     /**
      *  This is a variant UpdateEntry() extracting the item update information
@@ -264,9 +264,9 @@ class RequiresQueue
      * @throws RequiresQueueException if the user has not provided this
      *         any value or the request slot was not found.
      */
-    const std::string GetResponse(ClientAttentionType type,
-                                  ClientAttentionGroup group,
-                                  uint32_t id) const;
+    std::string GetResponse(ClientAttentionType type,
+                            ClientAttentionGroup group,
+                            uint32_t id) const;
 
     /**
      *  Retrieve the value provided by a user, using the assigned variable
@@ -282,9 +282,9 @@ class RequiresQueue
      * @throws RequiresQueueException if the user has not provided this
      *         any value or the request slot was not found.
      */
-    const std::string GetResponse(ClientAttentionType type,
-                                  ClientAttentionGroup group,
-                                  const std::string &name) const;
+    std::string GetResponse(ClientAttentionType type,
+                            ClientAttentionGroup group,
+                            const std::string &name) const;
 
     /**
      *  Retrieve the number of requires slots which have been prepared for

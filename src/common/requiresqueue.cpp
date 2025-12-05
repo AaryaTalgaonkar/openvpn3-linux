@@ -52,13 +52,13 @@ RequiresSlot::RequiresSlot()
 /*
  *  RequiresQueueException
  */
-RequiresQueueException::RequiresQueueException(std::string err)
+RequiresQueueException::RequiresQueueException(const std::string &err)
     : DBus::Exception("RequiresQueue", err)
 {
 }
 
 
-RequiresQueueException::RequiresQueueException(std::string errname, std::string errmsg)
+RequiresQueueException::RequiresQueueException(const std::string &errname, const std::string &errmsg)
     : DBus::Exception("RequiresQueue", errname + ": " + errmsg)
 {
 }
@@ -190,8 +190,8 @@ void RequiresQueue::ClearAll() noexcept
 
 uint32_t RequiresQueue::RequireAdd(ClientAttentionType type,
                                    ClientAttentionGroup group,
-                                   std::string name,
-                                   std::string descr,
+                                   const std::string &name,
+                                   const std::string &descr,
                                    bool hidden_input)
 {
     struct RequiresSlot elmt;
@@ -249,7 +249,7 @@ GVariant *RequiresQueue::QueueFetchGVariant(GVariant *parameters) const
 void RequiresQueue::UpdateEntry(ClientAttentionType type,
                                 ClientAttentionGroup group,
                                 uint32_t id,
-                                std::string newvalue)
+                                const std::string &newvalue)
 {
     if (QueueDone(type, group))
     {
@@ -323,7 +323,7 @@ void RequiresQueue::ResetValue(ClientAttentionType type,
 }
 
 
-const std::string RequiresQueue::GetResponse(ClientAttentionType type,
+std::string RequiresQueue::GetResponse(ClientAttentionType type,
                                              ClientAttentionGroup group,
                                              uint32_t id) const
 {
@@ -342,7 +342,7 @@ const std::string RequiresQueue::GetResponse(ClientAttentionType type,
 }
 
 
-const std::string RequiresQueue::GetResponse(ClientAttentionType type,
+std::string RequiresQueue::GetResponse(ClientAttentionType type,
                                              ClientAttentionGroup group,
                                              const std::string &name) const
 {
