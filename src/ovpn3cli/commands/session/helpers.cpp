@@ -199,11 +199,11 @@ void start_session(SessionManager::Proxy::Session::Ptr session,
                    bool background)
 {
     // Prepare the SIGINT signal handling
-    auto sact = new struct sigaction;
-    sact->sa_handler = sigint_handler;
-    sact->sa_flags = 0;
-    sigemptyset(&sact->sa_mask);
-    sigaction(SIGINT, sact, NULL);
+    struct sigaction sact;
+    sact.sa_handler = sigint_handler;
+    sact.sa_flags = 0;
+    sigemptyset(&sact.sa_mask);
+    sigaction(SIGINT, &sact, NULL);
 
     // Start or restart the session
     SessionStartMode mode = initial_mode;
@@ -365,7 +365,7 @@ void start_session(SessionManager::Proxy::Session::Ptr session,
                 std::cout << "Disconnecting" << std::endl;
                 return;
             }
-            else if (!query_user_input(session, sact))
+            else if (!query_user_input(session, &sact))
             {
                 if (ExitReason::ABORTED == exit_reason)
                 {
