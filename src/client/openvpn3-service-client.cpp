@@ -1714,12 +1714,8 @@ int client_service(ParsedArgs::Ptr args)
         catch (std::exception &excp)
         {
             std::cout << "FATAL ERROR: " << excp.what() << std::endl;
-            return 3;
         }
-        // This should really not happen, but if it does - lets log it
-        std::cout << "FATAL ERROR: Unexpected error event in no-fork branch"
-                  << std::endl;
-        return 8;
+        return 3;
     }
 #endif
 

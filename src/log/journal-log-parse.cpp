@@ -171,10 +171,6 @@ uint64_t LogEntry::extract_journal_tstamp(sd_journal *journal) const
 
 const std::string LogEntry::timestamp_to_str(uint64_t tstmp) const
 {
-    if (tstmp < 0)
-    {
-        return "";
-    }
     // The timestamp granularity in the journal is microseconds.
     // We don't need that kind of granularity and it is easier to
     // just use the normal time_t type

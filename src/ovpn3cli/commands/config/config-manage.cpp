@@ -148,7 +148,6 @@ std::string ConfigProfileDetails::extract_override(const std::string &override,
     {
         return unavail_value;
     }
-    return "(inaccessible)";
 }
 
 
