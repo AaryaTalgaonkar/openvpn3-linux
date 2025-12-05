@@ -34,7 +34,8 @@ int main(int argc, char **argv)
 
     if (argc == 3)
     {
-        iterations = ::atoi(argv[2]);
+        int it = ::atoi(argv[2]);
+        iterations = (it > 0 ? it : iterations);
     }
 
     pid_t service_pid = -1;

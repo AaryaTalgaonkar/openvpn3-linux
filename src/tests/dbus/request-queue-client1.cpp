@@ -67,7 +67,8 @@ int main(int argc, char **argv)
     int iterations = 250;
     if (argc == 2)
     {
-        iterations = ::atoi(argv[1]);
+        int it = ::atoi(argv[1]);
+        iterations = (it > 0 ? it : iterations);
     }
 
 
