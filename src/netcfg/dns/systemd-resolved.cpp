@@ -82,8 +82,8 @@ void SystemdResolved::Apply(const ResolverSettings::Ptr settings)
                 continue;
             }
             openvpn::IP::Addr addr(r);
-            upd->resolvers.push_back(resolved::IPAddress(addr.to_string(),
-                                                         addr.is_ipv6() ? AF_INET6 : AF_INET));
+            upd->resolvers.emplace_back(addr.to_string(),
+                                        addr.is_ipv6() ? AF_INET6 : AF_INET);
         }
 
         for (const auto &sd : settings->GetSearchDomains())
@@ -92,7 +92,7 @@ void SystemdResolved::Apply(const ResolverSettings::Ptr settings)
             // https://systemd.io/RESOLVED-VPNS/ - if in split-dns mode (tunnel scope)
             // TODO: Look into getting routing domains setup for reverse DNS lookups
             //        based on pushed routes
-            upd->search.push_back(SearchDomain(sd, false));
+            upd->search.emplace_back(sd, false);
         }
 
         upd->dnssec = settings->GetDNSSEC();
@@ -100,7 +100,7 @@ void SystemdResolved::Apply(const ResolverSettings::Ptr settings)
 
         if (settings->GetDNSScope() == DNS::Scope::GLOBAL)
         {
-            upd->search.push_back(SearchDomain(".", true));
+            upd->search.emplace_back(".", true);
             upd->default_routing = true;
         }
         else

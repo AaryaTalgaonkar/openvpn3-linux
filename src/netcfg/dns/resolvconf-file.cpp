@@ -271,10 +271,10 @@ void ResolvConfFile::Apply(const ResolverSettings::Ptr settings)
                                 srvs.end());
         for (const auto &e : srvs)
         {
-            NetCfgChangeEvent ev(NetCfgChangeType::DNS_SERVER_ADDED,
-                                 "",
-                                 {{"dns_server", e}});
-            notification_queue.push_back(ev);
+            notification_queue.emplace_back(
+                NetCfgChangeType::DNS_SERVER_ADDED,
+                "",
+                NetCfgChangeDetails{{"dns_server", e}});
         }
 
         vpn_search_domains.insert(vpn_search_domains.end(),
@@ -282,10 +282,10 @@ void ResolvConfFile::Apply(const ResolverSettings::Ptr settings)
                                   dmns.end());
         for (const auto &e : dmns)
         {
-            NetCfgChangeEvent ev(NetCfgChangeType::DNS_SEARCH_ADDED,
-                                 "",
-                                 {{"search_domain", e}});
-            notification_queue.push_back(ev);
+            notification_queue.emplace_back(
+                NetCfgChangeType::DNS_SEARCH_ADDED,
+                "",
+                NetCfgChangeDetails{{"search_domain", e}});
         }
     }
     else
@@ -295,10 +295,10 @@ void ResolvConfFile::Apply(const ResolverSettings::Ptr settings)
                                         srvs.end());
         for (const auto &e : srvs)
         {
-            NetCfgChangeEvent ev(NetCfgChangeType::DNS_SERVER_REMOVED,
-                                 "",
-                                 {{"dns_server", e}});
-            notification_queue.push_back(ev);
+            notification_queue.emplace_back(
+                NetCfgChangeType::DNS_SERVER_REMOVED,
+                "",
+                NetCfgChangeDetails{{"dns_server", e}});
         }
 
         vpn_search_domains_removed.insert(vpn_search_domains_removed.end(),
@@ -306,10 +306,9 @@ void ResolvConfFile::Apply(const ResolverSettings::Ptr settings)
                                           dmns.end());
         for (const auto &e : dmns)
         {
-            NetCfgChangeEvent ev(NetCfgChangeType::DNS_SEARCH_REMOVED,
-                                 "",
-                                 {{"search_domain", e}});
-            notification_queue.push_back(ev);
+            notification_queue.emplace_back(NetCfgChangeType::DNS_SEARCH_REMOVED,
+                                            "",
+                                            NetCfgChangeDetails{{"search_domain", e}});
         }
     }
 

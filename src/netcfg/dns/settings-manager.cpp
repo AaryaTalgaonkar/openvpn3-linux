@@ -98,9 +98,9 @@ void SettingsManager::ApplySettings(NetCfgSignals::Ptr signals)
                 {
                     for (const auto &s : name_servers)
                     {
-                        notif.push_back(NetCfgChangeEvent(NetCfgChangeType::DNS_SERVER_REMOVED,
-                                                          settings->GetDeviceName(),
-                                                          {{"dns_server", s}}));
+                        notif.emplace_back(NetCfgChangeEvent(NetCfgChangeType::DNS_SERVER_REMOVED,
+                                                             settings->GetDeviceName(),
+                                                             {{"dns_server", s}}));
                     }
                 }
 
@@ -109,9 +109,9 @@ void SettingsManager::ApplySettings(NetCfgSignals::Ptr signals)
                 {
                     for (const auto &s : search_domains)
                     {
-                        notif.push_back(NetCfgChangeEvent(NetCfgChangeType::DNS_SEARCH_REMOVED,
-                                                          settings->GetDeviceName(),
-                                                          {{"search_domain", s}}));
+                        notif.emplace_back(NetCfgChangeEvent(NetCfgChangeType::DNS_SEARCH_REMOVED,
+                                                             settings->GetDeviceName(),
+                                                             {{"search_domain", s}}));
                     }
                 }
 

@@ -275,8 +275,7 @@ class CoreVPNClient : public CLIENTBASECLASS
             const long long value = bundle[i];
             if (value)
             {
-                ConnectionStatDetails s(stats_name(i), value);
-                stats.push_back(s);
+                stats.emplace_back(stats_name(i), value);
             }
         }
         return stats;

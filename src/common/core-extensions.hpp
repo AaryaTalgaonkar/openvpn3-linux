@@ -444,8 +444,7 @@ class OptionListJSON : public openvpn::OptionList
             {
                 v.push_back(e.asString());
             }
-            Option opt(key, v);
-            push_back(opt);
+            emplace_back(key, v);
             return;
         }
 
@@ -454,8 +453,7 @@ class OptionListJSON : public openvpn::OptionList
             // Option values inside tags needs a slightly different handling
             // in the type 1) format.  The OptionList::parse_option_from_line()
             // does not expect tag-formatted key/values.
-            Option opt(key, data.asString());
-            push_back(opt);
+            emplace_back(key, data.asString());
             return;
         }
 

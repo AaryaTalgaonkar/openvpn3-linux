@@ -370,7 +370,7 @@ class Session : public DBusRequiresQueueProxy
             gchar *key = nullptr;
             gint64 val;
             g_variant_get(r, "{sx}", &key, &val);
-            ret.push_back(ConnectionStatDetails(std::string(key), val));
+            ret.emplace_back(std::string(key), val);
             g_variant_unref(r);
             g_free(key);
         }
