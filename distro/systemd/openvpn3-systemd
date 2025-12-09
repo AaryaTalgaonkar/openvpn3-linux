@@ -118,8 +118,17 @@ class OpenVPN3systemd(object):
             self.sd_notify(1, "STATUS=%s:%s, %s\nSTOPPING=1" % (maj, min, msg))
             self.__mainloop.quit()
         if StatusMajor.CONNECTION == maj and StatusMinor.CFG_REQUIRE_USER == min:
-            self.__request_credentials()
-            self.__session.Connect()
+            error = self.__request_credentials()
+            if error is None:
+                self.__session.Connect()
+            else:
+                try:
+                    self.__session.Disconnect()
+                except:
+                    pass
+                self.sd_notify(0, "STATUS=%s\nSTOPPING=1" % error)
+                print("** ERROR ** %s" % error)
+                self.__mainloop.quit()
 
 
     ##
@@ -230,7 +239,14 @@ class OpenVPN3systemd(object):
                 if str(excep).find('Backend VPN process is not ready') > 1:
                     time.sleep(0.5)
                 elif str(excep).find(' Missing user credentials') > 0:
-                    self.__request_credentials()
+                    error = self.__request_credentials()
+                    if error is not None:
+                        try:
+                            self.__session.Disconnect()
+                        except:
+                            pass
+                        raise RuntimeError(error)
+
                 elif str(excep).find('ERR_PROFILE_SERVER_LOCKED_UNSUPPORTED:') > 1:
                     self.__session.Disconnect()
                     raise Exception('Server locked profiles are not supported')
@@ -294,9 +310,12 @@ class OpenVPN3systemd(object):
             try:
                 r = subprocess.check_output(args)
                 input_slot.ProvideInput(r.decode('utf-8').strip())
+                return None
             except subprocess.CalledProcessError as e:
                 self.__session.Disconnect()
-                raise RuntimeError("Could not retrieve user credentials: %s" % str(e))
+                return "Could not retrieve user credentials: %s" % str(e)
+            except dbus.exceptions.DBusException as e:
+                return "VPN session no longer valid: %s" % e.get_dbus_message()
 
 
 if "__main__" == __name__:
