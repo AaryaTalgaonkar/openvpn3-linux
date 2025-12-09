@@ -122,7 +122,7 @@ class File
     /**
      *  Retrieve the filename which is currently used
      */
-    const std::string GetFilename() const;
+    std::string GetFilename() const;
 
 
     /**
@@ -179,9 +179,9 @@ class File
      *          if the the value type is OptionValueType::Present and the
      *          value is not present.
      */
-    const std::string GetValue(const std::string &key);
-    const int GetIntValue(const std::string &key);
-    const bool GetBoolValue(const std::string &key);
+    std::string GetValue(const std::string &key);
+    int GetIntValue(const std::string &key);
+    bool GetBoolValue(const std::string &key);
 
 
     /**

@@ -36,13 +36,13 @@ SettingsManager::SettingsManager(ResolverBackendInterface::Ptr be)
 SettingsManager::~SettingsManager() = default;
 
 
-const std::string SettingsManager::GetBackendInfo() const
+std::string SettingsManager::GetBackendInfo() const
 {
     return backend->GetBackendInfo();
 }
 
 
-const ApplySettingsMode SettingsManager::GetApplyMode() const
+ApplySettingsMode SettingsManager::GetApplyMode() const
 {
     return backend->GetApplyMode();
 }

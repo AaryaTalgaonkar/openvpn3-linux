@@ -65,7 +65,7 @@ File::File(const fs::path &fname)
 }
 
 
-const std::string File::GetFilename() const
+std::string File::GetFilename() const
 {
     return config_filename;
 }
@@ -193,7 +193,7 @@ bool File::IsPresent(const std::string &key)
 }
 
 
-const std::string File::GetValue(const std::string &key)
+std::string File::GetValue(const std::string &key)
 {
     configure_mapping();
 
@@ -220,13 +220,13 @@ const std::string File::GetValue(const std::string &key)
 }
 
 
-const int File::GetIntValue(const std::string &key)
+int File::GetIntValue(const std::string &key)
 {
     return std::stoi(File::GetValue(key));
 }
 
 
-const bool File::GetBoolValue(const std::string &key)
+bool File::GetBoolValue(const std::string &key)
 {
     return (File::GetValue(key) == "true");
 }

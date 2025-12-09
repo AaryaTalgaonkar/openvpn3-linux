@@ -55,7 +55,7 @@ class SyslogWriter : public LogWriter
                  const int log_facility = LOG_DAEMON);
     virtual ~SyslogWriter();
 
-    const std::string GetLogWriterInfo() const override;
+    std::string GetLogWriterInfo() const override;
 
     /**
      *  We presume syslog will always add timestamps to its logging,

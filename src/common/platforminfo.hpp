@@ -58,7 +58,7 @@ class PlatformInfo
      * @return Returns true if the backend D-Bus service providing host
      *         information is available, otherwise false.
      */
-    const bool DBusAvailable() const;
+    bool DBusAvailable() const;
 
     /**
      *  Return a string containing OS/distribution details.  It
@@ -69,7 +69,7 @@ class PlatformInfo
      *
      *  @return const std::string
      */
-    const std::string str() const;
+    std::string str() const;
 
 
     /**

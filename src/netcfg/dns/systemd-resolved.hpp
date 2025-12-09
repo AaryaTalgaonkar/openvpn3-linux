@@ -97,7 +97,7 @@ class SystemdResolved : public ResolverBackendInterface
      *
      * @return Returns a constant std::string with backend details.
      */
-    const std::string GetBackendInfo() const noexcept override;
+    std::string GetBackendInfo() const noexcept override;
 
 
     /**
@@ -112,7 +112,7 @@ class SystemdResolved : public ResolverBackendInterface
      *
      * @returns NetCfg::DNS:ApplySettingsMode
      */
-    const ApplySettingsMode GetApplyMode() const noexcept override;
+    ApplySettingsMode GetApplyMode() const noexcept override;
 
 
     /**

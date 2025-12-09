@@ -108,13 +108,13 @@ class Session : public DBus::Object::Base
      */
     void ResetLogForwarders();
 
-    const std::string GetConfigName() const noexcept;
-    const std::string GetDeviceName() const noexcept;
+    std::string GetConfigName() const noexcept;
+    std::string GetDeviceName() const noexcept;
     std::string GetBackendBusName() const noexcept;
     Events::Status GetLastEvent() const noexcept;
 
-    const bool CheckACL(const std::string &caller) const noexcept;
-    const uid_t GetOwner() const noexcept;
+    bool CheckACL(const std::string &caller) const noexcept;
+    uid_t GetOwner() const noexcept;
     void MoveToOwner(const uid_t from_uid, const uid_t to_uid);
 
   protected:

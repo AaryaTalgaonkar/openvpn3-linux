@@ -709,13 +709,13 @@ void Session::SetConfigName(const std::string &cfgname)
 }
 
 
-const std::string Session::GetConfigName() const noexcept
+std::string Session::GetConfigName() const noexcept
 {
     return config_name;
 }
 
 
-const std::string Session::GetDeviceName() const noexcept
+std::string Session::GetDeviceName() const noexcept
 {
     try
     {
@@ -742,13 +742,13 @@ Events::Status Session::GetLastEvent() const noexcept
 }
 
 
-const bool Session::CheckACL(const std::string &caller) const noexcept
+bool Session::CheckACL(const std::string &caller) const noexcept
 {
     return object_acl->CheckACL(caller, {object_acl->GetOwner()});
 }
 
 
-const uid_t Session::GetOwner() const noexcept
+uid_t Session::GetOwner() const noexcept
 {
     return object_acl->GetOwner();
 }

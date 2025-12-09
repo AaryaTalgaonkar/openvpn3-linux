@@ -34,7 +34,7 @@ class LookupException : public std::exception
         return message.c_str();
     }
 
-    const std::string str() const noexcept
+    std::string str() const noexcept
     {
         return message;
     }

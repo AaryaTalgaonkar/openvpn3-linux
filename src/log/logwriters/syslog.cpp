@@ -38,7 +38,7 @@ SyslogWriter::~SyslogWriter()
 }
 
 
-const std::string SyslogWriter::GetLogWriterInfo() const
+std::string SyslogWriter::GetLogWriterInfo() const
 {
     return std::string("syslog");
 }

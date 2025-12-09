@@ -52,7 +52,7 @@ void AttentionReq::reset()
 }
 
 
-const bool AttentionReq::empty() const
+bool AttentionReq::empty() const
 {
     return (type == ClientAttentionType::UNSET)
            && (group == ClientAttentionGroup::UNSET)
@@ -60,19 +60,19 @@ const bool AttentionReq::empty() const
 }
 
 
-const std::string AttentionReq::Type() const
+std::string AttentionReq::Type() const
 {
     return ClientAttentionType_str[static_cast<uint32_t>(type)];
 }
 
 
-const std::string AttentionReq::Group() const
+std::string AttentionReq::Group() const
 {
     return ClientAttentionGroup_str[static_cast<uint32_t>(group)];
 }
 
 
-const std::string AttentionReq::Message() const
+std::string AttentionReq::Message() const
 {
     return message;
 }

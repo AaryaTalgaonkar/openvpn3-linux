@@ -36,7 +36,7 @@ class StreamLogWriter : public LogWriter
     StreamLogWriter(std::ostream &dst);
     virtual ~StreamLogWriter();
 
-    const std::string GetLogWriterInfo() const override;
+    std::string GetLogWriterInfo() const override;
 
     /**
      *  Generic Write() method, which can allows prepended and appended
@@ -81,7 +81,7 @@ class ColourStreamWriter : public StreamLogWriter
     ColourStreamWriter(std::ostream &dst, ColourEngine *ce);
     virtual ~ColourStreamWriter() = default;
 
-    const std::string GetLogWriterInfo() const override;
+    std::string GetLogWriterInfo() const override;
 
     void WriteStatus(const Events::Status &status,
                      const std::string &prefix_override = "[STATUS]") override;

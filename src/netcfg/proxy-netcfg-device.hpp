@@ -403,8 +403,8 @@ class Device
 
 
     NetCfgDeviceType GetDeviceType() const;
-    const std::string GetDeviceName() const;
-    const DBus::Object::Path GetDevicePath() const;
+    std::string GetDeviceName() const;
+    DBus::Object::Path GetDevicePath() const;
     bool GetActive() const;
 
     std::vector<std::string> GetIPv4Addresses() const;

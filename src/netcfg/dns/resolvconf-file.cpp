@@ -57,7 +57,7 @@ void FileGenerator::SetFilename(const std::string &fname) noexcept
 }
 
 
-const std::string FileGenerator::GetFilename() const noexcept
+std::string FileGenerator::GetFilename() const noexcept
 {
     return filename;
 }
@@ -69,7 +69,7 @@ void FileGenerator::SetBackupFilename(const std::string &bfname) noexcept
 }
 
 
-const std::string FileGenerator::GetBackupFilename() const noexcept
+std::string FileGenerator::GetBackupFilename() const noexcept
 {
     return backup_filename;
 }
@@ -205,13 +205,13 @@ ResolvConfFile::~ResolvConfFile()
 }
 
 
-const ApplySettingsMode ResolvConfFile::GetApplyMode() const noexcept
+ApplySettingsMode ResolvConfFile::GetApplyMode() const noexcept
 {
     return ApplySettingsMode::MODE_PRE;
 }
 
 
-const std::string ResolvConfFile::GetBackendInfo() const noexcept
+std::string ResolvConfFile::GetBackendInfo() const noexcept
 {
     std::string ret = std::string("ResolvConf file backend. Using: ")
                       + "'" + GetFilename() + "'";
@@ -377,7 +377,7 @@ void ResolvConfFile::Restore()
 }
 
 
-const std::vector<std::string> ResolvConfFile::GetNameServers(bool only_sys)
+std::vector<std::string> ResolvConfFile::GetNameServers(bool only_sys)
 {
     Read();
     parse();

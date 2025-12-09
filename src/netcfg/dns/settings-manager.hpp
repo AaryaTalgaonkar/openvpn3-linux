@@ -49,9 +49,9 @@ class SettingsManager
      *
      * @return  Returns a std::string containing the details
      */
-    const std::string GetBackendInfo() const;
+    std::string GetBackendInfo() const;
 
-    const ApplySettingsMode GetApplyMode() const;
+    ApplySettingsMode GetApplyMode() const;
 
 
     /**

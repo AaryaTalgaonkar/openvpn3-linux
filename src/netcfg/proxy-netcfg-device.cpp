@@ -548,12 +548,12 @@ NetCfgDeviceType Device::GetDeviceType() const
 }
 
 
-const std::string Device::GetDeviceName() const
+std::string Device::GetDeviceName() const
 {
     return proxy->GetProperty<std::string>(prxtgt, "device_name");
 }
 
-const DBus::Object::Path Device::GetDevicePath() const
+DBus::Object::Path Device::GetDevicePath() const
 {
     return prxtgt->object_path;
 }

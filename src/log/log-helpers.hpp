@@ -137,7 +137,7 @@ const std::array<const std::string, 9> LogCategory_str = {
 
 
 
-inline const std::string LogPrefix(LogGroup group, LogCategory catg)
+inline std::string LogPrefix(LogGroup group, LogCategory catg)
 {
     if (LogGroup::UNDEFINED == group && LogCategory::UNDEFINED == catg)
     {

@@ -38,7 +38,7 @@ struct NetCfgChangeEvent
     bool empty() const noexcept;
 
 
-    static const DBus::Signals::SignalArgList SignalDeclaration() noexcept
+    static DBus::Signals::SignalArgList SignalDeclaration() noexcept
     {
         return {{"type", glib2::DataType::DBus<NetCfgChangeType>()},
                 {"device", glib2::DataType::DBus<std::string>()},
@@ -46,8 +46,8 @@ struct NetCfgChangeEvent
     }
 
 
-    static const std::string TypeStr(const NetCfgChangeType &type,
-                                     bool tech_form = false) noexcept
+    static std::string TypeStr(const NetCfgChangeType &type,
+                               bool tech_form = false) noexcept
     {
         switch (type)
         {
@@ -81,8 +81,8 @@ struct NetCfgChangeEvent
     }
 
 
-    static const std::vector<std::string> FilterMaskList(const uint32_t mask,
-                                                         bool tech_form = false)
+    static std::vector<std::string> FilterMaskList(const uint32_t mask,
+                                                   bool tech_form = false)
     {
         std::vector<std::string> ret;
 
@@ -100,9 +100,9 @@ struct NetCfgChangeEvent
     }
 
 
-    static const std::string FilterMaskStr(const uint16_t mask,
-                                           bool tech_form = false,
-                                           const std::string &separator = ", ")
+    static std::string FilterMaskStr(const uint16_t mask,
+                                     bool tech_form = false,
+                                     const std::string &separator = ", ")
     {
         std::stringstream buf;
         bool first_done = false;

@@ -34,7 +34,7 @@ StreamLogWriter::~StreamLogWriter()
 }
 
 
-const std::string StreamLogWriter::GetLogWriterInfo() const
+std::string StreamLogWriter::GetLogWriterInfo() const
 {
     return std::string("StreamWriter");
 }
@@ -83,7 +83,7 @@ ColourStreamWriter::ColourStreamWriter(std::ostream &dst, ColourEngine *ce)
 }
 
 
-const std::string ColourStreamWriter::GetLogWriterInfo() const
+std::string ColourStreamWriter::GetLogWriterInfo() const
 {
     return std::string("ColourStreamWriter");
 }

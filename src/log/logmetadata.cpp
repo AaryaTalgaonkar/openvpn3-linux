@@ -62,7 +62,7 @@ LogMetaDataValue::LogMetaDataValue(const std::string &l,
 }
 
 
-const std::string LogMetaDataValue::GetValue(const bool logtag_encaps) const
+std::string LogMetaDataValue::GetValue(const bool logtag_encaps) const
 {
     switch (type)
     {

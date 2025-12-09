@@ -668,7 +668,7 @@ void SingleCommand::SetAliasCommand(const std::string &alias,
 }
 
 
-const std::string SingleCommand::GetAliasCommand() const
+std::string SingleCommand::GetAliasCommand() const
 {
     return alias_cmd;
 }

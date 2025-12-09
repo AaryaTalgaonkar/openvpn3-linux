@@ -158,7 +158,7 @@ class ParsedArgs
      * @return Returns std::string of the first matching option.
      * @throws OptionsNotFound if no option was found if no_throw is false.
      */
-    const std::string Present(const std::vector<std::string> &optlist,
+    std::string Present(const std::vector<std::string> &optlist,
                               bool no_throw = false) const
     {
         for (const auto &k : optlist)
@@ -613,7 +613,7 @@ class SingleCommand
         {
         }
 
-        const std::string GetComment(const CommentPlacement &p) const
+        std::string GetComment(const CommentPlacement &p) const
         {
             return (p == placement ? comment + "\n" : "");
         }
@@ -662,7 +662,7 @@ class SingleCommand
      *
      * @return Returns a std::string with the alias
      */
-    const std::string GetAliasCommand() const;
+    std::string GetAliasCommand() const;
 
 
     void AddComment(const CommentPlacement &p, const std::string &c)

@@ -61,7 +61,7 @@ void StatusChange::Subscribe(DBus::Signals::Target::Ptr subscr_tgt)
 }
 
 
-const std::string StatusChange::GetSignature() const
+std::string StatusChange::GetSignature() const
 {
     return DBus::Signals::SignalArgSignature(Events::Status::SignalDeclaration());
 }

@@ -201,7 +201,7 @@ class Link
      *
      * @return const DBus::Object::Path
      */
-    const DBus::Object::Path GetPath() const;
+    DBus::Object::Path GetPath() const;
 
     /**
      *  Retrieve the device name this link object is related to
@@ -215,7 +215,7 @@ class Link
      *
      * @return const std::vector<std::string>
      */
-    const std::vector<std::string> GetDNSServers() const;
+    std::vector<std::string> GetDNSServers() const;
 
     /**
      *  Replace the currently configured list of DNS servers with a new
@@ -231,14 +231,14 @@ class Link
      *
      * @return const std::string
      */
-    const std::string GetCurrentDNSServer() const;
+    std::string GetCurrentDNSServer() const;
 
     /**
      *  Retrieve a list of all search domains configured for this interface
      *
      * @return const SearchDomain::List
      */
-    const SearchDomain::List GetDomains() const;
+    SearchDomain::List GetDomains() const;
 
     /**
      *  Replace the currently used list of DNS search domains with a new

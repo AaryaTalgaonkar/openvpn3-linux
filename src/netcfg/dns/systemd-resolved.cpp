@@ -38,13 +38,13 @@ SystemdResolved::SystemdResolved(DBus::Connection::Ptr dbc)
 }
 
 
-const std::string SystemdResolved::GetBackendInfo() const noexcept
+std::string SystemdResolved::GetBackendInfo() const noexcept
 {
     return std::string("systemd-resolved DNS configuration backend");
 }
 
 
-const ApplySettingsMode SystemdResolved::GetApplyMode() const noexcept
+ApplySettingsMode SystemdResolved::GetApplyMode() const noexcept
 {
     return ApplySettingsMode::MODE_POST;
 }

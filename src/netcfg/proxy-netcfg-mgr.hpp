@@ -46,9 +46,9 @@ class Manager
      */
     [[nodiscard]] static Manager::Ptr Create(DBus::Connection::Ptr dbuscon);
 
-    const std::string GetConfigFile();
+    std::string GetConfigFile();
 
-    const DBus::Object::Path CreateVirtualInterface(const std::string &device_name);
+    DBus::Object::Path CreateVirtualInterface(const std::string &device_name);
 
 #ifdef OPENVPN3_NETCFGPRX_DEVICE
     Device *getVirtualInterface(const DBus::Object::Path &path)

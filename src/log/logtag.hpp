@@ -58,7 +58,7 @@ struct LogTag
      * @return  Returns a std::string containing the tag this sender and
      *          interface will use
      */
-    const std::string str(const bool encaps_override) const;
+    std::string str(const bool encaps_override) const;
 
 
     /**
@@ -68,7 +68,7 @@ struct LogTag
      * @return  Returns a std::string containing the tag this sender and
      *          interface will use
      */
-    const std::string str() const;
+    std::string str() const;
 
 
     /**

@@ -37,7 +37,7 @@ struct Log
         SESSION_TOKEN
     };
 
-    static const DBus::Signals::SignalArgList SignalDeclaration(bool with_session_token = false) noexcept;
+    static DBus::Signals::SignalArgList SignalDeclaration(bool with_session_token = false) noexcept;
 
     /**
      *  Initializes an empty LogEvent struct.
@@ -142,14 +142,14 @@ struct Log
      *
      * @return std::string with the log group description
      */
-    const std::string GetLogGroupStr() const;
+    std::string GetLogGroupStr() const;
 
     /**
      *  Retrieve a string describing the Log Category of this LogEvent
      *
      * @return std::string with the log category description
      */
-    const std::string GetLogCategoryStr() const;
+    std::string GetLogCategoryStr() const;
 
     /**
      *  Resets the LogEvent struct to a known and empty state
@@ -179,7 +179,7 @@ struct Log
      * @param prefix              bool enabling/disabling log group/category prefix
      * @return const std::string  Returns a formatted string of the log event.
      */
-    const std::string str(unsigned short indent = 0, bool prefix = true) const;
+    std::string str(unsigned short indent = 0, bool prefix = true) const;
 
     bool operator==(const Log &compare) const;
     bool operator!=(const Log &compare) const;

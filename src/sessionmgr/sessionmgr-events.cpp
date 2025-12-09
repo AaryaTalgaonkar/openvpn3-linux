@@ -67,8 +67,8 @@ GVariant *Event::GetGVariant() const noexcept
 }
 
 
-const std::string Event::TypeStr(const EventType type,
-                                 bool tech_form) noexcept
+std::string Event::TypeStr(const EventType type,
+                           bool tech_form) noexcept
 {
     switch (type)
     {
@@ -85,7 +85,7 @@ const std::string Event::TypeStr(const EventType type,
 }
 
 
-const DBus::Signals::SignalArgList Event::SignalDeclaration() noexcept
+DBus::Signals::SignalArgList Event::SignalDeclaration() noexcept
 {
     return {{"path", glib2::DataType::DBus<DBus::Object::Path>()},
             {"type", glib2::DataType::DBus<SessionManager::EventType>()},

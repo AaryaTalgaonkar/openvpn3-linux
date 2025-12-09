@@ -137,7 +137,7 @@ class Session : public DBusRequiresQueueProxy
     }
 
 
-    const DBus::Object::Path GetPath() const
+    DBus::Object::Path GetPath() const
     {
         return target->object_path;
     }
@@ -266,7 +266,7 @@ class Session : public DBusRequiresQueueProxy
      *          session owner has access to the session log via the session
      *          manager.
      */
-    const bool GetRestrictLogAccess()
+    bool GetRestrictLogAccess()
     {
         return proxy->GetProperty<bool>(target, "restrict_log_access");
     }
@@ -293,7 +293,7 @@ class Session : public DBusRequiresQueueProxy
      * @return  Returns true if session manager will proxy log events from
      *          the VPN client backend
      */
-    const bool GetReceiveLogEvents()
+    bool GetReceiveLogEvents()
     {
         return proxy->GetProperty<bool>(target, "receive_log_events");
     }
@@ -317,7 +317,7 @@ class Session : public DBusRequiresQueueProxy
      *          where 6 is the most verbose.  With 0 only fatal and critical
      *          errors will be provided
      */
-    const uint32_t GetLogVerbosity()
+    uint32_t GetLogVerbosity()
     {
         return proxy->GetProperty<uint32_t>(target, "log_verbosity");
     }
@@ -341,7 +341,7 @@ class Session : public DBusRequiresQueueProxy
      * @return Returns a populated struct LogEvent with the the complete log
      *         event.
      */
-    const Events::Log GetLastLogEvent()
+    Events::Log GetLastLogEvent()
     {
         GVariant *logev = proxy->GetPropertyGVariant(target, "last_log");
         auto ret = Events::ParseLog(logev);
@@ -474,7 +474,7 @@ class Session : public DBusRequiresQueueProxy
      *
      * @return Returns uid_t of the session object owner
      */
-    const uid_t GetOwner()
+    uid_t GetOwner()
     {
         return proxy->GetProperty<uid_t>(target, "owner");
     }
@@ -487,7 +487,7 @@ class Session : public DBusRequiresQueueProxy
      * @return Returns an array if uid_t references for each user granted
      *         access.
      */
-    const std::vector<uid_t> GetAccessList()
+    std::vector<uid_t> GetAccessList()
     {
         auto ret = proxy->GetPropertyArray<uid_t>(target, "acl");
         return ret;
@@ -499,7 +499,7 @@ class Session : public DBusRequiresQueueProxy
      *
      * @return  Returns a std::string with the device name
      */
-    const std::string GetDeviceName() const
+    std::string GetDeviceName() const
     {
         return proxy->GetProperty<std::string>(target, "device_name");
     }
@@ -511,7 +511,7 @@ class Session : public DBusRequiresQueueProxy
      *
      * @return  Returns true if DCO is enabled
      */
-    const bool GetDCO() const
+    bool GetDCO() const
     {
         return proxy->GetProperty<bool>(target, "dco");
     }
@@ -738,7 +738,7 @@ class Manager
     }
 
 
-    const DBus::Object::Path::List FetchAvailableSessionPaths() const
+    DBus::Object::Path::List FetchAvailableSessionPaths() const
     {
         try
         {
@@ -759,7 +759,7 @@ class Manager
      *
      * @return  Session::List (aka std::vector<SessionManager::Proxy::Session::Ptr>)
      */
-    const Session::List FetchAvailableSessions() const
+    Session::List FetchAvailableSessions() const
     {
         Session::List ret{};
         for (const auto &session_path : FetchAvailableSessionPaths())
@@ -776,7 +776,7 @@ class Manager
     }
 
 
-    const std::vector<std::string> FetchManagedInterfaces() const
+    std::vector<std::string> FetchManagedInterfaces() const
     {
         try
         {
@@ -803,7 +803,7 @@ class Manager
      *         paths which were started with the given configuration name.
      *         If no match is found, the std::vector will be empty.
      */
-    const DBus::Object::Path::List LookupConfigName(const std::string &cfgname) const
+    DBus::Object::Path::List LookupConfigName(const std::string &cfgname) const
     {
         try
         {
@@ -828,7 +828,7 @@ class Manager
      *          the session this interface is attached to.  If not found,
      *          and exception is thrown.
      */
-    const DBus::Object::Path LookupInterface(const std::string &interface) const
+    DBus::Object::Path LookupInterface(const std::string &interface) const
     {
         try
         {

@@ -31,12 +31,12 @@ class TestBackend : public ResolverBackendInterface
 
     TestBackend() = default;
 
-    const std::string GetBackendInfo() const noexcept override
+    std::string GetBackendInfo() const noexcept override
     {
         return "TestBackend: DNS configuration tester";
     }
 
-    const ApplySettingsMode GetApplyMode() const noexcept override
+    ApplySettingsMode GetApplyMode() const noexcept override
     {
         return ApplySettingsMode::MODE_PRE; // Not relevant in this test
     }

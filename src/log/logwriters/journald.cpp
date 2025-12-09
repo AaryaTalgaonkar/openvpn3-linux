@@ -82,7 +82,7 @@ JournaldWriter::JournaldWriter(const std::string &logsndr)
 }
 
 
-const std::string JournaldWriter::GetLogWriterInfo() const
+std::string JournaldWriter::GetLogWriterInfo() const
 {
     return std::string("journald");
 }

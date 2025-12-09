@@ -44,7 +44,7 @@ struct ConstantMapping
     {
     }
 
-    const std::string GetPyValue() const
+    std::string GetPyValue() const
     {
         std::ostringstream res;
         switch (dbus_type[0])

@@ -41,7 +41,7 @@ class JournaldWriter : public LogWriter
     JournaldWriter(const std::string &log_sender);
     virtual ~JournaldWriter() = default;
 
-    const std::string GetLogWriterInfo() const override;
+    std::string GetLogWriterInfo() const override;
 
     /**
      *  We presume journald will always add timestamps to its logging,

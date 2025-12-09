@@ -342,7 +342,7 @@ class OpenVPN3ConfigurationProxy
     }
 
 
-    const std::string GetName() const
+    std::string GetName() const
     {
         return proxy->GetProperty<std::string>(proxy_tgt, "name");
     }
@@ -439,7 +439,7 @@ class OpenVPN3ConfigurationProxy
     }
 
 
-    const bool GetSealed() const
+    bool GetSealed() const
     {
         return proxy->GetProperty<bool>(proxy_tgt, "readonly");
     }
@@ -703,7 +703,7 @@ class OpenVPN3ConfigurationProxy
      *
      * @return const std::vector<std::string> containing all tags
      */
-    const std::vector<std::string> GetTags() const
+    std::vector<std::string> GetTags() const
     {
         if (!(features & CfgMgrFeatures::TAGS))
         {

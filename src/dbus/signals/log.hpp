@@ -40,7 +40,7 @@ class Log : public DBus::Signals::Signal
         DBus::Signals::Target::Ptr subscr_tgt = nullptr);
     ~Log() noexcept = default;
 
-    const std::string GetSignature() const;
+    std::string GetSignature() const;
 
     bool Send(const Events::Log &logev) noexcept;
     GVariant *LastLogEvent() const;

@@ -70,7 +70,7 @@ class FileGenerator
      *
      * @return  Returns a std::string containing the filename
      */
-    virtual const std::string GetFilename() const noexcept;
+    virtual std::string GetFilename() const noexcept;
 
     /**
      *  Change the filename used for the backup file after initialization
@@ -85,7 +85,7 @@ class FileGenerator
      *
      * @return  Returns a std::string containing the filename
      */
-    virtual const std::string GetBackupFilename() const noexcept;
+    virtual std::string GetBackupFilename() const noexcept;
 
 
   protected:
@@ -163,7 +163,7 @@ class ResolvConfFile : public FileGenerator,
      *
      * @return Returns a constant std::string with backend details.
      */
-    const std::string GetBackendInfo() const noexcept override;
+    std::string GetBackendInfo() const noexcept override;
 
     /**
      *  Retrieve when the backend can apply the DNS resolver settings.
@@ -177,7 +177,7 @@ class ResolvConfFile : public FileGenerator,
      *
      * @returns NetCfg::DNS:ApplySettingsMode
      */
-    const ApplySettingsMode GetApplyMode() const noexcept override;
+    ApplySettingsMode GetApplyMode() const noexcept override;
 
     /**
      *  Add new DNS resolver settings.  This may be called multiple times
@@ -207,7 +207,7 @@ class ResolvConfFile : public FileGenerator,
      *
      * @return std::vector<std::string> containing list of DNS servers
      */
-    const std::vector<std::string> GetNameServers(bool only_sys = false);
+    std::vector<std::string> GetNameServers(bool only_sys = false);
 
   protected:
     std::mutex change_guard;

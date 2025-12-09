@@ -67,7 +67,7 @@ PlatformInfo::PlatformInfo(DBus::Connection::Ptr con)
 }
 
 
-const bool PlatformInfo::DBusAvailable() const
+bool PlatformInfo::DBusAvailable() const
 {
     if (!proxy)
     {
@@ -78,7 +78,7 @@ const bool PlatformInfo::DBusAvailable() const
 }
 
 
-const std::string PlatformInfo::str() const
+std::string PlatformInfo::str() const
 {
     std::string os_name{};
 

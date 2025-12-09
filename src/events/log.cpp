@@ -25,7 +25,7 @@
 
 namespace Events {
 
-const DBus::Signals::SignalArgList Log::SignalDeclaration(bool with_session_token) noexcept
+DBus::Signals::SignalArgList Log::SignalDeclaration(bool with_session_token) noexcept
 {
     if (with_session_token)
     {
@@ -158,7 +158,7 @@ GVariant *Log::GetGVariantDict() const
 }
 
 
-const std::string Log::GetLogGroupStr() const
+std::string Log::GetLogGroupStr() const
 {
     if ((uint8_t)group >= LogGroupCount)
     {
@@ -170,7 +170,7 @@ const std::string Log::GetLogGroupStr() const
 }
 
 
-const std::string Log::GetLogCategoryStr() const
+std::string Log::GetLogCategoryStr() const
 {
     if ((uint8_t)category > 8)
     {
@@ -199,7 +199,7 @@ bool Log::empty() const
 }
 
 
-const std::string Log::str(unsigned short indent, bool prefix) const
+std::string Log::str(unsigned short indent, bool prefix) const
 {
     std::ostringstream r;
     if (prefix)

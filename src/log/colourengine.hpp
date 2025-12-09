@@ -67,7 +67,7 @@ class ColourEngine
      *
      * @return  Returns a string containing to be used to colour the output
      */
-    virtual const std::string Set(Colour fg, Colour bg) = 0;
+    virtual std::string Set(Colour fg, Colour bg) = 0;
 
 
     /**
@@ -75,7 +75,7 @@ class ColourEngine
      *
      * @return  Returns the string needed to reset the colour to default
      */
-    virtual const std::string Reset() = 0;
+    virtual std::string Reset() = 0;
 
 
     /**
@@ -112,7 +112,7 @@ class ColourEngine
      * @return  Returns a std::string to be used to set the colour
      *
      */
-    virtual const std::string ColourByGroup(LogGroup grp) = 0;
+    virtual std::string ColourByGroup(LogGroup grp) = 0;
 
 
     /**
@@ -123,7 +123,7 @@ class ColourEngine
      * @return  Returns a std::string to be used to set the colour
      *
      */
-    virtual const std::string ColourByCategory(LogCategory ctg) = 0;
+    virtual std::string ColourByCategory(LogCategory ctg) = 0;
 
 
     /**

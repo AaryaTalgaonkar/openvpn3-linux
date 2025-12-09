@@ -47,13 +47,13 @@ LogTag::LogTag(const LogTag &cp)
 }
 
 
-const std::string LogTag::str() const
+std::string LogTag::str() const
 {
     return LogTag::str(encaps);
 }
 
 
-const std::string LogTag::str(const bool encaps_override) const
+std::string LogTag::str(const bool encaps_override) const
 {
     if (encaps_override)
     {

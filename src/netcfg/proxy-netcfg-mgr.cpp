@@ -69,7 +69,7 @@ Manager::Manager(DBus::Connection::Ptr dbuscon_)
 }
 
 
-const std::string Manager::GetConfigFile()
+std::string Manager::GetConfigFile()
 {
     if (!proxy_helper->CheckObjectExists(tgt_mgr->object_path,
                                          tgt_mgr->interface))
@@ -81,7 +81,7 @@ const std::string Manager::GetConfigFile()
 }
 
 
-const DBus::Object::Path Manager::CreateVirtualInterface(const std::string &device_name)
+DBus::Object::Path Manager::CreateVirtualInterface(const std::string &device_name)
 {
     proxy_helper->Ping();
     try

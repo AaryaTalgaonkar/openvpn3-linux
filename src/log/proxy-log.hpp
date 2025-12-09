@@ -104,7 +104,7 @@ class LogProxy
     }
 
 
-    const unsigned int GetLogLevel() const
+    unsigned int GetLogLevel() const
     {
         return proxy->GetProperty<unsigned int>(target, "log_level");
     }
@@ -116,13 +116,13 @@ class LogProxy
     }
 
 
-    const DBus::Object::Path GetSessionPath() const
+    DBus::Object::Path GetSessionPath() const
     {
         return proxy->GetProperty<DBus::Object::Path>(target, "session_path");
     }
 
 
-    const std::string GetLogTarget() const
+    std::string GetLogTarget() const
     {
         return proxy->GetProperty<std::string>(target, "target");
     }
@@ -314,7 +314,7 @@ class LogServiceProxy
      *  Retrieve the configuration/state file openvpn-service-logger is
      *  configured to use.
      */
-    const std::string GetConfigFile() const
+    std::string GetConfigFile() const
     {
         return logservice->GetProperty<std::string>(logtarget, "config_file");
     }
@@ -323,7 +323,7 @@ class LogServiceProxy
     /**
      *  Retrieve which logging method is used by the log service
      */
-    const std::string GetLogMethod() const
+    std::string GetLogMethod() const
     {
         return logservice->GetProperty<std::string>(logtarget, "log_method");
     }

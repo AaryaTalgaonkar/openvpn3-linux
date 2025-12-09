@@ -187,7 +187,7 @@ Link::Link(asio::io_context &asio_ctx,
 }
 
 
-const DBus::Object::Path Link::GetPath() const
+DBus::Object::Path Link::GetPath() const
 {
     return (tgt_link ? tgt_link->object_path : "");
 }
@@ -199,7 +199,7 @@ std::string Link::GetDeviceName() const
 }
 
 
-const std::vector<std::string> Link::GetDNSServers() const
+std::vector<std::string> Link::GetDNSServers() const
 {
     GVariant *r = proxy->GetPropertyGVariant(tgt_link, "DNS");
     glib2::Utils::checkParams(__func__, r, "a(iay)");
@@ -238,7 +238,7 @@ std::vector<std::string> Link::SetDNSServers(const IPAddress::List &servers)
 }
 
 
-const std::string Link::GetCurrentDNSServer() const
+std::string Link::GetCurrentDNSServer() const
 {
     GVariant *r = nullptr;
     try
@@ -262,7 +262,7 @@ const std::string Link::GetCurrentDNSServer() const
 }
 
 
-const SearchDomain::List Link::GetDomains() const
+SearchDomain::List Link::GetDomains() const
 {
     GVariant *r = proxy->GetPropertyGVariant(tgt_link, "Domains");
     glib2::Utils::checkParams(__func__, r, "a(sb)");

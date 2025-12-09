@@ -51,7 +51,7 @@ ResolverSettings::~ResolverSettings() = default;
 
 
 
-const ssize_t ResolverSettings::GetIndex() const noexcept
+ssize_t ResolverSettings::GetIndex() const noexcept
 {
     return index;
 }
@@ -111,7 +111,7 @@ void ResolverSettings::SetDNSScope(const DNS::Scope new_scope) noexcept
 }
 
 
-const DNS::Scope ResolverSettings::GetDNSScope() const noexcept
+DNS::Scope ResolverSettings::GetDNSScope() const noexcept
 {
     return scope;
 }
@@ -229,7 +229,7 @@ std::string ResolverSettings::GetDNSSEC_string() const
 
 
 
-const std::string ResolverSettings::SetDNSScope(GVariant *params)
+std::string ResolverSettings::SetDNSScope(GVariant *params)
 {
     std::string params_type = glib2::DataType::Extract(params);
     if ("s" != params_type)
@@ -305,7 +305,7 @@ std::string ResolverSettings::GetDNSTransport_string() const
 }
 
 
-const std::string ResolverSettings::AddNameServers(GVariant *params)
+std::string ResolverSettings::AddNameServers(GVariant *params)
 {
     std::string params_type = glib2::DataType::Extract(params);
     if ("(as)" != params_type)

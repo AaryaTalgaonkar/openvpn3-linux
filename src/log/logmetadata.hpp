@@ -76,7 +76,7 @@ struct LogMetaDataValue
      *
      * @return  Returns a std::string of this objects value
      */
-    const std::string GetValue(const bool logtag_encaps = true) const;
+    std::string GetValue(const bool logtag_encaps = true) const;
 
     friend std::ostream &operator<<(std::ostream &os, const LogMetaDataValue::Ptr mdv)
     {

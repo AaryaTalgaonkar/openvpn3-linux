@@ -45,7 +45,7 @@ class StatusChange : public DBus::Signals::Signal
 
     void Subscribe(DBus::Signals::Target::Ptr subscr_tgt);
 
-    const std::string GetSignature() const;
+    std::string GetSignature() const;
 
     bool Send(const Events::Status &stch) noexcept;
     Events::Status LastEvent() const;

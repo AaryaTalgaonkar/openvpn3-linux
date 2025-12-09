@@ -45,7 +45,7 @@ class LogWriter
      *
      * @return  Returns a std::string with information about the backend
      */
-    virtual const std::string GetLogWriterInfo() const = 0;
+    virtual std::string GetLogWriterInfo() const = 0;
 
 
     /**

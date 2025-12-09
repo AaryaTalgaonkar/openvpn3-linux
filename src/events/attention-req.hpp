@@ -39,11 +39,11 @@ struct AttentionReq
     static DBus::Signals::SignalArgList SignalDeclaration() noexcept;
 
     void reset();
-    const bool empty() const;
+    bool empty() const;
 
-    const std::string Type() const;
-    const std::string Group() const;
-    const std::string Message() const;
+    std::string Type() const;
+    std::string Group() const;
+    std::string Message() const;
 
     GVariant *GetGVariant() const;
 

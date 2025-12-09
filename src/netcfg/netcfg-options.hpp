@@ -155,7 +155,7 @@ struct NetCfgOptions
 
 
   private:
-    static const std::string decode_options(const NetCfgOptions &o)
+    static std::string decode_options(const NetCfgOptions &o)
     {
         std::stringstream s;
 

@@ -94,7 +94,7 @@ class Event
      *
      * @return  Returns a std::string of the representation of EventType
      */
-    static const std::string TypeStr(const EventType type,
+    static std::string TypeStr(const EventType type,
                                      bool tech_form = false) noexcept;
 
     /**
@@ -102,7 +102,7 @@ class Event
      *
      * @return  DBus::Signals::SignalArgList describing the signal type
      */
-    static const DBus::Signals::SignalArgList SignalDeclaration() noexcept;
+    static DBus::Signals::SignalArgList SignalDeclaration() noexcept;
 
     bool operator==(const Event &compare) const;
     bool operator!=(const Event &compare) const;

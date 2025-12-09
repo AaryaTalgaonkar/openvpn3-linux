@@ -65,7 +65,7 @@ class ResolverSettings
      *
      * @return  Returns an ssize_t value of the current index
      */
-    const ssize_t GetIndex() const noexcept;
+    ssize_t GetIndex() const noexcept;
 
 
     /**
@@ -161,7 +161,7 @@ class ResolverSettings
      *
      * @return  Returns DNS::Scope of the current resolver scope
      */
-    const DNS::Scope GetDNSScope() const noexcept;
+    DNS::Scope GetDNSScope() const noexcept;
 
 
     /**
@@ -390,7 +390,7 @@ class ResolverSettings
      *  @returns Returns a std::string of the received and accepted
      *           DNS resolver scope
      */
-    const std::string SetDNSScope(GVariant *params);
+    std::string SetDNSScope(GVariant *params);
 
     /**
      *  Adds DNS name servers based on an array of strings provided via
@@ -402,7 +402,7 @@ class ResolverSettings
      * @returns Returns a std::string list of added DNS servers,
      *          comma separated
      */
-    const std::string AddNameServers(GVariant *params);
+    std::string AddNameServers(GVariant *params);
 
     /**
      *  Adds new DNS search domains based on an array of strings provided

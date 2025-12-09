@@ -57,7 +57,7 @@ class ResolverBackendInterface
      *
      * @return  Returns a std::string with the information.
      */
-    virtual const std::string GetBackendInfo() const noexcept = 0;
+    virtual std::string GetBackendInfo() const noexcept = 0;
 
     /**
      *  Retrieve when the backend can apply the DNS resolver settings.
@@ -67,7 +67,7 @@ class ResolverBackendInterface
      *
      * @returns NetCfg::DNS:ApplySettingsMode
      */
-    virtual const ApplySettingsMode GetApplyMode() const noexcept = 0;
+    virtual ApplySettingsMode GetApplyMode() const noexcept = 0;
 
     /**
      *  Register DNS resolver settings for a particular VPN session

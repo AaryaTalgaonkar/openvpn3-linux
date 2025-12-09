@@ -49,7 +49,7 @@ Log::Log(DBus::Signals::Emit::Ptr emitter,
 }
 
 
-const std::string Log::GetSignature() const
+std::string Log::GetSignature() const
 {
     return DBus::Signals::SignalArgSignature(Events::Log::SignalDeclaration());
 }
