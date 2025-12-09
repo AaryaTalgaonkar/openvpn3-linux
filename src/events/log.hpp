@@ -52,8 +52,8 @@ struct Log
      * @param msg  std::string containing the log message to use.
      * @param filter_nl  (optional) Filter out newline (\n) characters in log message (default true)
      */
-    Log(const LogGroup grp,
-        const LogCategory ctg,
+    Log(LogGroup grp,
+        LogCategory ctg,
         const std::string &msg,
         bool filter_nl = true);
 
@@ -65,8 +65,8 @@ struct Log
      * @param msg  std::string containing the log message to use.
      * @param filter_nl  (optional) Filter out newline (\n) characters in log message (default true)
      */
-    Log(const LogGroup grp,
-        const LogCategory ctg,
+    Log(LogGroup grp,
+        LogCategory ctg,
         const std::string &session_token,
         const std::string &msg,
         bool filter_nl = true);
@@ -80,8 +80,8 @@ struct Log
      * @param msg            char * containing the log message to use.
      * @param filter_nl      (optional) Filter out newline (\n) characters in log message (default true)
      */
-    Log(const LogGroup grp,
-        const LogCategory ctg,
+    Log(LogGroup grp,
+        LogCategory ctg,
         const char *session_token,
         const char *msg,
         bool filter_nl = true);

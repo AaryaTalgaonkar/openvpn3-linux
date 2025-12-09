@@ -19,8 +19,8 @@
 
 namespace Events {
 
-AttentionReq::AttentionReq(const ClientAttentionType att_type,
-                           const ClientAttentionGroup att_group,
+AttentionReq::AttentionReq(ClientAttentionType att_type,
+                           ClientAttentionGroup att_group,
                            const std::string &msg)
     : type(att_type), group(att_group), message(msg)
 {

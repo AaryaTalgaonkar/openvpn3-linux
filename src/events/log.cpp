@@ -49,8 +49,8 @@ Log::Log()
 }
 
 
-Log::Log(const LogGroup grp,
-         const LogCategory ctg,
+Log::Log(LogGroup grp,
+         LogCategory ctg,
          const std::string &msg,
          bool filter_nl)
     : group(grp), category(ctg),
@@ -60,8 +60,8 @@ Log::Log(const LogGroup grp,
 }
 
 
-Log::Log(const LogGroup grp,
-         const LogCategory ctg,
+Log::Log(LogGroup grp,
+         LogCategory ctg,
          const std::string &session_token,
          const std::string &msg,
          bool filter_nl)
@@ -73,8 +73,8 @@ Log::Log(const LogGroup grp,
 }
 
 
-Log::Log(const LogGroup grp,
-         const LogCategory ctg,
+Log::Log(LogGroup grp,
+         LogCategory ctg,
          const char *session_token,
          const char *msg,
          bool filter_nl)

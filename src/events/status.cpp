@@ -26,7 +26,7 @@
 
 namespace Events {
 
-Status::Status(const StatusMajor maj, const StatusMinor min, const std::string &msg)
+Status::Status(StatusMajor maj, StatusMinor min, const std::string &msg)
 {
     reset();
     major = maj;
@@ -92,7 +92,7 @@ bool Status::empty() const
 }
 
 
-void Status::SetPrintMode(const Status::PrintMode m)
+void Status::SetPrintMode(Status::PrintMode m)
 {
     print_mode = static_cast<unsigned short>(m);
 }

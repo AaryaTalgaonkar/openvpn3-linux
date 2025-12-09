@@ -30,8 +30,8 @@ struct AttentionReq
     std::string message = {};
 
     AttentionReq() = default;
-    AttentionReq(const ClientAttentionType att_type,
-                 const ClientAttentionGroup att_group,
+    AttentionReq(ClientAttentionType att_type,
+                 ClientAttentionGroup att_group,
                  const std::string &msg);
     AttentionReq(GVariant *params);
     ~AttentionReq() = default;

@@ -47,7 +47,7 @@ struct Status
     bool show_numeric_status;
 
 
-    Status(const StatusMajor maj, const StatusMinor min, const std::string &msg = "");
+    Status(StatusMajor maj, StatusMinor min, const std::string &msg = "");
     Status();
 
     /**
@@ -77,7 +77,7 @@ struct Status
      *  Configures what should be printed
      * @param m
      */
-    void SetPrintMode(const Status::PrintMode m);
+    void SetPrintMode(Status::PrintMode m);
 
     /**
      *  Compares the saved status against a specific state
@@ -88,7 +88,7 @@ struct Status
      * @return Returns true if both maj and min matches the saved
      *         state
      */
-    bool Check(const StatusMajor maj, const StatusMinor min) const;
+    bool Check(StatusMajor maj, StatusMinor min) const;
 
     /**
      *  Create a D-Bus compliant GVariant object with the status information
