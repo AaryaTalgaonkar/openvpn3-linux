@@ -454,12 +454,12 @@ class NetCfgTunBuilder : public T
     }
 
 
-    virtual void tun_builder_dco_new_peer(uint32_t peer_id,
-                                          uint32_t transport_fd,
-                                          struct sockaddr *sa,
-                                          socklen_t salen,
-                                          openvpn::IPv4::Addr &vpn4,
-                                          openvpn::IPv6::Addr &vpn6) override
+    void tun_builder_dco_new_peer(uint32_t peer_id,
+                                  uint32_t transport_fd,
+                                  struct sockaddr *sa,
+                                  socklen_t salen,
+                                  openvpn::IPv4::Addr &vpn4,
+                                  openvpn::IPv6::Addr &vpn6) override
     {
         if (!dco)
         {
