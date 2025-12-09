@@ -58,7 +58,7 @@ class BackendStarterSignals : public LogSender
      * @param log_level   Verbosity level; threshold level for sending signals
      */
     BackendStarterSignals(DBus::Connection::Ptr conn, unsigned int log_level)
-        : LogSender(conn,
+        : LogSender(std::move(conn),
                     LogGroup::BACKENDSTART,
                     Constants::GenPath("backends"),
                     Constants::GenInterface("backends"))
@@ -145,7 +145,7 @@ class BackendStarterHandler : public DBus::Object::Base
                           unsigned int log_level)
         : DBus::Object::Base(Constants::GenPath("backends"),
                              Constants::GenInterface("backends")),
-          dbuscon(dbuscon_),
+          dbuscon(std::move(dbuscon_)),
           creds(DBus::Credentials::Query::Create(dbuscon)),
           client_args(client_args),
           client_envvars(client_envvars),
@@ -333,7 +333,7 @@ class BackendStarterSrv : public DBus::Service
     BackendStarterSrv(DBus::Connection::Ptr conn,
                       const std::vector<std::string> &cliargs,
                       unsigned int log_level)
-        : DBus::Service(conn, Constants::GenServiceName("backends")),
+        : DBus::Service(std::move(conn), Constants::GenServiceName("backends")),
           client_args(cliargs),
           log_level(log_level) {};
 

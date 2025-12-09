@@ -68,7 +68,7 @@ class Handler
 
     [[nodiscard]] static Ptr Create(DBus::Connection::Ptr conn)
     {
-        return Ptr(new Handler(conn));
+        return Ptr(new Handler(std::move(conn)));
     }
 
 #ifdef HAVE_TINYXML

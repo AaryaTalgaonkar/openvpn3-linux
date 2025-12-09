@@ -106,12 +106,12 @@ class BackendClientObject : public DBus::Object::Base
                         LogWriter *logwr,
                         const bool socket_protect_disabl)
         : DBus::Object::Base(objpath, Constants::GenInterface("backends")),
-          dbusconn(conn),
-          dbus_creds(DBus::Credentials::Query::Create(conn)),
+          dbusconn(std::move(conn)),
           session_token(session_token_),
           disabled_socket_protect(socket_protect_disabl)
     {
-        signal = DBus::Signals::Group::Create<BackendSignals>(conn,
+        dbus_creds = DBus::Credentials::Query::Create(dbusconn);
+        signal = DBus::Signals::Group::Create<BackendSignals>(dbusconn,
                                                               LogGroup::CLIENT,
                                                               session_token,
                                                               logwr),
@@ -1467,22 +1467,21 @@ class ClientService : public DBus::Service
                   DBus::Connection::Ptr dbuscon_,
                   const std::string &sesstoken,
                   LogWriter *logwr_)
-        : DBus::Service(dbuscon_, Constants::GenServiceName("backends.be") + to_string(getpid())),
-          mainloop(mainloop_),
-          dbuscon(dbuscon_),
+        : DBus::Service(std::move(dbuscon_), Constants::GenServiceName("backends.be") + to_string(getpid())),
+          mainloop(std::move(mainloop_)),
           start_pid(start_pid_),
           session_token(sesstoken),
           logwr(logwr_)
     {
         try
         {
-            logservice = LogServiceProxy::Create(dbuscon);
+            logservice = LogServiceProxy::Create(GetConnection());
 
             logservice->Attach(Constants::GenInterface("backends"));
             logservice->Attach(Constants::GenInterface("sessions"));
 
             DBus::Object::Path object_path = Constants::GenPath("backends/session");
-            be_obj = CreateServiceHandler<BackendClientObject>(dbuscon,
+            be_obj = CreateServiceHandler<BackendClientObject>(GetConnection(),
                                                                std::move(object_path),
                                                                session_token,
                                                                default_log_level,
@@ -1570,7 +1569,6 @@ class ClientService : public DBus::Service
 
   private:
     DBus::MainLoop::Ptr mainloop = nullptr;
-    DBus::Connection::Ptr dbuscon = nullptr;
     uint32_t default_log_level = 3; // LogCategory::INFO messages
     const pid_t start_pid;
     const std::string session_token;

@@ -52,7 +52,7 @@ class NetCfgTunBuilder : public T
         : disabled_dns_config(false),
           netcfgmgr(NetCfgProxy::Manager::Create(dbuscon))
     {
-        signals = BackendSignals::Create(dbuscon,
+        signals = BackendSignals::Create(std::move(dbuscon),
                                          LogGroup::CLIENT,
                                          "(netcfg-cli-test)",
                                          nullptr);
