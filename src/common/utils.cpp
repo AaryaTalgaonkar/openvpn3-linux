@@ -184,7 +184,7 @@ void set_console_echo(bool echo)
 }
 
 
-std::string get_local_tstamp(const std::time_t epoch)
+std::string get_local_tstamp(std::time_t epoch)
 {
     if (epoch > 0)
     {

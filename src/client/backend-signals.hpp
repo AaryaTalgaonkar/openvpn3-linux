@@ -160,7 +160,7 @@ class BackendSignals : public LogSender
     }
 
 
-    void StatusChange(const StatusMajor maj, const StatusMinor min, const std::string &msg = "")
+    void StatusChange(StatusMajor maj, StatusMinor min, const std::string &msg = "")
     {
         sig_statuschg->Send(Events::Status(maj, min, msg));
     }
@@ -219,8 +219,8 @@ class BackendSignals : public LogSender
      * @param att_group  ClientAttentionGroup of the attention required
      * @param msg        Simple string message describing what is needed.
      */
-    void AttentionReq(const ClientAttentionType att_type,
-                      const ClientAttentionGroup att_group,
+    void AttentionReq(ClientAttentionType att_type,
+                      ClientAttentionGroup att_group,
                       std::string msg)
     {
         sig_attreq->Send(att_type, att_group, msg);

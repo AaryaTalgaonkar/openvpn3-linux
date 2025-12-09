@@ -29,7 +29,7 @@ struct ConnectionStatDetails
     {
     }
 
-    ConnectionStatDetails(const std::string &key, const long long value)
+    ConnectionStatDetails(const std::string &key, long long value)
         : key(key), value(value)
     {
     }

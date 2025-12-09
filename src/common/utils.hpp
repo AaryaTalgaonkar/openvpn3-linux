@@ -45,7 +45,7 @@ static inline std::string simple_basename(const std::string &filename)
  * @param epoch         time_t value to convert
  * @return std::string containing the human readable representation
  */
-std::string get_local_tstamp(const std::time_t epoch);
+std::string get_local_tstamp(std::time_t epoch);
 
 
 /**
