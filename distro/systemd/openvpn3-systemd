@@ -198,6 +198,19 @@ class OpenVPN3systemd(object):
         if self.__config is None:
             raise RuntimeError("No configuration profile has been retrieved")
 
+        # Check if a VPN session is already running with this configuration name
+        num_sessions = 0;
+        try:
+            chk = self.__smgr.LookupConfigName(self.__config.GetConfigName())
+            num_sessions = len(chk)
+        except:
+            # If the LookupConfigName call failed, presume everything is fine
+            pass
+        finally:
+            if num_sessions > 0:
+                raise RuntimeError("A VPN session with %s is already active" %  self.__config.GetConfigName())
+
+
         #  Create a new VPN Session
         self.__session = self.__smgr.NewTunnel(self.__config)
         time.sleep(2)
