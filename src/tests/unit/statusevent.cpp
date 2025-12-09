@@ -327,5 +327,52 @@ TEST(StatusEvent, stringstream)
     ASSERT_EQ(chk3.str(), expect3);
 }
 
+TEST(StatusEvent, SetPrintMode)
+{
+    std::string message{"Testing SetPrintMode"};
+    Events::Status status(StatusMajor::PROCESS, StatusMinor::PROC_STARTED, message);
+    status.show_numeric_status = false;
+
+    status.SetPrintMode(Events::Status::PrintMode::NONE);
+    std::stringstream chk1;
+    chk1 << status;
+    EXPECT_EQ(chk1.str(), message);
+
+    status.SetPrintMode(Events::Status::PrintMode::MAJOR);
+    std::stringstream chk2;
+    chk2 << status;
+    EXPECT_EQ(chk2.str(), std::string("Process: ") + message);
+
+    status.SetPrintMode(Events::Status::PrintMode::MINOR);
+    std::stringstream chk3;
+    chk3 << status;
+    EXPECT_EQ(chk3.str(), std::string("Process started: ") + message);
+
+    status.SetPrintMode(Events::Status::PrintMode::ALL);
+    std::stringstream chk4;
+    chk4 << status;
+    EXPECT_EQ(chk4.str(), std::string("Process, Process started: ") + message);
+
+    status.show_numeric_status = true;
+    status.SetPrintMode(Events::Status::PrintMode::NONE);
+    std::stringstream chk5;
+    chk5 << status;
+    EXPECT_EQ(chk5.str(), std::string("[] ") + message);
+
+    status.SetPrintMode(Events::Status::PrintMode::MAJOR);
+    std::stringstream chk6;
+    chk6 << status;
+    EXPECT_EQ(chk6.str(), std::string("[5] Process: ") + message);
+
+    status.SetPrintMode(Events::Status::PrintMode::MINOR);
+    std::stringstream chk7;
+    chk7 << status;
+    EXPECT_EQ(chk7.str(), std::string("[27] Process started: ") + message);
+
+    status.SetPrintMode(Events::Status::PrintMode::ALL);
+    std::stringstream chk8;
+    chk8 << status;
+    EXPECT_EQ(chk8.str(), std::string("[5,27] Process, Process started: ") + message);
+}
 
 } // namespace unittest

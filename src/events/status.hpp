@@ -26,7 +26,6 @@
 
 
 namespace Events {
-
 /**
  * Carries a status event record as reported by a VPN backend client
  */
@@ -43,7 +42,7 @@ struct Status
     StatusMajor major;
     StatusMinor minor;
     std::string message;
-    uint8_t print_mode;
+    PrintMode print_mode;
     bool show_numeric_status;
 
 
@@ -133,17 +132,17 @@ struct Status
             std::stringstream status_str;
 
             status_num << "[";
-            if (s.print_mode & static_cast<uint8_t>(Status::PrintMode::MAJOR))
+            if (s.check_print_mode(Status::PrintMode::MAJOR))
             {
                 status_num << std::to_string(static_cast<unsigned>(s.major));
                 status_str << StatusMajor_str[static_cast<unsigned>(s.major)];
             }
-            if (s.print_mode == static_cast<uint8_t>(Status::PrintMode::ALL))
+            if (s.print_mode == Status::PrintMode::ALL)
             {
                 status_num << ",";
                 status_str << ", ";
             }
-            if (s.print_mode & static_cast<uint8_t>(Status::PrintMode::MINOR))
+            if (s.check_print_mode(Status::PrintMode::MINOR))
             {
                 status_num << std::to_string(static_cast<unsigned>(s.minor));
                 status_str << StatusMinor_str[static_cast<unsigned>(s.minor)];
@@ -152,7 +151,7 @@ struct Status
 
             return os << (s.show_numeric_status ? status_num.str() : "")
                       << status_str.str()
-                      << (s.print_mode != static_cast<uint8_t>(Status::PrintMode::NONE)
+                      << (s.print_mode != Status::PrintMode::NONE
                                   && !s.message.empty()
                               ? ": "
                               : "")
@@ -175,6 +174,8 @@ struct Status
      *   Parses a GVvariant (uus) tupple containing the status object
      */
     void parse_tuple(GVariant *status);
+
+    bool check_print_mode(PrintMode mode) const;
 };
 
 } // namespace Events

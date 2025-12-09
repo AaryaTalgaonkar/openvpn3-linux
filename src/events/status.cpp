@@ -75,7 +75,7 @@ void Status::reset()
     major = StatusMajor::UNSET;
     minor = StatusMinor::UNSET;
     message.clear();
-    print_mode = static_cast<uint8_t>(PrintMode::ALL);
+    print_mode = PrintMode::ALL;
 #ifdef DEBUG_CORE_EVENTS
     show_numeric_status = true;
 #else
@@ -94,7 +94,7 @@ bool Status::empty() const
 
 void Status::SetPrintMode(Status::PrintMode m)
 {
-    print_mode = static_cast<unsigned short>(m);
+    print_mode = m;
 }
 
 
@@ -153,5 +153,12 @@ void Status::parse_tuple(GVariant *status)
     minor = glib2::Value::Extract<StatusMinor>(status, 1);
     message = glib2::Value::Extract<std::string>(status, 2);
 }
+
+
+bool Status::check_print_mode(Status::PrintMode mode) const
+{
+    return (static_cast<uint8_t>(print_mode) & static_cast<uint8_t>(mode)) > 0;
+}
+
 
 } // namespace Events
