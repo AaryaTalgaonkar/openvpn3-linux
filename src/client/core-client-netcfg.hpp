@@ -380,7 +380,7 @@ class NetCfgTunBuilder : public T
         }
         try
         {
-            return netcfgmgr->ProtectSocket(socket, remote, ipv6, devpath);
+            return netcfgmgr->ProtectSocket(socket, std::move(remote), ipv6, devpath);
         }
         catch (const DBus::Exception &excp)
         {

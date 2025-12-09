@@ -83,7 +83,7 @@ class BackendSignals : public LogSender
 
     BackendSignals(DBus::Connection::Ptr conn,
                    LogGroup lgroup,
-                   std::string session_token,
+                   const std::string &session_token,
                    LogWriter *logwr)
         : LogSender(conn,
                     lgroup,
@@ -128,7 +128,7 @@ class BackendSignals : public LogSender
 
     [[nodiscard]] static BackendSignals::Ptr Create(DBus::Connection::Ptr conn,
                                                     LogGroup lgroup,
-                                                    std::string session_token,
+                                                    const std::string &session_token,
                                                     LogWriter *logwr)
     {
         return BackendSignals::Ptr(new BackendSignals(std::move(conn),

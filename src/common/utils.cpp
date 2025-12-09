@@ -100,7 +100,7 @@ void drop_root()
  *
  * @return A pre-formatted std::string containing the version references
  */
-std::string get_version(std::string component)
+std::string get_version(const std::string &component)
 {
     std::stringstream ver;
 

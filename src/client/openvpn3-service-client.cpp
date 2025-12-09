@@ -100,8 +100,8 @@ class BackendClientObject : public DBus::Object::Base
      *                       this openvpn3-service-client process.
      */
     BackendClientObject(DBus::Connection::Ptr conn,
-                        DBus::Object::Path objpath,
-                        std::string session_token_,
+                        const DBus::Object::Path &objpath,
+                        const std::string &session_token_,
                         uint32_t default_log_level,
                         LogWriter *logwr,
                         const bool socket_protect_disabl)
@@ -574,7 +574,7 @@ class BackendClientObject : public DBus::Object::Base
      * @return true if the caller is the session manager, otherwise false.
      *
      */
-    bool validate_sender(std::string sender)
+    bool validate_sender(const std::string &sender)
     {
 #ifdef DEBUG_DISABLE_SECURITY_CHECKS
         return true;
@@ -1465,7 +1465,7 @@ class ClientService : public DBus::Service
     ClientService(pid_t start_pid_,
                   DBus::MainLoop::Ptr mainloop_,
                   DBus::Connection::Ptr dbuscon_,
-                  std::string sesstoken,
+                  const std::string &sesstoken,
                   LogWriter *logwr_)
         : DBus::Service(dbuscon_, Constants::GenServiceName("backends.be") + to_string(getpid())),
           mainloop(mainloop_),

@@ -327,7 +327,7 @@ void ConfigHandler::method_lookup_config_name(DBus::Object::Method::Arguments::P
     auto config_name = glib2::Value::Extract<std::string>(params, 0);
 
     auto configs = helper_retrieve_configs(args->GetCallerBusName(),
-                                           [config_name](Configuration::Ptr obj)
+                                           [&config_name](Configuration::Ptr obj)
                                            {
                                                return obj->GetName() == config_name;
                                            });
@@ -350,7 +350,7 @@ void ConfigHandler::method_search_by_tag(DBus::Object::Method::Arguments::Ptr ar
     auto tag = glib2::Value::Extract<std::string>(params, 0);
 
     auto configs = helper_retrieve_configs(args->GetCallerBusName(),
-                                           [tag](Configuration::Ptr obj)
+                                           [&tag](Configuration::Ptr obj)
                                            {
                                                return obj->CheckForTag(tag);
                                            });
@@ -374,7 +374,7 @@ void ConfigHandler::method_search_by_owner(DBus::Object::Method::Arguments::Ptr 
     uid_t owner = get_userid(std::move(str_owner));
 
     auto configs = helper_retrieve_configs(args->GetCallerBusName(),
-                                           [owner](Configuration::Ptr obj)
+                                           [&owner](Configuration::Ptr obj)
                                            {
                                                return obj->GetOwnerUID() == owner;
                                            });
@@ -398,7 +398,7 @@ void ConfigHandler::method_transfer_ownership(DBus::Object::Method::Arguments::P
     uid_t new_owner_uid = glib2::Value::Extract<uid_t>(params, 1);
 
     auto configs = helper_retrieve_configs(args->GetCallerBusName(),
-                                           [path](Configuration::Ptr obj)
+                                           [&path](Configuration::Ptr obj)
                                            {
                                                return obj->GetPath() == path;
                                            });

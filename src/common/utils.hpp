@@ -27,12 +27,12 @@ constexpr char package_version[] = "git:" CONFIGURE_GIT_REVISION CONFIGURE_GIT_F
 
 
 void drop_root();
-std::string get_version(std::string component);
+std::string get_version(const std::string &component);
 const std::string get_guiversion();
 int stop_handler(void *loop);
 void set_console_echo(bool echo);
 
-static inline std::string simple_basename(const std::string filename)
+static inline std::string simple_basename(const std::string &filename)
 {
     return filename.substr(filename.rfind('/') + 1);
 }

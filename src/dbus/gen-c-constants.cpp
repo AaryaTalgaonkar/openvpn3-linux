@@ -30,7 +30,7 @@
 template <class T>
 struct ConstantMapping
 {
-    ConstantMapping(const std::string name, T value)
+    ConstantMapping(const std::string &name, const T &value)
         : name(name), value(value)
     {
     }
@@ -44,7 +44,7 @@ struct ConstantMapping
 
 
 template <class T>
-void Generator(std::string name, std::string prefix, std::vector<ConstantMapping<T>> mapping)
+void Generator(const std::string &name, const std::string &prefix, const std::vector<ConstantMapping<T>> &mapping)
 {
     std::stringstream c;
 

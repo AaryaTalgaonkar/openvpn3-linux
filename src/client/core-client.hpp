@@ -65,7 +65,7 @@ using namespace openvpn;
 class ParseCR_TEXT
 {
   public:
-    ParseCR_TEXT(const std::string req)
+    ParseCR_TEXT(const std::string &req)
     {
         std::stringstream r(req);
         std::string tok = {};
@@ -316,7 +316,7 @@ class CoreVPNClient : public CLIENTBASECLASS
             socket = -1;
             signals->LogVerb2("Socket Protect with FD has been disabled");
         }
-        return CLIENTBASECLASS::socket_protect(socket, remote, ipv6);
+        return CLIENTBASECLASS::socket_protect(socket, std::move(remote), ipv6);
     }
 
 
@@ -648,7 +648,7 @@ class CoreVPNClient : public CLIENTBASECLASS
     }
 
 
-    void open_url(std::string &url, const std::string &flags)
+    void open_url(const std::string &url, const std::string &flags)
     {
         // We currently ignore the flags since we do not have an
         // internal webview or proxy implementation

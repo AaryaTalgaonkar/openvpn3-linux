@@ -331,7 +331,7 @@ class BackendStarterSrv : public DBus::Service
      */
 
     BackendStarterSrv(DBus::Connection::Ptr conn,
-                      const std::vector<std::string> cliargs,
+                      const std::vector<std::string> &cliargs,
                       unsigned int log_level)
         : DBus::Service(conn, Constants::GenServiceName("backends")),
           client_args(cliargs),
