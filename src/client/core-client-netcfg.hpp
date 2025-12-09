@@ -549,8 +549,8 @@ class NetCfgTunBuilder : public T
 
         try
         {
-            std::string devpath = netcfgmgr->CreateVirtualInterface(session_token);
-            device.reset(netcfgmgr->getVirtualInterface(devpath));
+            DBus::Object::Path devpath = netcfgmgr->CreateVirtualInterface(session_token);
+            device.reset(netcfgmgr->getVirtualInterface(std::move(devpath)));
             try
             {
                 device->SetDNSscope(dns_scope);
