@@ -7,10 +7,11 @@
 //
 
 #include <algorithm>
+#include <fmt/compile.h>
 #include <string>
 #include <uuid/uuid.h>
 
-std::string generate_path_uuid(std::string prefix, char delim)
+std::string generate_path_uuid(const std::string &prefix, char delim)
 {
     uuid_t uuid;
     char uuid_str[38];
@@ -19,5 +20,9 @@ std::string generate_path_uuid(std::string prefix, char delim)
     std::string ret(uuid_str);
     std::replace(ret.begin(), ret.end(), '-', delim);
 
-    return (prefix == "" ? ret : prefix + "/" + ret);
+    if (prefix.empty())
+    {
+        return ret;
+    }
+    return fmt::format(FMT_COMPILE("{}/{}"), prefix, std::move(ret));
 }

@@ -10,4 +10,4 @@
 
 #include <string>
 
-std::string generate_path_uuid(std::string prefix, char delim);
+std::string generate_path_uuid(const std::string &prefix, char delim);
