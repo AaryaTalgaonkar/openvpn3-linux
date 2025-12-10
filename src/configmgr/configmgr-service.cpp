@@ -17,6 +17,7 @@
 
 #include "build-config.h"
 
+#include <fmt/format-inl.h>
 #include "common/lookup.hpp"
 #include "dbus/path.hpp"
 #include "configmgr-service.hpp"
@@ -228,21 +229,26 @@ std::vector<std::string> ConfigHandler::get_persistent_config_file_list(const st
 
 void ConfigHandler::import_persistent_configuration(const std::string &fname)
 {
-    signals_->LogVerb1("Loading persistent configuration: " + fname);
-
     // Load the JSON file and parse it
+    signals_->Debug("Parsing persistent configuration: " + fname);
     std::ifstream statefile(fname, std::ifstream::binary);
     Json::Value data;
     statefile >> data;
 
-    object_manager_->CreateObject<Configuration>(dbuscon_,
-                                                 object_manager_,
-                                                 creds_qry_,
-                                                 sig_configmgr_event_,
-                                                 fname,
-                                                 data,
-                                                 signals_->GetLogLevel(),
-                                                 logwr_);
+    auto cfgobj = object_manager_->CreateObject<Configuration>(dbuscon_,
+                                                               object_manager_,
+                                                               creds_qry_,
+                                                               sig_configmgr_event_,
+                                                               fname,
+                                                               data,
+                                                               signals_->GetLogLevel(),
+                                                               logwr_);
+    signals_->LogVerb1(fmt::format(
+        "Loaded persistent configuration '{}', profile name: '{}', owner: {}",
+        fname,
+        cfgobj->GetName(),
+        lookup_username(cfgobj->GetOwnerUID())
+    ));
 }
 
 
