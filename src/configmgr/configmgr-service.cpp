@@ -389,7 +389,7 @@ void ConfigHandler::method_transfer_ownership(DBus::Object::Method::Arguments::P
     GVariant *params = args->GetMethodParameters();
 
     auto path = glib2::Value::Extract<DBus::Object::Path>(params, 0);
-    uid_t new_owner_uid = glib2::Value::Extract<uid_t>(params, 0);
+    uid_t new_owner_uid = glib2::Value::Extract<uid_t>(params, 1);
 
     auto configs = helper_retrieve_configs(args->GetCallerBusName(),
                                            [path](Configuration::Ptr obj)
