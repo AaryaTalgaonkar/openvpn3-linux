@@ -71,19 +71,19 @@ static int config_manager(ParsedArgs::Ptr args)
         }
     }
 
-    DBus::BusType bus = (args->Present("use-session-bus")
-                             ? DBus::BusType::SESSION
-                             : DBus::BusType::SYSTEM);
-    auto dbuscon = DBus::Connection::Create(bus);
-    auto configmgr_srv = DBus::Service::Create<ConfigManager::Service>(dbuscon, logwr);
-    configmgr_srv->PrepareIdleDetector(std::chrono::minutes(idle_wait_min));
-
     unsigned int log_level = 3;
     if (args->Present("log-level"))
     {
         log_level = std::atoi(args->GetValue("log-level", 0).c_str());
     }
-    configmgr_srv->SetLogLevel(log_level);
+
+    DBus::BusType bus = (args->Present("use-session-bus")
+                             ? DBus::BusType::SESSION
+                             : DBus::BusType::SYSTEM);
+    auto dbuscon = DBus::Connection::Create(bus);
+    auto configmgr_srv = DBus::Service::Create<ConfigManager::Service>(dbuscon, logwr, log_level);
+    configmgr_srv->PrepareIdleDetector(std::chrono::minutes(idle_wait_min));
+
 
     if (args->Present("state-dir"))
     {

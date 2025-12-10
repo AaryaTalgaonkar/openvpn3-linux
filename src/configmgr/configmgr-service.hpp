@@ -155,21 +155,12 @@ class ConfigHandler : public DBus::Object::Base
 class Service : public DBus::Service
 {
   public:
-    Service(DBus::Connection::Ptr con, LogWriter::Ptr logwr);
+    Service(DBus::Connection::Ptr con, LogWriter::Ptr logwr, uint8_t loglevel);
     ~Service() noexcept;
 
     void BusNameAcquired(const std::string &busname) override;
     void BusNameLost(const std::string &busname) override;
 
-    /**
-     *  Sets the log level to use for the configuration manager main object
-     *  and individual configuration objects.  This is essentially just an
-     *  inherited value from the main program but is not something which
-     *  should be changed on a per-object instance.
-     *
-     * @param loglvl  Log level to use
-     */
-    void SetLogLevel(uint8_t loglvl);
 
     /**
      *  Enables the persistent storage feature.  This defines where

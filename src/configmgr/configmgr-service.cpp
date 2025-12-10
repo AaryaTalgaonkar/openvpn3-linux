@@ -434,10 +434,11 @@ ConfigHandler::helper_retrieve_configs(const std::string &caller,
 
 // Service
 
-Service::Service(DBus::Connection::Ptr con, LogWriter::Ptr lwr)
+Service::Service(DBus::Connection::Ptr con, LogWriter::Ptr lwr, uint8_t loglevel)
     : DBus::Service(con, SERVICE_CONFIGMGR),
       con_(con),
-      logwr_(std::move(lwr))
+      logwr_(std::move(lwr)),
+      loglevel_(loglevel)
 {
     try
     {
@@ -478,11 +479,6 @@ void Service::BusNameLost(const std::string &busname)
                                    + busname + "' registration on the D-Bus");
 }
 
-
-void Service::SetLogLevel(uint8_t loglvl)
-{
-    loglevel_ = loglvl;
-}
 
 void Service::SetStateDirectory(const std::string &stdir)
 {
