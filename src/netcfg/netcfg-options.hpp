@@ -132,7 +132,7 @@ struct NetCfgOptions
      *
      * @return  Returns a const std::string of the decoded options
      */
-    const std::string str()
+    std::string str() const
     {
         return decode_options(*this);
     }
