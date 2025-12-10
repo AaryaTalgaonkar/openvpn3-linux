@@ -634,7 +634,15 @@ Json::Value Configuration::Export() const
 
 void Configuration::TransferOwnership(uid_t new_owner_uid)
 {
+    uid_t old_owner_uid = object_acl_->GetOwner();
     object_acl_->TransferOwnership(new_owner_uid);
+    signals_->LogInfo(fmt::format(
+        "Configuration profile '{}' transfered owner from {} to {}",
+        prop_name_,
+        lookup_username(old_owner_uid),
+        lookup_username(new_owner_uid)
+    ));
+    update_persistent_file();
 }
 
 
