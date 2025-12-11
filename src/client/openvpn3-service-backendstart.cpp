@@ -235,8 +235,12 @@ class BackendStarterHandler : public DBus::Object::Base
             //  to stdout, which will be picked up by other logs on the
             //  system
             //
-            const char **args = (const char **)std::calloc(client_args.size() + 2, sizeof(char *));
             char **env = {0};
+            auto args = static_cast<const char **>(std::calloc(client_args.size() + 2, sizeof(char *)));
+            if (!args)
+            {
+                throw std::runtime_error("Failed to allocate memory to arguments");
+            }
             unsigned int i = 0;
 
             for (const auto &arg : client_args)
@@ -259,7 +263,11 @@ class BackendStarterHandler : public DBus::Object::Base
 
             if (client_envvars.size() > 0)
             {
-                env = (char **)std::calloc(client_envvars.size(), sizeof(char *));
+                env = static_cast<char **>(std::calloc(client_envvars.size() + 2, sizeof(char *)));
+                if (!env)
+                {
+                    throw std::runtime_error("Failed to allocate memory to environment variables");
+                }
                 unsigned int idx = 0;
                 for (const auto &ev : client_envvars)
                 {
