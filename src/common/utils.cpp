@@ -211,7 +211,7 @@ bool is_colour_terminal()
 
     const char *term_env = getenv("TERM");
     std::string term(term_env ? term_env : "");
-    if (term.empty() || term == "dump")
+    if (term.empty() || term == "dumb")
     {
         return false;
     }
