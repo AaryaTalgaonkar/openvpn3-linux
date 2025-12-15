@@ -101,21 +101,23 @@ class OpenVPN3systemd(object):
     def _StatusHandler(self, major, minor, msg):
         maj = StatusMajor(major)
         min = StatusMinor(minor)
+        status_str = "%s: %s" % (maj.name.capitalize(), self._status_minor_describe(min))
+        if len(msg) > 0:
+            status_str += " - %s" % msg
 
-        print('%s [STATUS] (%s, %s) %s' % (datetime.datetime.now(),
-                                           maj, min, msg))
-        self.sd_notify(1, "STATUS=%s:%s, %s" % (maj, min, msg))
+        print('%s [STATUS] %s' % (datetime.datetime.now(), status_str))
+        self.sd_notify(1, "STATUS=%s" % status_str)
 
         # Session got most likely disconnected outside of this program
         if StatusMajor.SESSION == maj and StatusMinor.PROC_STOPPED == min:
-            self.sd_notify(1, "STATUS=%s:%s, %s\nSTOPPING=1" % (maj, min, msg))
+            self.sd_notify(0, "STATUS=%s\nSTOPPING=1" % status_str)
             self.__mainloop.quit()
         if StatusMajor.CONNECTION == maj and StatusMinor.CONN_AUTH_FAILED == min:
-            self.sd_notify(0, "STATUS=%s:%s, %s\nERRRNO=%i" % (maj, min, msg, errno.EACCES))
+            self.sd_notify(0, "STATUS=%s\nERRRNO=%i\nSTOPPING=1" % (status_str, errno.EACCES))
             self.__error_set = True
             self.__mainloop.quit()
         if StatusMajor.CONNECTION == maj and StatusMinor.CONN_DISCONNECTED == min:
-            self.sd_notify(1, "STATUS=%s:%s, %s\nSTOPPING=1" % (maj, min, msg))
+            self.sd_notify(0, "STATUS=%s\nSTOPPING=1" % status_str)
             self.__mainloop.quit()
         if StatusMajor.CONNECTION == maj and StatusMinor.CFG_REQUIRE_USER == min:
             error = self.__request_credentials()
@@ -126,9 +128,58 @@ class OpenVPN3systemd(object):
                     self.__session.Disconnect()
                 except:
                     pass
-                self.sd_notify(0, "STATUS=%s\nSTOPPING=1" % error)
+                self.sd_notify(0, "STATUS=Error: %s\nSTOPPING=1" % error)
                 print("** ERROR ** %s" % error)
                 self.__mainloop.quit()
+
+
+    def _status_minor_describe(self, minor):
+        if StatusMinor.UNSET == minor:
+            return "(Unknown status)"
+        elif StatusMinor.CFG_ERROR == minor:
+            return "Configuration error"
+        elif StatusMinor.CFG_OK == minor:
+            return "Configuration OK"
+        elif StatusMinor.CFG_INLINE_MISSING == minor:
+            return "Inline configuration data is missing"
+        elif StatusMinor.CFG_REQUIRE_USER == minor:
+            return "User need to provide more information"
+        elif StatusMinor.CONN_INIT == minor:
+            return "VPN connection is initializing"
+        elif StatusMinor.CONN_CONNECTING == minor:
+            return "VPN connection is starting"
+        elif StatusMinor.CONN_CONNECTED == minor:
+            return "VPN client is connected"
+        elif StatusMinor.CONN_DISCONNECTING == minor:
+            return "VPN client is disconnecting"
+        elif StatusMinor.CONN_DISCONNECTED == minor:
+            return "VPN client has disconnected"
+        elif StatusMinor.CONN_FAILED == minor:
+            return "VPN connection failed"
+        elif StatusMinor.CONN_AUTH_FAILED == minor:
+            return "User authentication for VPN session failed"
+        elif StatusMinor.CONN_RECONNECTING == minor:
+            return "VPN connection is reconnecting"
+        elif StatusMinor.CONN_PAUSING == minor:
+            return "VPN client is pausing the session"
+        elif StatusMinor.CONN_PAUSED == minor:
+            return "VPN client has paused the session"
+        elif StatusMinor.CONN_RESUMING == minor:
+            return "VPN client is resuming the paused session"
+        elif StatusMinor.CONN_DONE == minor:
+            return "VPN client session has completed"
+        elif StatusMinor.SESS_AUTH_USERPASS == minor:
+            return "VPN session need account credentials from user"
+        elif StatusMinor.SESS_AUTH_URL == minor:
+            return "VPN session need web based user authentication to complete"
+        elif StatusMinor.SESS_AUTH_CHALLENGE == minor:
+            return "VPN session need a challenge response from the user for authentication"
+        elif StatusMinor.PROC_STARTED == minor:
+            return "VPN client process has started"
+        elif StatusMinor.PROC_STOPPED == minor:
+            return "VPN client process has stopped"
+        elif StatusMinor.PROC_KILLED == minor:
+            return "VPN client process has been killed"
 
 
     ##
@@ -293,6 +344,7 @@ class OpenVPN3systemd(object):
         if self.__session is None:
             raise RuntimeError("Session not started")
 
+        self.sd_notify(1, "STATUS=Restarting session")
         self.__session.Restart()
 
 
@@ -305,7 +357,9 @@ class OpenVPN3systemd(object):
         if self.__session is None:
             raise RuntimeError("Session not started")
 
+        self.sd_notify(0, "STOPPING=1\nSTATUS=Disconnecting VPN session\n")
         self.__session.Disconnect()
+        self.sd_notify(0, "STOPPING=1\nSTATUS=VPN session stopped\n")
 
 
     def __request_credentials(self):
