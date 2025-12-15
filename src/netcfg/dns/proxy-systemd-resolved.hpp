@@ -192,6 +192,7 @@ class Link
     [[nodiscard]] static Link::Ptr Create(asio::io_context &asio_ctx,
                                           Error::Storage::Ptr errors,
                                           DBus::Proxy::Client::Ptr prx,
+                                          int32_t if_index,
                                           const DBus::Object::Path &path,
                                           const std::string &devname);
     ~Link() noexcept = default;
@@ -356,6 +357,7 @@ class Link
     asio::io_context &asio_proxy;
     Error::Storage::Ptr errors;
     DBus::Proxy::Client::Ptr proxy = nullptr;
+    unsigned int if_index = 0;
     DBus::Proxy::TargetPreset::Ptr tgt_link = nullptr;
     const std::string device_name;
     bool feature_set_default_route = true;
@@ -363,6 +365,7 @@ class Link
     Link(asio::io_context &asio_ctx,
          Error::Storage::Ptr errors,
          DBus::Proxy::Client::Ptr dbuscon,
+         int32_t if_idx,
          const DBus::Object::Path &path,
          const std::string &devname);
 
@@ -423,12 +426,12 @@ class Manager
      *  Retrieve the D-Bus path to a link object used by the systemd-resolved
      *  service
      *
-     * @param if_idx  unsigned int of the interface index ("if index") to lookup
+     * @param if_idx  int32_t of the interface index ("if index") to lookup
      *
      * @return DBus::Object::Path used by the systemd-resolved to the network
      *         interface
      */
-    DBus::Object::Path GetLink(unsigned int if_idx) const;
+    DBus::Object::Path GetLink(int32_t if_idx) const;
 
 
   private:

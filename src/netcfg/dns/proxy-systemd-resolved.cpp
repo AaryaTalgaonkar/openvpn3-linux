@@ -16,6 +16,8 @@
 #include <net/if.h>
 #include <sys/socket.h>
 #include <asio.hpp>
+#include <fmt/format.h>
+
 #include <gdbuspp/connection.hpp>
 #include <gdbuspp/glib2/utils.hpp>
 #include <gdbuspp/object/path.hpp>
@@ -168,19 +170,22 @@ GVariant *SearchDomain::GetGVariant() const
 Link::Ptr Link::Create(asio::io_context &asio_ctx,
                        Error::Storage::Ptr errors,
                        DBus::Proxy::Client::Ptr prx,
+                       int32_t if_index,
                        const DBus::Object::Path &path,
                        const std::string &devname)
 {
-    return Link::Ptr(new Link(asio_ctx, errors, prx, path, devname));
+    return Link::Ptr(new Link(asio_ctx, errors, prx, if_index, path, devname));
 }
 
 
 Link::Link(asio::io_context &asio_ctx,
            Error::Storage::Ptr errors_,
            DBus::Proxy::Client::Ptr prx,
+           int32_t if_idx,
            const DBus::Object::Path &path,
            const std::string &devname)
-    : asio_proxy(asio_ctx), errors(errors_), proxy(prx), device_name(devname)
+    : asio_proxy(asio_ctx), errors(errors_), proxy(prx),
+      if_index(if_idx), device_name(devname)
 {
     tgt_link = DBus::Proxy::TargetPreset::Create(path,
                                                  "org.freedesktop.resolve1.Link");
@@ -665,11 +670,11 @@ Link::Ptr Manager::RetrieveLink(const std::string &dev_name)
     {
         return nullptr;
     }
-    return Link::Create(asio_proxy, asio_errors, proxy, link_path, dev_name);
+    return Link::Create(asio_proxy, asio_errors, proxy, if_idx, link_path, dev_name);
 }
 
 
-DBus::Object::Path Manager::GetLink(unsigned int if_idx) const
+DBus::Object::Path Manager::GetLink(int32_t if_idx) const
 {
     GVariant *res = proxy->Call(tgt_resolved,
                                 "GetLink",
