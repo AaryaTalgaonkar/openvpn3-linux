@@ -165,7 +165,7 @@ void Manager::Cleanup()
     }
     try
     {
-        GVariant *res = proxy->Call(tgt_mgr, "Cleanup");
+        GVariant *res = proxy->Call(tgt_mgr, "Cleanup", nullptr, true);
         if (res)
         {
             g_variant_unref(res);
