@@ -131,6 +131,7 @@ std::vector<std::string> Storage::GetLinks() const
 
 size_t Storage::NumErrors(const std::string &link) const
 {
+    std::lock_guard<std::mutex> lock_guard(Error::access_mtx);
     auto f = errors_.find(link);
     return (f != errors_.end() ? f->second.size() : 0);
 }
