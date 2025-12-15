@@ -17,6 +17,7 @@
 
 #include "build-config.h"
 
+#include <fmt/compile.h>
 #include <gdbuspp/object/base.hpp>
 
 #include "common/string-utils.hpp"
@@ -177,29 +178,65 @@ const bool NetCfgServiceHandler::Authorize(const DBus::Authz::Request::Ptr authz
 
     if (DBus::Object::Operation::METHOD_CALL == authzreq->operation)
     {
-        const uid_t caller_uid = creds_query->GetUID(authzreq->caller);
+        bool uid_valid = false;
+        bool sub_owner_valid = false;
+        try
+        {
+            const uid_t caller_uid = creds_query->GetUID(authzreq->caller);
+            uid_valid = true;
 
-        // - NetCfgSubscriptions related:
-        //    By default, the subscribe method access is managed by
-        //    the D-Bus policy.  The default policy will only allow
-        //    this by the openvpn user account.
-        if ("net.openvpn.v3.netcfg.NotificationSubscriberList" == authzreq->target)
-        {
-            // Only allow root to access the subscriber list
-            return caller_uid == 0;
-        }
-        else if ("net.openvpn.v3.netcfg.NotificationUnsubscribe" == authzreq->target)
-        {
-            if (!subscriptions)
+            // - NetCfgSubscriptions related:
+            //    By default, the subscribe method access is managed by
+            //    the D-Bus policy.  The default policy will only allow
+            //    this by the openvpn user account.
+            if ("net.openvpn.v3.netcfg.NotificationSubscriberList" == authzreq->target)
             {
+                // Only allow root to access the subscriber list
+                return caller_uid == 0;
+            }
+            else if ("net.openvpn.v3.netcfg.NotificationUnsubscribe" == authzreq->target)
+            {
+                if (!subscriptions)
+                {
+                    return false;
+                }
+                uid_t sub_owner = subscriptions->GetSubscriptionOwner(authzreq->caller);
+                sub_owner_valid = true;
+                signals->Debug("net.openvpn.v3.netcfg.NotificationUnsubscribe: "
+                               "owner_uid="
+                               + std::to_string(sub_owner)
+                               + ", caller_uid=" + std::to_string(caller_uid));
+                return (caller_uid == 0) || (caller_uid == sub_owner);
+            }
+        }
+        catch (const DBus::Exception &excp)
+        {
+            std::string failing_method;
+            if (!uid_valid)
+            {
+                failing_method = "GetUID";
+            }
+            else if (!sub_owner_valid)
+            {
+                failing_method = "GetSubscriotionOwner";
+            }
+            else
+            {
+                signals->LogError(
+                    fmt::format(FMT_COMPILE("Unexpected error authorizing {}: {}"),
+                                authzreq->caller,
+                                excp.GetRawError()));
                 return false;
             }
-            uid_t sub_owner = subscriptions->GetSubscriptionOwner(authzreq->caller);
-            signals->Debug("net.openvpn.v3.netcfg.NotificationUnsubscribe: "
-                           "owner_uid="
-                           + std::to_string(sub_owner)
-                           + ", caller_uid=" + std::to_string(caller_uid));
-            return (caller_uid == 0) || (caller_uid == sub_owner);
+
+            signals->LogError(fmt::format(
+                FMT_COMPILE("Failed to retrieve caller information, access rejected ({})"),
+                failing_method));
+            signals->Debug(fmt::format("{}('{}') call failed: {}",
+                                       failing_method,
+                                       authzreq->caller,
+                                       excp.GetRawError()));
+            return false;
         }
     }
 
@@ -221,30 +258,48 @@ void NetCfgServiceHandler::method_create_virtual_interface(DBus::Object::Method:
     signals->Debug(std::string("CreateVirtualInterface(")
                    + "'" + device_name + "')");
 
-    std::string sender = args->GetCallerBusName();
-    std::string dev_path = Constants::GenPath("netcfg") + "/"
-                           + std::to_string(creds_query->GetPID(sender))
-                           + "_" + device_name;
+    try
+    {
+        std::string sender = args->GetCallerBusName();
+        uid_t sender_uid = creds_query->GetUID(sender);
+        pid_t sender_pid = creds_query->GetPID(sender);
 
-    NetCfgDevice::Ptr device = object_manager->CreateObject<NetCfgDevice>(
-        conn,
-        object_manager,
-        creds_query->GetUID(sender),
-        creds_query->GetPID(sender),
-        dev_path,
-        device_name,
-        resolver,
-        subscriptions,
-        signals->GetLogLevel(),
-        signals->GetLogWriter(),
-        options);
+        DBus::Object::Path dev_path = fmt::format(FMT_COMPILE("{}/{}_{}"),
+                                           Constants::GenPath("netcfg"),
+                                           sender_pid,
+                                           device_name);
 
-    signals->LogInfo(std::string("Virtual device '") + device_name + "'"
-                     + " registered on " + dev_path
-                     + " (owner uid " + std::to_string(creds_query->GetUID(sender))
-                     + ", owner pid " + std::to_string(creds_query->GetPID(sender)) + ")");
+        NetCfgDevice::Ptr device = object_manager->CreateObject<NetCfgDevice>(
+            conn,
+            object_manager,
+            sender_uid,
+            sender_pid,
+            dev_path,
+            device_name,
+            resolver,
+            subscriptions,
+            signals->GetLogLevel(),
+            signals->GetLogWriter(),
+            options);
 
-    args->SetMethodReturn(glib2::Value::CreateTupleWrapped(dev_path, "o"));
+        signals->LogInfo(fmt::format(
+            FMT_COMPILE("Virtual device '{}' registered on {} (owner uid {}, owner pid {})"),
+            device_name,
+            dev_path,
+            sender_uid,
+            sender_pid));
+        args->SetMethodReturn(glib2::Value::CreateTupleWrapped(dev_path, "o"));
+    }
+    catch (const DBus::Exception &excp)
+    {
+        std::string user_error = fmt::format("Error creating virtual interface '{}'",
+                                             device_name);
+        signals->LogCritical(user_error);
+        signals->DebugDevice(device_name,
+                             fmt::format("CreateVirtualInterface exception: {}",
+                                         excp.GetRawError()));
+        throw NetCfgException(user_error);
+    }
 }
 
 
