@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <sys/socket.h>
+#include <fmt/printf.h>
 #include <gdbuspp/connection.hpp>
 
 #include "build-config.h"
@@ -201,6 +202,18 @@ int program(ParsedArgs::Ptr args)
         link->Revert();
     }
 
+    if (!args->Present("no-wait"))
+    {
+        std::cout << "\nWaiting for background tasks to complete ... \n";
+        link->WaitForBackgroundTasks();
+        std::cout << "Background tasks complete\n";
+    }
+    else
+    {
+        std::cout << "\nContinues without waiting for background calls to complete\n";
+    }
+
+
     if (mods)
     {
         std::cout << std::endl
@@ -211,7 +224,7 @@ int program(ParsedArgs::Ptr args)
     auto errors = link->GetErrors();
     if (errors.size() > 0)
     {
-        std::cout << "** Captured Errors:\n";
+        std::cout << "\n*** Captured Errors:\n";
         uint32_t idx = 0;
         for (const auto &errmsg : errors)
         {
@@ -241,6 +254,7 @@ int main(int argc, char **argv)
     cmd.AddOption("set-dnssec", "MODE", true, "Set DNSSEC mode for the device");
     cmd.AddOption("set-dnsovertls", "MODE", true, "Set the DNSOverTLS mode for the device");
     cmd.AddOption("revert", 0, "Revert all DNS settings on the interface to systemd-resolved defaults");
+    cmd.AddOption("no-wait", 0, "Don't wait for background D-Bus calls to complete before inspecting changes/errors");
 
     try
     {

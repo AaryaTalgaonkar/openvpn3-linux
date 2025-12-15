@@ -445,6 +445,20 @@ Error::Message::List Link::GetErrors() const
     return errors->GetErrors(tgt_link->object_path);
 }
 
+
+
+void Link::WaitForBackgroundTasks() const
+{
+    // TODO: This is very primitive.  But good enough for now.
+    //       This method is primarily used by the test programs currently
+    //       In the future, std::atomic::wait() in C++20
+    //       https://en.cppreference.com/w/cpp/atomic/atomic/wait.html
+    while (asio_running_tasks > 0)
+    {
+        sleep(1);
+    }
+}
+
 namespace {
 /**
  *  Simple hack to simplify passing data from BackgroundCall()
@@ -513,9 +527,15 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
          .params = (params ? g_variant_ref(params) : nullptr),
          .error_callback = std::move(error_callback)});
 
+    if (asio_running_tasks + 1 >= UINT16_MAX)
+    {
+        throw Exception("Too many bacground ASIO tasks running");
+    }
+    asio_running_tasks++;
+
     asio::post(
         asio_proxy,
-        [bgdata]()
+        [bgdata, running_tasks_count = &asio_running_tasks]()
         {
             std::vector<std::string> error_messages;
             try
@@ -604,6 +624,7 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
                     g_variant_unref(bgdata->params);
                 }
                 delete bgdata;
+                (*running_tasks_count)--;
             }
             catch (const std::exception &excp)
             {

@@ -364,8 +364,16 @@ class Link : public std::enable_shared_from_this<Link>
     Error::Message::List GetErrors() const;
 
 
+    /**
+     *  Blocks until all running background tasks has been completed
+     *
+     */
+    void WaitForBackgroundTasks() const;
+
+
   private:
     asio::io_context &asio_proxy;
+    std::atomic<uint16_t> asio_running_tasks = 0;
     Error::Storage::Ptr errors;
     DBus::Proxy::Client::Ptr proxy = nullptr;
     int if_index = 0;
