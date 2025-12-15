@@ -16,7 +16,9 @@
 #include <net/if.h>
 #include <sys/socket.h>
 #include <asio.hpp>
+#include <fmt/compile.h>
 #include <fmt/format.h>
+#include <fmt/format-inl.h>
 
 #include <gdbuspp/connection.hpp>
 #include <gdbuspp/glib2/utils.hpp>
@@ -39,6 +41,7 @@ using namespace NetCfg::DNS::resolved;
  */
 // #define DEBUG_RESOLVED_DBUS
 
+namespace {
 /**
  *  Low-level debug logging for background D-Bus calls to
  *  systemd-resolved.
@@ -51,19 +54,32 @@ using namespace NetCfg::DNS::resolved;
  *  library.
  *
  */
-#define SD_RESOLVED_BG_LOG(msg)                                              \
-    {                                                                        \
-        std::ostringstream ls;                                               \
-        ls << msg;                                                           \
-        CoreLog::___core_log("systemd-resolved background proxy", ls.str()); \
-    }
+
+template <typename... T>
+using vargs =
+    fmt::detail::format_arg_store<fmt::context, sizeof...(T), fmt::detail::count_named_args<T...>(), fmt::detail::make_descriptor<fmt::context, T...>()>;
+
+template <typename... T>
+void sd_resolved_bg_log(fmt::format_string<T...> fmt, T &&...args)
+{
+    std::string msg = fmt::vformat(fmt.str, vargs<T...>{{args...}});
+    CoreLog::___core_log("systemd-resolved background proxy", std::move(msg));
+}
+
 
 #ifdef DEBUG_RESOLVED_DBUS
-#define SD_RESOLVED_DEBUG(x) SD_RESOLVED_BG_LOG(x)
+template <typename... T>
+void sd_resolved_debug(fmt::format_string<T...> fmt, T &&...args)
+{
+    std::string msg = fmt::vformat(fmt.str, vargs<T...>{{args...}});
+    CoreLog::___core_log(" <DEBUG>   systemd-resolved background proxy", std::move(msg));
+}
+
 #else
-#define SD_RESOLVED_DEBUG(x)
+#define sd_resolved_debug(...)
 #endif
 
+} // namespace (anonymous)
 
 namespace NetCfg {
 namespace DNS {
@@ -435,16 +451,21 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
 {
     if (asio_proxy.stopped())
     {
-        SD_RESOLVED_DEBUG("Background ASIO thread not running");
+        sd_resolved_debug("Background ASIO thread not running");
         throw Exception("Background ASIO thread not running");
     }
 
-    SD_RESOLVED_DEBUG("Preparing ASIO post lambda: "
-                      << " proxy=" << (proxy ? proxy->GetDestination() : "[invalid proxy object]")
-                      << " target=" << (tgt_link ? tgt_link->object_path : "[invalid target object]")
-                      << " errors-object=" << (errors ? "[valid]" : "[invalid]")
-                      << " method=" << method
-                      << " params=" << g_variant_print(params, true));
+    sd_resolved_debug("Preparing ASIO post lambda: error-object={} proxy={} target={} method={} params='{}'",
+                      (errors ? "[valid]" : "[invalid]"),
+                      (proxy ? proxy->GetDestination() : "[invalid proxy object]"),
+                      (tgt_link ? tgt_link->object_path : "[invalid target object]"),
+                      method,
+                      (params ? g_variant_print(params, true) : "[NULL]"));
+
+    if (!tgt_link)
+    {
+        throw Exception("systemd-resolved network interface target undefined (tgt_link)");
+    }
 
     /*
      *  // TODO: Improve this
@@ -481,12 +502,13 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
                 DBus::Proxy::Client::Ptr proxy = bgdata->proxy.lock();
                 if (!proxy)
                 {
-                    std::ostringstream msg;
-                    SD_RESOLVED_BG_LOG("Invalid background request:"
-                                       << " proxy=" << (proxy ? proxy->GetDestination() : "[invalid]")
-                                       << " target=" << (bgdata->path)
-                                       << " method=" << bgdata->method
-                                       << " params=" << (bgdata->params ? g_variant_print(bgdata->params, true) : "[NULL]"));
+                    sd_resolved_bg_log("Invalid background request: proxy={} object_path={} method={}.{} params='{}",
+                                       (proxy ? proxy->GetDestination() : "[invalid]"),
+                                       bgdata->path,
+                                       bgdata->interface,
+                                       bgdata->method,
+                                       (bgdata->params ? g_variant_print(bgdata->params, true) : "[NULL]"));
+
                     //  If the proxy object is invalid, the Link object has been
                     //  or is being destructed.  Then we just bail out.
                     if (bgdata->params)
@@ -507,15 +529,20 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
                     {
                         if (!prxqry->CheckObjectExists(bgdata->path, bgdata->interface))
                         {
-                            SD_RESOLVED_BG_LOG("[LAMBDA] - object not found: " << bgdata->path);
+                            sd_resolved_bg_log("[LAMBDA] target={}, interface={}, method={}, attempts={} - Object not found",
+                                               bgdata->path,
+                                               bgdata->interface,
+                                               bgdata->method,
+                                               attempts);
                             sleep(1);
                             continue; // Retry again
                         }
 
-                        SD_RESOLVED_DEBUG("[LAMBDA] Performing proxy call:"
-                                          << "  object_path=" << bgdata->path
-                                          << ", method=" << bgdata->method
-                                          << ", params=" << (bgdata->params ? g_variant_print(bgdata->params, true) : "[none]"));
+                        sd_resolved_debug("[LAMBDA] Performing proxy call: object_path={}, method={}.{}, params='{}'",
+                                          bgdata->path,
+                                          bgdata->interface,
+                                          bgdata->method,
+                                          (bgdata->params ? g_variant_print(bgdata->params, true) : "[NULL]"));
 
                         // The proxy->Call(...) call might result in bgdata->params being released,
                         // even if an exception happens.  We increase the GVariant refcounter to
@@ -527,13 +554,17 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
                     }
                     catch (const std::exception &excp)
                     {
-                        SD_RESOLVED_DEBUG("[LAMBDA]  proxy call exception, "
-                                          << "object_path=" << bgdata->path
-                                          << ": " << excp.what());
                         std::string err = excp.what();
+                        sd_resolved_debug("[LAMBDA]  proxy call exception, object_path={}: {}",
+                                          bgdata->path,
+                                          err);
                         if ((err.find("Timeout was reached") != std::string::npos) || attempts < 1)
                         {
-                            SD_RESOLVED_BG_LOG("Background systemd-resolved call failed: object_path=" << bgdata->path << ", method=" << bgdata->method << ": " << err);
+                            sd_resolved_bg_log("Background systemd-resolved call failed: object_path={}, method={}.{}: {}",
+                                               bgdata->path,
+                                               bgdata->interface,
+                                               bgdata->method,
+                                               err);
                         }
                         sleep(1);
                     }
@@ -547,7 +578,8 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
             }
             catch (const std::exception &excp)
             {
-                SD_RESOLVED_BG_LOG("[NetCfg::DNS::resolved::Link::BackgroundCall - LAMBDA] Preparation EXCEPTION:" << excp.what());
+                sd_resolved_bg_log("NetCfg::DNS::resolved::Link::BackgroundCall - LAMBDA] Preparation EXCEPTION: {}",
+                                   excp.what());
                 return;
             }
         });
@@ -627,16 +659,20 @@ Manager::Manager(DBus::Connection::Ptr conn)
             {
                 try
                 {
-                    SD_RESOLVED_DEBUG("resolved::Manager() async_proxy_thread - asio::io_context::run() started - asio_keep_running=" << asio_keep_running);
+                    sd_resolved_debug("resolved::Manager() async_proxy_thread - asio::io_context::run() started - asio_keep_running={}",
+                                      asio_keep_running);
                     asio_proxy.run();
-                    SD_RESOLVED_DEBUG("resolved::Manager() async_proxy_thread - asio::io_context::run() completed - asio_keep_running=" << asio_keep_running);
+                    sd_resolved_debug("resolved::Manager() async_proxy_thread - asio::io_context::run() completed - asio_keep_running={}",
+                                      asio_keep_running);
                 }
                 catch (const std::exception &excp)
                 {
-                    SD_RESOLVED_BG_LOG("[resolved::Manager() async_proxy_thread] Exception:" << excp.what());
+                    sd_resolved_bg_log("[resolved::Manager() async_proxy_thread] Exception: {}",
+                                       excp.what());
                 }
             }
-            SD_RESOLVED_DEBUG("resolved::Manager() async_proxy_thread - stopping asio::io_context - asio_keep_running=" << asio_keep_running);
+            sd_resolved_debug("resolved::Manager() async_proxy_thread - stopping asio::io_context - asio_keep_running={}",
+                              asio_keep_running);
         });
 }
 
@@ -660,10 +696,10 @@ Link::Ptr Manager::RetrieveLink(const std::string &dev_name)
     unsigned int if_idx = ::if_nametoindex(dev_name.c_str());
     if (0 == if_idx)
     {
-        std::stringstream err;
-        err << "Could not retrieve if_index for '" << dev_name << "': "
-            << std::string(::strerror(errno));
-        throw Exception(err.str());
+        throw Exception(fmt::format(
+            FMT_COMPILE("Could not retrieve if_index for '{}': {}"),
+            dev_name,
+            ::strerror(errno)));
     }
     auto link_path = GetLink(if_idx);
     if (link_path.empty())
@@ -688,11 +724,10 @@ DBus::Object::Path Manager::GetLink(int32_t if_idx) const
     }
     catch (const DBus::Exception &excp)
     {
-        std::ostringstream err;
-        err << "Could not retrieve systemd-resolved path for "
-            << "if_index " + std::to_string(if_idx) + ": "
-            << excp.what();
-        throw Exception(err.str());
+        throw Exception(fmt::format(
+            FMT_COMPILE("Could not retrieve systemd-resolved path for if_index {}: {}"),
+            if_idx,
+            excp.what()));
     }
 }
 
