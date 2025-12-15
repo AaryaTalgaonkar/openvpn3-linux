@@ -443,11 +443,14 @@ struct background_call_data
     std::string method;
     GVariant *params;
     Error::Storage::Ptr errors;
+    std::function<void(const std::vector<std::string> &errormsg)> error_callback;
 };
 } // namespace
 
 
-void Link::BackgroundCall(const std::string &method, GVariant *params)
+void Link::BackgroundCall(const std::string &method,
+                          GVariant *params,
+                          std::function<void(const std::vector<std::string> &errormsg)> error_callback)
 {
     if (asio_proxy.stopped())
     {
@@ -490,13 +493,14 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
          .path = tgt_link->object_path,
          .interface = tgt_link->interface,
          .method = method,
-         .params = (params ? g_variant_ref(params) : nullptr)});
-
+         .params = (params ? g_variant_ref(params) : nullptr),
+         .error_callback = std::move(error_callback)});
 
     asio::post(
         asio_proxy,
         [bgdata]()
         {
+            std::vector<std::string> error_messages;
             try
             {
                 DBus::Proxy::Client::Ptr proxy = bgdata->proxy.lock();
@@ -550,11 +554,13 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
                         GVariant *params = (bgdata->params ? g_variant_ref_sink(bgdata->params) : nullptr);
                         GVariant *r = proxy->Call(bgdata->path, bgdata->interface, bgdata->method, params);
                         g_variant_unref(r);
+                        error_messages = {};
                         break;
                     }
                     catch (const std::exception &excp)
                     {
                         std::string err = excp.what();
+                        error_messages.push_back(err);
                         sd_resolved_debug("[LAMBDA]  proxy call exception, object_path={}: {}",
                                           bgdata->path,
                                           err);
@@ -569,6 +575,12 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
                         sleep(1);
                     }
                 }
+
+                if (bgdata->error_callback && error_messages.size() > 0)
+                {
+                    bgdata->error_callback(error_messages);
+                }
+
                 // Delete the GVariant object with the D-Bus method arguments; now it is no longer needed
                 if (bgdata->params)
                 {
@@ -580,6 +592,11 @@ void Link::BackgroundCall(const std::string &method, GVariant *params)
             {
                 sd_resolved_bg_log("NetCfg::DNS::resolved::Link::BackgroundCall - LAMBDA] Preparation EXCEPTION: {}",
                                    excp.what());
+                if (bgdata->error_callback)
+                {
+                    error_messages.push_back(std::string(excp.what()));
+                    bgdata->error_callback(error_messages);
+                }
                 return;
             }
         });

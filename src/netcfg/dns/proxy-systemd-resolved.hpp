@@ -378,14 +378,24 @@ class Link
      *  If a DBus::Proxy::Exception happens, the error message
      *  can be retrieved via the GetErrors() call.
      *
-     *  @param method  std::string with the D-Bus method to call
-     *  @param params  GVariant object containing all the arguments
-     *                 to the D-Bus call
+     *  @param method          std::string with the D-Bus method to call
+     *  @param params          (optional) GVariant object containing all the
+                               arguments to the D-Bus call
+     *  @param error_callback  (optional) Callback function which is called
+     *                         in the situation where errors occurs in the
+     *                         background call.  This function need to take
+     *                         a std::vector<std::string> argument, which
+     *                         carries one string per error event.  This
+     *                         callback is called once after all retry
+     *                         attempts has been tried and only if errors
+     *                         occured.
      *
      *  @throws resolved::Exception if the ASIO background worker
      *          thread is not running
      */
-    void BackgroundCall(const std::string &method, GVariant *params = nullptr);
+    void BackgroundCall(const std::string &method,
+                        GVariant *params = nullptr,
+                        std::function<void(const std::vector<std::string> &errormsg)> error_callback = nullptr);
 };
 
 
