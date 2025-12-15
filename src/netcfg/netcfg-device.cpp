@@ -593,23 +593,41 @@ void NetCfgDevice::method_disable()
 
 void NetCfgDevice::destroy()
 {
-    if (resolver && dnsconfig)
+    try
     {
-        std::stringstream details;
-        details << dnsconfig;
+        if (resolver && dnsconfig)
+        {
+            std::stringstream details;
+            details << dnsconfig;
 
-        signals->DebugDevice(device_name,
-                             "Removing DNS/resolver settings: "
-                                 + details.str());
-        dnsconfig->PrepareRemoval();
-        resolver->ApplySettings(signals);
-        modified = false;
+            signals->DebugDevice(device_name,
+                                 "Removing DNS/resolver settings: "
+                                     + details.str());
+            dnsconfig->PrepareRemoval();
+            resolver->ApplySettings(signals);
+            modified = false;
+        }
+
+        // release the NetCfgDevice object from memory as well, which
+        // will should do the proper interface teardown calls in the
+        // destructor
+        object_manager->RemoveObject(GetPath());
     }
-
-    // release the NetCfgDevice object from memory as well, which
-    // will should do the proper interface teardown calls in the
-    // destructor
-    object_manager->RemoveObject(GetPath());
+    catch (const DBus::Exception &excp)
+    {
+        signals->LogError(fmt::format("Failed to destroy interface '{}'", device_name));
+        signals->DebugDevice(
+            device_name,
+            fmt::format("[destroy()] Error destroying device: {}", excp.GetRawError())
+        );
+    }
+    catch (const std::exception &excp)
+    {
+        signals->LogError(fmt::format("Failed to destroy interface '{}'", device_name));
+        signals->DebugDevice(
+            device_name,
+            fmt::format("[destroy()] Error destroying device: {}", excp.what()));
+    }
 }
 
 
@@ -617,10 +635,22 @@ void NetCfgDevice::method_destroy(DBus::Object::Method::Arguments::Ptr args)
 {
     auto credsq = DBus::Credentials::Query::Create(dbuscon);
     std::string caller = args->GetCallerBusName();
-    uid_t caller_uid = credsq->GetUID(caller);
-    // CheckOwnerAccess(caller);
 
-    std::string sender_name = lookup_username(caller_uid);
+    std::string sender_name = fmt::format("[{}]", caller);
+    try
+    {
+        uid_t caller_uid = credsq->GetUID(caller);
+        // CheckOwnerAccess(caller);
+        sender_name = lookup_username(caller_uid);
+    }
+    catch (const DBus::Exception &excp)
+    {
+        signals->DebugDevice(
+            device_name,
+            fmt::format("[method_destroy] {} Error retrieving D-Bus caller: {}",
+                        sender_name, excp.GetRawError()));
+    }
+
 
     destroy();
 
