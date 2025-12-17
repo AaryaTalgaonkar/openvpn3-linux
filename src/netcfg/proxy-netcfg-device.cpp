@@ -106,9 +106,12 @@ Device::Device(DBus::Connection::Ptr dbuscon_, const DBus::Object::Path &devpath
 
 void Device::SetRemoteAddress(const std::string &remote, bool ipv6) const
 {
+    GVariantBuilder *params = glib2::Builder::Create("(sb)");
+    glib2::Builder::Add(params, remote);
+    glib2::Builder::Add(params, ipv6);
     GVariant *r = proxy->Call(prxtgt,
                               "SetRemoteAddress",
-                              g_variant_new("(sb)", remote.c_str(), ipv6));
+                              glib2::Builder::Finish(params));
     if (r)
     {
         g_variant_unref(r);
@@ -119,9 +122,12 @@ void Device::SetRemoteAddress(const std::string &remote, bool ipv6) const
 bool Device::AddBypassRoute(const std::string &addr,
                             bool ipv6) const
 {
+    GVariantBuilder *params = glib2::Builder::Create("(sb)");
+    glib2::Builder::Add(params, addr);
+    glib2::Builder::Add(params, ipv6);
     GVariant *r = proxy->Call(prxtgt,
                               "AddBypassRoute",
-                              g_variant_new("(sb)", addr.c_str(), ipv6));
+                              glib2::Builder::Finish(params));
     if (r)
     {
         g_variant_unref(r);
@@ -136,13 +142,16 @@ void Device::AddIPAddress(const std::string &ip_address,
                           const std::string &gateway,
                           bool ipv6) const
 {
+    GVariantBuilder *params = glib2::Builder::Create("(susb)");
+    glib2::Builder::Add(params, ip_address);
+    glib2::Builder::Add(params, prefix_size);
+    glib2::Builder::Add(params, gateway);
+    glib2::Builder::Add(params, ipv6);
+
     GVariant *r = proxy->Call(prxtgt,
                               "AddIPAddress",
-                              g_variant_new("(susb)",
-                                            ip_address.c_str(),
-                                            prefix_size,
-                                            gateway.c_str(),
-                                            ipv6));
+                              glib2::Builder::Finish(params));
+
     if (r)
     {
         g_variant_unref(r);
@@ -158,26 +167,17 @@ void Device::AddNetworks(const std::vector<Network> &networks) const
 
     for (const auto &net : networks)
     {
+        GVariantBuilder *elem = glib2::Builder::Create(data_type);
+        glib2::Builder::Add(elem, net.address);
+        glib2::Builder::Add(elem, net.prefix_size);
         if (service_version > 25)
         {
             // Route metric was added after the v25 release
-            g_variant_builder_add(bld,
-                                  data_type,
-                                  net.address.c_str(),
-                                  net.prefix_size,
-                                  net.metric,
-                                  net.ipv6,
-                                  net.exclude);
+            glib2::Builder::Add(elem, net.metric);
         }
-        else
-        {
-            g_variant_builder_add(bld,
-                                  data_type,
-                                  net.address.c_str(),
-                                  net.prefix_size,
-                                  net.ipv6,
-                                  net.exclude);
-        }
+        glib2::Builder::Add(elem, net.ipv6);
+        glib2::Builder::Add(elem, net.exclude);
+        glib2::Builder::Add(bld, glib2::Builder::Finish(elem));
     }
 
     // DBus somehow wants this still wrapped being able to do this
@@ -185,8 +185,6 @@ void Device::AddNetworks(const std::vector<Network> &networks) const
     GVariant *res = proxy->Call(prxtgt,
                                 "AddNetworks",
                                 glib2::Builder::FinishWrapped(bld));
-
-
     if (res)
     {
         g_variant_unref(res);
@@ -643,14 +641,16 @@ void DCO::NewPeer(unsigned int peer_id,
 {
     auto sa_str = base64->encode(sa, salen);
 
+    GVariantBuilder *params = glib2::Builder::Create("(ususs)");
+    glib2::Builder::Add(params, peer_id);
+    glib2::Builder::Add(params, sa_str);
+    glib2::Builder::Add(params, salen);
+    glib2::Builder::Add(params, vpn4.to_string());
+    glib2::Builder::Add(params, vpn6.to_string());
+
     proxy->SendFD(dcotgt,
                   "NewPeer",
-                  g_variant_new("(ususs)",
-                                peer_id,
-                                sa_str.c_str(),
-                                salen,
-                                vpn4.to_string().c_str(),
-                                vpn6.to_string().c_str()),
+                  glib2::Builder::Finish(params),
                   transport_fd);
 }
 
@@ -677,17 +677,16 @@ void DCO::NewKey(unsigned int key_slot,
 
     auto str = base64->encode(kc.SerializeAsString());
 
-    proxy->Call(dcotgt,
-                "NewKey",
-                g_variant_new("(us)", key_slot, str.c_str()));
+    GVariantBuilder *params = glib2::Builder::Create("(us)");
+    glib2::Builder::Add(params, key_slot);
+    glib2::Builder::Add(params, str);
+    proxy->Call(dcotgt, "NewKey", glib2::Builder::Finish(params));
 }
 
 
 void DCO::SwapKeys(unsigned int peer_id) const
 {
-    GVariant *res = proxy->Call(dcotgt,
-                                "SwapKeys",
-                                g_variant_new("(u)", peer_id));
+    GVariant *res = proxy->Call(dcotgt, "SwapKeys", glib2::Value::Create(peer_id));
     if (res)
     {
         g_variant_unref(res);
@@ -699,12 +698,11 @@ void DCO::SetPeer(unsigned int peer_id,
                   int keepalive_interval,
                   int keepalive_timeout) const
 {
-    GVariant *res = proxy->Call(dcotgt,
-                                "SetPeer",
-                                g_variant_new("(uuu)",
-                                              peer_id,
-                                              keepalive_interval,
-                                              keepalive_timeout));
+    GVariantBuilder *params = glib2::Builder::Create("(uuu)");
+    glib2::Builder::Add(params, peer_id);
+    glib2::Builder::Add<unsigned int>(params, keepalive_interval);
+    glib2::Builder::Add<unsigned int>(params, keepalive_timeout);
+    GVariant *res = proxy->Call(dcotgt, "SetPeer", glib2::Builder::Finish(params));
     if (res)
     {
         g_variant_unref(res);
