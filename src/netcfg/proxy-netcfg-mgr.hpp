@@ -51,9 +51,9 @@ class Manager
     DBus::Object::Path CreateVirtualInterface(const std::string &device_name);
 
 #ifdef OPENVPN3_NETCFGPRX_DEVICE
-    Device *getVirtualInterface(const DBus::Object::Path &path)
+    std::shared_ptr<Device> getVirtualInterface(const DBus::Object::Path &path)
     {
-        return new Device(dbuscon, path);
+        return std::make_shared<Device>(dbuscon, path);
     }
 #endif
 
