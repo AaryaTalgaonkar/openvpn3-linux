@@ -466,12 +466,23 @@ namespace {
  */
 struct background_call_data
 {
-    std::weak_ptr<DBus::Proxy::Client> proxy;
+    using Ptr = std::shared_ptr<background_call_data>;
+    background_call_data(DBus::Proxy::Client::Ptr prx,
+                         const DBus::Object::Path &objpath,
+                         const std::string &interf,
+                         const std::string &meth,
+                         GVariant *prms,
+                         std::function<void(const std::vector<std::string> &)> err_cb)
+        : proxy(std::move(prx)), object_path(std::move(objpath)), interface(std::move(interf)),
+          method(std::move(meth)), params(prms), error_callback(std::move(err_cb))
+    {
+    }
+
+    DBus::Proxy::Client::Ptr proxy;
     DBus::Object::Path object_path;
     std::string interface;
     std::string method;
     GVariant *params;
-    Error::Storage::Ptr errors;
     std::function<void(const std::vector<std::string> &errormsg)> error_callback;
 };
 } // namespace
@@ -501,6 +512,12 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
         throw Exception("systemd-resolved network interface target undefined (tgt_link)");
     }
 
+    if (asio_running_tasks + 1 >= UINT16_MAX)
+    {
+        throw Exception("Too many bacground ASIO tasks running");
+    }
+    asio_running_tasks++;
+
     /*
      *  // TODO: Improve this
      *
@@ -513,25 +530,25 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
      *
      *  The proxy object seems to be handled fine, so we keep the "old"
      *  approach here.
-     *
-     *  This is then created as a raw pointer based object, which is
-     *  passed on to the lambda and deleted in the lambda function.  This
-     *  is to ensure the object does not disappear before the the lambda
-     *  function has had a chance to process the information.
      */
-    background_call_data *bgdata = new background_call_data(
-        {.proxy = std::weak_ptr<DBus::Proxy::Client>(proxy),
-         .object_path = target->object_path,
-         .interface = target->interface,
-         .method = std::move(method),
-         .params = (params ? g_variant_ref(params) : nullptr),
-         .error_callback = std::move(error_callback)});
+    background_call_data::Ptr bgdata = std::make_shared<background_call_data>(
+        proxy,
+        target->object_path,
+        target->interface,
+        method,
+        (params ? g_variant_ref(params) : nullptr),
+        error_callback);
 
-    if (asio_running_tasks + 1 >= UINT16_MAX)
+
+    if (nullptr == bgdata)
     {
-        throw Exception("Too many bacground ASIO tasks running");
+        throw Exception(fmt::format(
+            FMT_COMPILE("Failed to allocate memory buffer for background task: path={}, interface={}, method={}, params='{}'"),
+            target->object_path,
+            target->interface,
+            method,
+            g_variant_print(params, true)));
     }
-    asio_running_tasks++;
 
     asio::post(
         asio_proxy,
@@ -540,7 +557,7 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
             std::vector<std::string> error_messages;
             try
             {
-                DBus::Proxy::Client::Ptr proxy = bgdata->proxy.lock();
+                DBus::Proxy::Client::Ptr proxy = std::move(bgdata->proxy);
                 if (!proxy)
                 {
                     sd_resolved_bg_log("Invalid background request: proxy={} object_path={} method={}.{} params='{}",
@@ -556,7 +573,6 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
                     {
                         g_variant_unref(bgdata->params);
                     }
-                    delete bgdata;
                     return;
                 }
 
@@ -623,8 +639,6 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
                 {
                     g_variant_unref(bgdata->params);
                 }
-                delete bgdata;
-                (*running_tasks_count)--;
             }
             catch (const std::exception &excp)
             {
@@ -635,8 +649,8 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
                     error_messages.push_back(std::string(excp.what()));
                     bgdata->error_callback(error_messages);
                 }
-                return;
             }
+            (*running_tasks_count)--;
         });
 }
 
