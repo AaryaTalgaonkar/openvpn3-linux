@@ -16,6 +16,8 @@
 #include <thread>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <fmt/compile.h>
+#include <fmt/format.h>
 
 // These must be included *before* the openvpn/
 // include files, otherwise the compilation will
@@ -35,7 +37,6 @@
 #include <openvpn/tun/linux/client/tunnetlink.hpp>
 #include <openvpn/tun/linux/client/tunmethods.hpp>
 #include <openvpn/buffer/buffer.hpp>
-#include <openvpn/asio/asiowork.hpp>
 
 
 NetCfgDCO::NetCfgDCO(DBus::Connection::Ptr dbuscon,
@@ -111,9 +112,24 @@ NetCfgDCO::NetCfgDCO(DBus::Connection::Ptr dbuscon,
         throw NetCfgException("Error creating ovpn-dco device: " + os.str());
     }
 
-    pipe.reset(new openvpn_io::posix::stream_descriptor(io_context, fds[1]));
+    async_dco_worker_thread = std::async(
+        std::launch::async,
+        [&]()
+        {
+            try
+            {
+                asio::executor_work_guard<asio::io_context::executor_type> worker = asio::make_work_guard(io_context);
+                io_context.run();
+            }
+            catch (const std::exception &excp)
+            {
+                signals->LogCritical(fmt::format(
+                    FMT_COMPILE("Async DCO io_context stopped: {}"),
+                    excp.what()));
+            }
+        });
 
-    asio_work.reset(new AsioWork(io_context));
+    pipe.reset(new openvpn_io::posix::stream_descriptor(io_context, fds[1]));
 
     try
     {
@@ -128,11 +144,6 @@ NetCfgDCO::NetCfgDCO(DBus::Connection::Ptr dbuscon,
         teardown();
         throw NetCfgException(err);
     }
-
-    th.reset(new std::thread([this]()
-                             {
-                                 this->io_context.run();
-                             }));
 }
 
 
@@ -172,20 +183,17 @@ void NetCfgDCO::teardown()
         pipe->close();
     }
 
-    if (asio_work)
+    if (!io_context.stopped())
     {
-        asio_work.reset();
+        io_context.stop();
     }
-
-    io_context.stop();
+    if (async_dco_worker_thread.valid())
+    {
+        async_dco_worker_thread.get();
+    }
 
     std::ostringstream os;
     TunNetlink::iface_del(os, dev_name);
-
-    if (th && th->joinable())
-    {
-        th->join();
-    }
 }
 
 

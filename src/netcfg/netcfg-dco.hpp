@@ -96,8 +96,7 @@ class NetCfgDCO : public DBus::Object::Base
     GeNLImpl::Ptr genl;
     openvpn_io::io_context io_context;
     // thread where ASIO event loop runs, used by GeNL and pipe
-    std::unique_ptr<std::thread> th;
-    std::unique_ptr<openvpn::AsioWork> asio_work;
+    std::future<void> async_dco_worker_thread;
     std::string dev_name;
 };
 
