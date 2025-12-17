@@ -79,7 +79,7 @@ void sd_resolved_debug(fmt::format_string<T...> fmt, T &&...args)
 #define sd_resolved_debug(...)
 #endif
 
-} // namespace (anonymous)
+} // namespace
 
 namespace NetCfg {
 namespace DNS {
@@ -206,6 +206,8 @@ Link::Link(asio::io_context &asio_ctx,
 {
     tgt_link = DBus::Proxy::TargetPreset::Create(path,
                                                  "org.freedesktop.resolve1.Link");
+    tgt_mgmt = DBus::Proxy::TargetPreset::Create("/org/freedesktop/resolve1",
+                                                 "org.freedesktop.resolve1.Manager");
 }
 
 
@@ -246,16 +248,19 @@ std::vector<std::string> Link::GetDNSServers() const
 
 std::vector<std::string> Link::SetDNSServers(const IPAddress::List &servers)
 {
-    GVariantBuilder *b = glib2::Builder::Create("a(iay)");
+    GVariantBuilder *b = glib2::Builder::Create("(ia(iay))");
+    glib2::Builder::Add<int32_t>(b, if_index);
+
+    glib2::Builder::OpenChild(b, "a(iay)");
     std::vector<std::string> applied{};
     for (const auto &srv : servers)
     {
         glib2::Builder::Add(b, srv.GetGVariant());
         applied.push_back(srv.str());
     }
-    GVariant *params = glib2::Builder::FinishWrapped(b);
-    BackgroundCall("SetDNS", params);
-    g_variant_unref(params);
+    glib2::Builder::CloseChild(b);
+
+    BackgroundCall(tgt_mgmt, "SetLinkDNS", glib2::Builder::Finish(b));
     return applied;
 }
 
@@ -307,7 +312,10 @@ SearchDomain::List Link::GetDomains() const
 
 std::vector<std::string> Link::SetDomains(const SearchDomain::List &doms)
 {
-    GVariantBuilder *b = glib2::Builder::Create("a(sb)");
+    GVariantBuilder *b = glib2::Builder::Create("(ia(sb))");
+    glib2::Builder::Add<int32_t>(b, if_index);
+
+    glib2::Builder::OpenChild(b, "a(sb)");
     std::vector<std::string> applied{};
     for (const auto &dom : doms)
     {
@@ -318,9 +326,8 @@ std::vector<std::string> Link::SetDomains(const SearchDomain::List &doms)
             applied.push_back(dom.search);
         }
     }
-    GVariant *params = glib2::Builder::FinishWrapped(b);
-    BackgroundCall("SetDomains", params);
-    g_variant_unref(params);
+    glib2::Builder::CloseChild(b);
+    BackgroundCall(tgt_mgmt, "SetLinkDomains", glib2::Builder::Finish(b));
     return applied;
 }
 
@@ -338,30 +345,34 @@ bool Link::GetDefaultRoute() const
 }
 
 
-bool Link::SetDefaultRoute(const bool route)
+void Link::SetDefaultRoute(const bool route)
 {
     if (!feature_set_default_route)
     {
-        return false;
+        return;
     }
-    try
-    {
-        GVariant *r = proxy->Call(tgt_link,
-                                  "SetDefaultRoute",
-                                  glib2::Value::CreateTupleWrapped(route));
-        g_variant_unref(r);
-        return true;
-    }
-    catch (const DBus::Proxy::Exception &excp)
-    {
-        std::string err(excp.what());
-        if (err.find("GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod") != std::string::npos)
-        {
-            feature_set_default_route = false;
-            return false;
-        }
-        throw excp;
-    }
+
+    GVariantBuilder *b = glib2::Builder::Create("(ib)");
+    glib2::Builder::Add(b, if_index);
+    glib2::Builder::Add(b, route);
+
+    BackgroundCall(tgt_mgmt,
+                   "SetLinkDefaultRoute",
+                   glib2::Builder::Finish(b),
+                   [self = shared_from_this()](const std::vector<std::string> errormsgs)
+                   {
+                       for (const auto &err : errormsgs)
+                       {
+                           self->errors->Add(self->tgt_link->object_path, "SetLinkDefaultRoute", err);
+                       }
+                       self->feature_set_default_route = false;
+                   });
+}
+
+
+bool Link::GetFeatureSetDefaultRoute() const
+{
+    return feature_set_default_route;
 }
 
 
@@ -386,9 +397,10 @@ void Link::SetDNSSEC(const std::string &mode)
         throw Exception("Invalid DNSSEC mode requested: " + mode);
     }
 
-    GVariant *params = glib2::Value::CreateTupleWrapped(mode);
-    BackgroundCall("SetDNSSEC", params);
-    g_variant_unref(params);
+    GVariantBuilder *b = glib2::Builder::Create("(is)");
+    glib2::Builder::Add<int32_t>(b, if_index);
+    glib2::Builder::Add(b, mode);
+    BackgroundCall(tgt_mgmt, "SetLinkDNSSEC", glib2::Builder::Finish(b));
 }
 
 
@@ -414,15 +426,17 @@ void Link::SetDNSOverTLS(const std::string &mode)
     {
         throw Exception("Invalid DNSOverTLS mode requested: " + mode);
     }
-    GVariant *params = glib2::Value::CreateTupleWrapped(mode);
-    BackgroundCall("SetDNSOverTLS", params);
-    g_variant_unref(params);
+
+    GVariantBuilder *b = glib2::Builder::Create("(is)");
+    glib2::Builder::Add<int32_t>(b, if_index);
+    glib2::Builder::Add(b, mode);
+    BackgroundCall(tgt_mgmt, "SetLinkDNSOverTLS", glib2::Builder::Finish(b));
 }
 
 
 void Link::Revert()
 {
-    BackgroundCall("Revert");
+    BackgroundCall(tgt_mgmt, "RevertLink", glib2::Value::Create<int32_t>(if_index));
 }
 
 
@@ -439,7 +453,7 @@ namespace {
 struct background_call_data
 {
     std::weak_ptr<DBus::Proxy::Client> proxy;
-    DBus::Object::Path path;
+    DBus::Object::Path object_path;
     std::string interface;
     std::string method;
     GVariant *params;
@@ -449,7 +463,8 @@ struct background_call_data
 } // namespace
 
 
-void Link::BackgroundCall(const std::string &method,
+void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
+                          const std::string &method,
                           GVariant *params,
                           std::function<void(const std::vector<std::string> &errormsg)> error_callback)
 {
@@ -459,14 +474,15 @@ void Link::BackgroundCall(const std::string &method,
         throw Exception("Background ASIO thread not running");
     }
 
-    sd_resolved_debug("Preparing ASIO post lambda: error-object={} proxy={} target={} method={} params='{}'",
+    sd_resolved_debug("Preparing ASIO post lambda: error-object={} proxy={} target={} interface={} method={} params='{}'",
                       (errors ? "[valid]" : "[invalid]"),
                       (proxy ? proxy->GetDestination() : "[invalid proxy object]"),
-                      (tgt_link ? tgt_link->object_path : "[invalid target object]"),
+                      (target ? target->object_path : "[invalid target object]"),
+                      (target ? target->interface : "[invalid target object]"),
                       method,
                       (params ? g_variant_print(params, true) : "[NULL]"));
 
-    if (!tgt_link)
+    if (!target)
     {
         throw Exception("systemd-resolved network interface target undefined (tgt_link)");
     }
@@ -491,9 +507,9 @@ void Link::BackgroundCall(const std::string &method,
      */
     background_call_data *bgdata = new background_call_data(
         {.proxy = std::weak_ptr<DBus::Proxy::Client>(proxy),
-         .path = tgt_link->object_path,
-         .interface = tgt_link->interface,
-         .method = method,
+         .object_path = target->object_path,
+         .interface = target->interface,
+         .method = std::move(method),
          .params = (params ? g_variant_ref(params) : nullptr),
          .error_callback = std::move(error_callback)});
 
@@ -509,7 +525,7 @@ void Link::BackgroundCall(const std::string &method,
                 {
                     sd_resolved_bg_log("Invalid background request: proxy={} object_path={} method={}.{} params='{}",
                                        (proxy ? proxy->GetDestination() : "[invalid]"),
-                                       bgdata->path,
+                                       bgdata->object_path,
                                        bgdata->interface,
                                        bgdata->method,
                                        (bgdata->params ? g_variant_print(bgdata->params, true) : "[NULL]"));
@@ -532,10 +548,10 @@ void Link::BackgroundCall(const std::string &method,
                 {
                     try
                     {
-                        if (!prxqry->CheckObjectExists(bgdata->path, bgdata->interface))
+                        if (!prxqry->CheckObjectExists(bgdata->object_path, bgdata->interface))
                         {
                             sd_resolved_bg_log("[LAMBDA] target={}, interface={}, method={}, attempts={} - Object not found",
-                                               bgdata->path,
+                                               bgdata->object_path,
                                                bgdata->interface,
                                                bgdata->method,
                                                attempts);
@@ -553,7 +569,7 @@ void Link::BackgroundCall(const std::string &method,
                         // even if an exception happens.  We increase the GVariant refcounter to
                         // avoid this object being deleted just yet.
                         GVariant *params = (bgdata->params ? g_variant_ref_sink(bgdata->params) : nullptr);
-                        GVariant *r = proxy->Call(bgdata->path, bgdata->interface, bgdata->method, params);
+                        GVariant *r = proxy->Call(bgdata->object_path, bgdata->interface, bgdata->method, params);
                         g_variant_unref(r);
                         error_messages = {};
                         break;
@@ -568,7 +584,7 @@ void Link::BackgroundCall(const std::string &method,
                         if ((err.find("Timeout was reached") != std::string::npos) || attempts < 1)
                         {
                             sd_resolved_bg_log("Background systemd-resolved call failed: object_path={}, method={}.{}: {}",
-                                               bgdata->path,
+                                               bgdata->object_path,
                                                bgdata->interface,
                                                bgdata->method,
                                                err);

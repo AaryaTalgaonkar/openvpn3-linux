@@ -173,7 +173,7 @@ struct SearchDomain
  *  has the needed lookup code to retrieve the proper D-Bus path for the
  *  interface.
  */
-class Link
+class Link : public std::enable_shared_from_this<Link>
 {
   public:
     using Ptr = std::shared_ptr<Link>;
@@ -273,10 +273,21 @@ class Link
      *
      * @param route   bool value to enable/disable the DNS default route flag.
      *                See @GetDefaultRoute() return values for more details
-     * @return False if this method is not available in the currently used
-     *         org.freedesktop.resolve1 (systemd-resolved) service.
      */
-    bool SetDefaultRoute(const bool route);
+    void SetDefaultRoute(const bool route);
+
+    /**
+     *  Check if the systemd-resolved supports the "SetDefaultRoute" feature.
+     *
+     *  This flag can only be trusted after the first attempt of calling
+     *  the Link::SetDefaultRoute() method, as that method will set the
+     *  feature flag depending if that method call failed or succeeded.
+     *
+     * @return bool Returns true if the systemd-resolved backend supports
+     *         the SetDefaultRoute/SetLinkDefaultRoute feature, otherwise
+     *         false.
+     */
+    bool GetFeatureSetDefaultRoute() const;
 
     /**
      *  Retrieve the DNSSEC mode for the interface
@@ -357,8 +368,9 @@ class Link
     asio::io_context &asio_proxy;
     Error::Storage::Ptr errors;
     DBus::Proxy::Client::Ptr proxy = nullptr;
-    unsigned int if_index = 0;
+    int if_index = 0;
     DBus::Proxy::TargetPreset::Ptr tgt_link = nullptr;
+    DBus::Proxy::TargetPreset::Ptr tgt_mgmt = nullptr;
     const std::string device_name;
     bool feature_set_default_route = true;
 
@@ -393,7 +405,8 @@ class Link
      *  @throws resolved::Exception if the ASIO background worker
      *          thread is not running
      */
-    void BackgroundCall(const std::string &method,
+    void BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
+                        const std::string &method,
                         GVariant *params = nullptr,
                         std::function<void(const std::vector<std::string> &errormsg)> error_callback = nullptr);
 };

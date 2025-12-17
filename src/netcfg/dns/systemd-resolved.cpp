@@ -150,14 +150,10 @@ void SystemdResolved::Commit(NetCfgSignals::Ptr signal)
                                  + "] Committing DNS search domains");
                 applied_search = upd->link->SetDomains(upd->search);
 
-                if (feat_dns_default_route
-                    && !upd->link->SetDefaultRoute(upd->default_routing))
+                if (feat_dns_default_route)
                 {
-                    signal->LogWarn("systemd-resolved: Service does not "
-                                    "support setting default route for DNS "
-                                    "requests. Disabling calling this feature.");
-                    feat_dns_default_route = false;
-                };
+                    upd->link->SetDefaultRoute(upd->default_routing);
+                }
 
                 if (upd->dnssec != openvpn::DnsServer::Security::Unset)
                 {
@@ -185,6 +181,13 @@ void SystemdResolved::Commit(NetCfgSignals::Ptr signal)
                     if ("SetDomains" == err.method)
                     {
                         error_domains = true;
+                    }
+                    if ("SetLinkDefaultRoute" == err.method)
+                    {
+                        signal->LogWarn("systemd-resolved: Service does not "
+                                        "support setting default route for DNS "
+                                        "requests. Disabling calling this feature.");
+                        feat_dns_default_route = upd->link->GetFeatureSetDefaultRoute();
                     }
                 }
                 upd->disabled = true;

@@ -183,11 +183,7 @@ int program(ParsedArgs::Ptr args)
 
     if (args->Present("set-default-route"))
     {
-        if (!link->SetDefaultRoute(args->GetBoolValue("set-default-route", 0)))
-        {
-            std::cout << "** ERROR **  Failed modifying DefaultRoute flag; "
-                      << "not supported in systemd-resolved" << std::endl;
-        };
+        link->SetDefaultRoute(args->GetBoolValue("set-default-route", 0));
     }
 
     if (args->Present("set-dnssec"))
@@ -212,6 +208,17 @@ int program(ParsedArgs::Ptr args)
         print_details(link);
     }
 
+    auto errors = link->GetErrors();
+    if (errors.size() > 0)
+    {
+        std::cout << "** Captured Errors:\n";
+        uint32_t idx = 0;
+        for (const auto &errmsg : errors)
+        {
+            idx++;
+            fmt::println("    {{{}}} {}", idx, errmsg.str());
+        }
+    }
     return 0;
 }
 
