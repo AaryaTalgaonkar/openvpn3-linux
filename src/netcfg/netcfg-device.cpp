@@ -261,12 +261,6 @@ NetCfgDevice::~NetCfgDevice() noexcept
         tunimpl->teardown(*this, true);
         tunimpl.reset();
     }
-#ifdef ENABLE_OVPNDCO
-    if (dco_device)
-    {
-        object_manager->RemoveObject(dco_device->GetPath());
-    }
-#endif
 }
 
 
@@ -608,9 +602,21 @@ void NetCfgDevice::destroy()
             modified = false;
         }
 
-        // release the NetCfgDevice object from memory as well, which
-        // will should do the proper interface teardown calls in the
-        // destructor
+        if (tunimpl)
+        {
+            tunimpl->teardown(*this, true);
+            tunimpl.reset();
+        }
+
+#ifdef ENABLE_OVPNDCO
+        if (dco_device)
+        {
+            dco_device->teardown();
+            object_manager->RemoveObject(dco_device->GetPath());
+        }
+#endif
+
+        // release the NetCfgDevice object from memory as well
         object_manager->RemoveObject(GetPath());
     }
     catch (const DBus::Exception &excp)

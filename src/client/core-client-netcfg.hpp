@@ -69,6 +69,10 @@ class NetCfgTunBuilder : public T
         // Explicitly call cleanup
         try
         {
+            if (dco)
+            {
+                dco.reset();
+            }
             if (device)
             {
                 device->Destroy();
