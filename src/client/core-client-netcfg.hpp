@@ -339,6 +339,7 @@ class NetCfgTunBuilder : public T
     {
         if (!device)
         {
+            signals->Debug("tun_builder_teardown, no device available");
             return;
         }
 
@@ -350,6 +351,7 @@ class NetCfgTunBuilder : public T
         {
             try
             {
+                signals->Debug("tun_builder_teardown, disconnect requested -> destroying virtual device");
                 device->Destroy();
             }
             catch (const DBus::Exception &excp)
@@ -363,6 +365,7 @@ class NetCfgTunBuilder : public T
         {
             try
             {
+                signals->Debug("tun_builder_teardown, no disconnect requsted -> disabling virtual device");
                 device->Disable();
             }
             catch (const DBus::Exception &excp)
