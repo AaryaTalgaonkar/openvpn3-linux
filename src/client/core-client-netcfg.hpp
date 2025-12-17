@@ -22,6 +22,9 @@
 
 #include "build-config.h"
 
+#include <fmt/compile.h>
+#include <fmt/format.h>
+
 #include <openvpn/client/dns.hpp>
 
 #include "netcfg/proxy-netcfg-device.hpp"
@@ -553,26 +556,44 @@ class NetCfgTunBuilder : public T
         if (device)
             return true;
 
-        try
+        for (uint8_t attempts = 3; attempts > 0; attempts--)
         {
-            DBus::Object::Path devpath = netcfgmgr->CreateVirtualInterface(session_token);
-            device.reset(netcfgmgr->getVirtualInterface(std::move(devpath)));
             try
             {
-                device->SetDNSscope(dns_scope);
+                DBus::Object::Path devpath = netcfgmgr->CreateVirtualInterface(session_token);
+                device.reset(netcfgmgr->getVirtualInterface(std::move(devpath)));
+                try
+                {
+                    device->SetDNSscope(dns_scope);
+                }
+                catch (const DBus::Exception &excp)
+                {
+                    signals->LogCritical("Failed changing DNS Scope: "
+                                         + std::string(excp.GetRawError()));
+                }
+                return true;
             }
-            catch (const DBus::Exception &excp)
+            catch (const DBus::Exception &e)
             {
-                signals->LogCritical("Failed changing DNS Scope: "
-                                     + std::string(excp.GetRawError()));
+                std::string err{e.what()};
+                if (err.find("Timeout was reached") != std::string::npos)
+                {
+                    signals->Debug(fmt::format(
+                        FMT_COMPILE("Timeout calling CreateVirtualInterface('{}'), {} attempt(s) left"),
+                        session_token,
+                        attempts));
+                    if (attempts > 1)
+                    {
+                        usleep(100000);
+                    }
+                }
             }
-            return true;
+            catch (const std::exception &e)
+            {
+                signals->LogError(std::string("Error creating virtual network device: ") + e.what());
+            }
         }
-        catch (const std::exception &e)
-        {
-            signals->LogError(std::string("Error creating virtual network device: ") + e.what());
-            return false;
-        }
+        return false;
     }
 
     std::vector<NetCfgProxy::Network> networks;
