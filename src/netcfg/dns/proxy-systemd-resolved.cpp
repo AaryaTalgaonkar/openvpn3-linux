@@ -660,20 +660,6 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
 //
 
 
-class AsioWorkerClass
-{
-  public:
-    AsioWorkerClass(asio::io_context &io_context)
-        : work(asio::make_work_guard(io_context))
-    {
-    }
-
-  private:
-    asio::executor_work_guard<asio::io_context::executor_type> work;
-};
-
-
-
 Manager::Ptr Manager::Create(DBus::Connection::Ptr conn)
 {
     return Manager::Ptr(new Manager(conn));
@@ -721,8 +707,7 @@ Manager::Manager(DBus::Connection::Ptr conn)
         std::launch::async,
         [&]()
         {
-            std::unique_ptr<AsioWorkerClass> asio_work;
-            asio_work.reset(new AsioWorkerClass(asio_proxy));
+            asio::executor_work_guard<asio::io_context::executor_type> worker = asio::make_work_guard(asio_proxy);
 
             while (asio_keep_running)
             {
