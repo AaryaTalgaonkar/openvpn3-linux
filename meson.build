@@ -246,6 +246,7 @@ common_code = static_library(
             'src/common/utils.cpp',
             'src/dbus/object-ownership.cpp',
             'src/dbus/path.cpp',
+            'src/dbus/support-functions.cpp',
             'src/events/attention-req.cpp',
             'src/events/log.cpp',
             'src/events/status.cpp',
