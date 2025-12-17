@@ -29,6 +29,7 @@
 #include <openvpn/common/split.hpp>
 
 #include "log/core-dbus-logger.hpp"
+#include "dbus/support-functions.hpp"
 #include "netcfg/dns/proxy-systemd-resolved.hpp"
 #include "netcfg/dns/systemd-resolved-exception.hpp"
 
@@ -584,7 +585,7 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
                 {
                     try
                     {
-                        if (!prxqry->CheckObjectExists(bgdata->object_path, bgdata->interface))
+                        if (!GDBusPP::Proxy::Utils::LookupObject(proxy, bgdata->object_path))
                         {
                             sd_resolved_bg_log("[LAMBDA] target={}, interface={}, method={}, attempts={} - Object not found",
                                                bgdata->object_path,

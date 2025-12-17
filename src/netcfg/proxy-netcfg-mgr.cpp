@@ -25,6 +25,7 @@
 #include <gdbuspp/proxy/utils.hpp>
 
 #include "dbus/constants.hpp"
+#include "dbus/support-functions.hpp"
 #include "proxy-netcfg-mgr.hpp"
 #include "netcfg-exception.hpp"
 #include "netcfg-subscriptions.hpp"
@@ -71,8 +72,7 @@ Manager::Manager(DBus::Connection::Ptr dbuscon_)
 
 std::string Manager::GetConfigFile()
 {
-    if (!proxy_helper->CheckObjectExists(tgt_mgr->object_path,
-                                         tgt_mgr->interface))
+    if (!GDBusPP::Proxy::Utils::LookupObject(proxy, tgt_mgr->object_path))
     {
         throw NetCfgProxyException("GetConfigFile",
                                    "net.openvpn.v3.netcfg service unavailable");
@@ -104,8 +104,7 @@ DBus::Object::Path Manager::CreateVirtualInterface(const std::string &device_nam
 
 bool Manager::ProtectSocket(int socket, const std::string &remote, bool ipv6, const std::string &devpath)
 {
-    if (!proxy_helper->CheckObjectExists(tgt_mgr->object_path,
-                                         tgt_mgr->interface))
+    if (!GDBusPP::Proxy::Utils::LookupObject(proxy, tgt_mgr->object_path))
     {
         throw NetCfgProxyException("ProtectSocket",
                                    "net.openvpn.v3.netcfg service unavailable");
@@ -157,8 +156,7 @@ bool Manager::DcoAvailable()
 
 void Manager::Cleanup()
 {
-    if (!proxy_helper->CheckObjectExists(tgt_mgr->object_path,
-                                         tgt_mgr->interface))
+    if (!GDBusPP::Proxy::Utils::LookupObject(proxy, tgt_mgr->object_path))
     {
         throw NetCfgProxyException("Cleanup",
                                    "net.openvpn.v3.netcfg service unavailable");
