@@ -155,6 +155,10 @@ bool query_user_input(SessionManager::Proxy::Session::Ptr session,
                                 }
                                 done = true;
                             }
+                            else if (err.find("Object does not exist at path ") != std::string::npos)
+                            {
+                                exit_reason = ExitReason::ABORTED;
+                            }
                             else
                             {
                                 done = true;
