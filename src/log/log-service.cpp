@@ -73,6 +73,7 @@ AttachedService::AttachedService(DBus::Connection::Ptr conn,
       src_target(DBus::Signals::Target::Create(busname, "", interface)),
       connection(conn), object_mgr(obj_mgr), log(logr)
 {
+    creds_query = DBus::Credentials::Query::Create(connection);
     log_handler = Signals::ReceiveLog::Create(
         submgr,
         src_target,
@@ -146,6 +147,33 @@ void AttachedService::process_log_event(const Events::Log &logevent)
         meta->AddMeta("object_path", logevent.sender->object_path);
     }
     meta->AddMeta("interface", logevent.sender->object_interface);
+
+    try
+    {
+        // Lookup the sender bus name from a lookup cache, to reduce
+        // the mount of D-Bus calls
+        pid_t sender_pid = 0;
+        auto node = busname_pid_map.extract(logevent.sender->busname);
+        if (node.empty())
+        {
+            // If the sender PID was not cached, look it up and store it
+            sender_pid = creds_query->GetPID(logevent.sender->busname);
+            busname_pid_map[logevent.sender->busname] = sender_pid;
+        }
+        else
+        {
+            sender_pid = node.mapped();
+        }
+        if (sender_pid > 0)
+        {
+            meta->AddMeta("sender_pid", sender_pid);
+        }
+    }
+    catch (const DBus::Exception &)
+    {
+        // Ignore if this lookup fails; it's not critical and just
+        // useful additional info if available
+    }
 
     Events::Log local_event(logevent);
     local_event.AddLogTag(logtag);

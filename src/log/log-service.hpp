@@ -88,6 +88,8 @@ class AttachedService
   private:
     DBus::Connection::Ptr connection = nullptr;
     DBus::Object::Manager::Ptr object_mgr = nullptr;
+    DBus::Credentials::Query::Ptr creds_query = nullptr;
+    std::unordered_map<std::string, pid_t> busname_pid_map;
     LogService::Logger::Ptr log = nullptr;
     Signals::ReceiveLog::Ptr log_handler = nullptr;
     Signals::ReceiveStatusChange::Ptr status_handler = nullptr;
