@@ -144,9 +144,7 @@ static int cmd_session_start(ParsedArgs::Ptr args)
     }
     catch (const DBus::Exception &excp)
     {
-        throw CommandException("session-start",
-                               "Could not start new VPN session: "
-                                   + std::string(excp.GetRawError()));
+        throw CommandException("session-start", excp.GetRawError());
     }
     catch (const std::exception &excp)
     {

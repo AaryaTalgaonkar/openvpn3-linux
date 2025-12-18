@@ -19,6 +19,8 @@
 #include <condition_variable>
 #include <iostream>
 #include <memory>
+#include <fmt/compile.h>
+#include <fmt/format.h>
 #include <gdbuspp/proxy.hpp>
 #include <gdbuspp/proxy/utils.hpp>
 
@@ -731,9 +733,12 @@ class Manager
 
             return Session::Create(proxy, session_path);
         }
-        catch (const DBus::Proxy::Exception &)
+        catch (const DBus::Proxy::Exception &excp)
         {
-            throw SessionManager::Proxy::Exception("Failed to start new tunnel");
+            throw SessionManager::Proxy::Exception(fmt::format(
+                FMT_COMPILE("Failed to start new tunnel:{}"),
+                excp.GetRawError()
+            ));
         }
     }
 
