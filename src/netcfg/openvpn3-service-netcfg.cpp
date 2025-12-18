@@ -208,7 +208,6 @@ int netcfg_main(ParsedArgs::Ptr args)
         // Register this service for logging via net.openvpn.v3.log
         logservice = LogServiceProxy::AttachInterface(dbuscon,
                                                       Constants::GenInterface("netcfg"));
-        logservice->Attach(Constants::GenInterface("netcfg.core"));
 
         std::cout << get_version(args->GetArgv0()) << std::endl;
 
@@ -260,7 +259,6 @@ int netcfg_main(ParsedArgs::Ptr args)
         netcfgsrv->Run();
 
         logservice->Detach(Constants::GenInterface("netcfg"));
-        logservice->Detach(Constants::GenInterface("netcfg.core"));
 
         // Explicitly restore the resolv.conf file, if configured
         try
