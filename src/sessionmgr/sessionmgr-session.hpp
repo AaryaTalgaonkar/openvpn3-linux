@@ -108,6 +108,7 @@ class Session : public DBus::Object::Base
      */
     void ResetLogForwarders();
 
+    DBus::Object::Path GetConfigPath() const noexcept;
     std::string GetConfigName() const noexcept;
     std::string GetDeviceName() const noexcept;
     std::string GetBackendBusName() const noexcept;

@@ -709,6 +709,12 @@ void Session::SetConfigName(const std::string &cfgname)
 }
 
 
+DBus::Object::Path Session::GetConfigPath() const noexcept
+{
+    return config_path;
+}
+
+
 std::string Session::GetConfigName() const noexcept
 {
     return config_name;
