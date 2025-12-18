@@ -73,6 +73,7 @@ struct LogEntry
     uint64_t realtime = 0;        //<  Timestamp in microseconds of the log event
     std::string timestamp = {};   //<  Timestamp in human readable format, based on current locale
     std::string sender = {};      //<  D-Bus sender of the log event, if present
+    std::string sender_pid = {};  //<  D-Bus sender process PID
     std::string interface = {};   //<  D-Bus interface of the log event producer, if present
     std::string method = {};      //<  D-Bus method related to the log event, if present
     std::string property = {};    //<  D-Bus object property related to the log event, if present
@@ -178,7 +179,8 @@ class Parse
         SESSION_TOKEN,
         OBJECT_PATH,
         SENDER,
-        INTERFACE
+        INTERFACE,
+        SENDER_PID
     };
 
 

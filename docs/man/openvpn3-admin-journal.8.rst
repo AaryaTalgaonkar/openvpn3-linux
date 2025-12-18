@@ -91,6 +91,13 @@ OPTIONS
                 bus names related to OpenVPN 3 Linux can be found by
                 running ``openvpn3-admin log-service --list-subscriptions``.
 
+--pid PROCESS_ID
+                In OpenVPN 3 Linux v27 and newer, the process ID (pid)
+                of the process sending log events is preseved in the
+                journal meta data section.  The `--pid` option with
+                the PID value of a service in the OpenVPN 3 Linux
+                stack will extract only those log records.
+
 --interface DBUS_INTERFACE
                 This is yet another approach to filter out specific
                 D-Bus services, but this filter is less specific.  This

@@ -39,6 +39,7 @@ LogEntry::LogEntry(sd_journal *journal)
     realtime = extract_journal_tstamp(journal);
     timestamp = timestamp_to_str(realtime);
     sender = extract_journal_field(journal, "O3_SENDER");
+    sender_pid = extract_journal_field(journal, "O3_SENDER_PID");
     interface = extract_journal_field(journal, "O3_INTERFACE");
     method = extract_journal_field(journal, "O3_METHOD");
     property = extract_journal_field(journal, "O3_PROPERTY");
@@ -66,6 +67,10 @@ const Json::Value LogEntry::GetJSON() const
     if (!sender.empty())
     {
         ret["O3_SENDER"] = sender;
+    }
+    if (!sender_pid.empty())
+    {
+        ret["O3_SENDER_PID"] = sender_pid;
     }
     if (!interface.empty())
     {
@@ -372,6 +377,9 @@ void Parse::AddFilter(const FilterType ft, const std::string &fval) const
 
     case FilterType::INTERFACE:
         match << "O3_INTERFACE=" << fval;
+        break;
+    case FilterType::SENDER_PID:
+        match << "O3_SENDER_PID=" << fval;
         break;
 
     default:

@@ -58,6 +58,10 @@ int cmd_journal(ParsedArgs::Ptr args)
     {
         journal.AddFilter(Parse::FilterType::SESSION_TOKEN, args->GetValue("session-token", 0));
     }
+    if (args->Present("pid"))
+    {
+        journal.AddFilter(Parse::FilterType::SENDER_PID, args->GetValue("pid", 0));
+    }
 
     LogEntries recs = journal.Retrieve();
     if (args->Present("json"))
@@ -87,6 +91,7 @@ SingleCommand::Ptr prepare_command_journal()
     jrnlcmd->AddOption("since", "DATE/TIME", true, "Retrieve log entries after the provided DATE/TIME value");
     jrnlcmd->AddOption("path", "DBUS_OBJECT_PATH", true, "Filter on D-Bus object path");
     jrnlcmd->AddOption("sender", "DBUS_SENDER", true, "Filter on D-Bus unique bus name (:x.xx)");
+    jrnlcmd->AddOption("pid", "PROCESS-ID", true, "Filter on the PID (process id) of the process sending log events");
     jrnlcmd->AddOption("interface", "DBUS_INTERFACE", true, "Filter on D-Bus object interface name");
     jrnlcmd->AddOption("logtag", "LOGTAG", true, "Filter on the LogTag value of the service");
     jrnlcmd->AddOption("session-token", "TOKEN", true, "Filter on the VPN client process session token value");
