@@ -143,6 +143,20 @@ void SrvHandler::method_new_tunnel(Object::Method::Arguments::Ptr args)
 
     auto cfgpath = glib2::Value::Extract<DBus::Object::Path>(params, 0);
     uid_t owner = creds_qry->GetUID(args->GetCallerBusName());
+
+    // Check if a VPN session using the same configuration path has
+    // already been started
+    auto config_path_filter = [&cfgpath](std::shared_ptr<Session> session)
+    {
+        return cfgpath == session->GetConfigPath();
+    };
+    auto session_search = helper_retrieve_sessions(args->GetCallerBusName(),
+                                                   config_path_filter);
+    if (!session_search.empty())
+    {
+        throw DBus::Object::Method::Exception("A session with this configuration profile is already running");
+    }
+
     auto sespath = tunnel_queue->AddTunnel(cfgpath, owner);
     args->SetMethodReturn(glib2::Value::CreateTupleWrapped(sespath));
 }
