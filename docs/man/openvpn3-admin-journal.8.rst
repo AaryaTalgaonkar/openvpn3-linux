@@ -112,7 +112,6 @@ OPTIONS
                         net.openvpn.v3.configuration
                         net.openvpn.v3.log
                         net.openvpn.v3.netcfg
-                        net.openvpn.v3.netcfg.core
                         net.openvpn.v3.sessions
 
 --logtag LOGTAG
