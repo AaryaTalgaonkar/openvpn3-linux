@@ -782,7 +782,7 @@ RegisterParsedArgs::Ptr SingleCommand::parse_commandline(const std::string &arg0
                 if (opt_version_added
                     && (0 == strncmp("version", long_opts[optidx].name, 7)))
                 {
-                    std::cout << get_version(arg0) << std::endl;
+                    std::cout << get_program_version(arg0) << std::endl;
                     goto exit;
                 }
 

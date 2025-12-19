@@ -31,6 +31,13 @@
 #include <openvpn/common/platform_string.hpp>
 
 
+#ifndef CONFIGURE_GIT_REVISION
+constexpr char package_version[] = PACKAGE_GUIVERSION;
+#else
+constexpr char package_version[] = "git:" CONFIGURE_GIT_REVISION CONFIGURE_GIT_FLAGS;
+#endif
+
+
 
 void drop_root()
 {
@@ -90,17 +97,7 @@ void drop_root()
 }
 
 
-/**
- *  Returns a string containing a version reference of the build.
- *  If a git checkout is discovered, flags identifying if there are
- *  uncommitted changes will be present too.
- *
- * @param component  An additional string identifying which component this
- *                   version reference belongs to.  Normally argv[0].
- *
- * @return A pre-formatted std::string containing the version references
- */
-std::string get_version(const std::string &component)
+std::string get_program_version(const std::string &component)
 {
     std::stringstream ver;
 
@@ -126,6 +123,12 @@ std::string get_version(const std::string &component)
         << openvpn_copyright;
 
     return ver.str();
+}
+
+
+const char *get_package_version()
+{
+    return package_version;
 }
 
 

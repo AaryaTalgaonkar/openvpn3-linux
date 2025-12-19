@@ -209,7 +209,7 @@ int netcfg_main(ParsedArgs::Ptr args)
         logservice = LogServiceProxy::AttachInterface(dbuscon,
                                                       Constants::GenInterface("netcfg"));
 
-        std::cout << get_version(args->GetArgv0()) << std::endl;
+        std::cout << get_program_version(args->GetArgv0()) << std::endl;
 
         //
         // DNS resolver integrations

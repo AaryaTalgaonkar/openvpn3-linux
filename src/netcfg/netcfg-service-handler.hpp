@@ -84,7 +84,7 @@ class NetCfgServiceHandler : public DBus::Object::Base
     DBus::Credentials::Query::Ptr creds_query = nullptr;
     NetCfgSignals::Ptr signals = nullptr;
     DNS::SettingsManager::Ptr resolver = nullptr;
-    std::string version{package_version};
+    std::string version{get_package_version()};
     NetCfgOptions options;
     NetCfgSubscriptions::Ptr subscriptions = nullptr;
 

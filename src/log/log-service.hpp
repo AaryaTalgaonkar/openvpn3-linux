@@ -130,7 +130,7 @@ class ServiceHandler : public DBus::Object::Base
     Log::EventFilter::Ptr logfilter = nullptr;
     DBus::Credentials::Query::Ptr dbuscreds = nullptr;
     DBus::Signals::SubscriptionManager::Ptr subscrmgr = nullptr;
-    std::string version = package_version;
+    std::string version = get_package_version();
 
     // Log subscription related to D-Bus service subscription attachments
     using AttachMap = std::map<size_t, AttachedService::Ptr>;

@@ -17,17 +17,49 @@
 #include <ctime>
 #include <string>
 
-#include "build-version.h"
-
-#ifndef CONFIGURE_GIT_REVISION
-constexpr char package_version[] = PACKAGE_GUIVERSION;
-#else
-constexpr char package_version[] = "git:" CONFIGURE_GIT_REVISION CONFIGURE_GIT_FLAGS;
-#endif
-
-
 void drop_root();
-std::string get_version(const std::string &component);
+
+/**
+ *  Get the version string used to identify the product, program
+ *  and version.
+ *
+ *  If a git checkout is discovered, flags identifying if there are
+ *  uncommitted changes will added.  These flags are identified by
+ *  a double underbar (__) and a character per flag.
+ *
+ *  Flags used are:  m - files are modified
+ *                   s - some files are modified and staged in the git index
+ *
+ *
+ * @param component  An additional string identifying which component this
+ *                   version reference belongs to.  Normally argv[0].
+ *
+ * @return A pre-formatted std::string containing the version references
+ */
+std::string get_program_version(const std::string &component);
+
+
+/**
+ *  Returns a string contaiining only the release/git version
+ *
+ *  This value is typically used in the D-Bus services root
+ *  object and represented in the 'version' property.
+ *
+ * @return const char* containing the version identifier.
+ */
+const char * get_package_version();
+
+/**
+ *  A variant of the get_program_version(), used
+ *  in the OpenVPN protocol for the IV_GUI_VER peer-info
+ *  field.
+ *
+ *  The format of this string must be:
+ *     OpenVPN3/Linux/$VERSION
+ *
+ * @return const std::string containing the string to be
+ *         used in the IV_GUI_VER field.
+ */
 const std::string get_guiversion();
 int stop_handler(void *loop);
 void set_console_echo(bool echo);

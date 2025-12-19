@@ -211,7 +211,7 @@ class BackendStarterHandler : public DBus::Object::Base
     const uid_t process_uid;
     BackendStarterSignals::Ptr be_signals{nullptr};
     ::Signals::StatusChange::Ptr sig_statuschg{nullptr};
-    std::string version{package_version};
+    std::string version{get_package_version()};
 
 
     /**
@@ -397,7 +397,7 @@ class BackendStarterSrv : public DBus::Service
 
 int backend_starter(ParsedArgs::Ptr args)
 {
-    std::cout << get_version(args->GetArgv0()) << std::endl;
+    std::cout << get_program_version(args->GetArgv0()) << std::endl;
 
     std::vector<std::string> client_args;
 #ifdef OPENVPN_DEBUG

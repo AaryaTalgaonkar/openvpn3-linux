@@ -14,7 +14,6 @@
 #include <gdbuspp/connection.hpp>
 
 #include "build-config.h"
-#include "build-version.h"
 #include "dbus/constants.hpp"
 #include "common/utils.hpp"
 #include "common/cmdargparser.hpp"
@@ -197,14 +196,14 @@ static int logger_service(ParsedArgs::Ptr args)
     {
         logwr->Write(Events::Log(LogGroup::LOGGER,
                                  LogCategory::INFO,
-                                 get_version(args->GetArgv0()),
+                                 get_program_version(args->GetArgv0()),
                                  false));
         logwr->Write(Events::Log(LogGroup::LOGGER,
                                  LogCategory::INFO,
                                  "Log method: " + logwr->GetLogWriterInfo()));
         if (do_console_info)
         {
-            std::cout << get_version(args->GetArgv0()) << std::endl;
+            std::cout << get_program_version(args->GetArgv0()) << std::endl;
             std::cout << "Log method: " << logwr->GetLogWriterInfo() << std::endl;
         }
 

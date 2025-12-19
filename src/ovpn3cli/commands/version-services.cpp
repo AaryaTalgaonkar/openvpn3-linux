@@ -202,7 +202,7 @@ int cmd_version_services(ParsedArgs::Ptr args)
 
         return 0;
     }
-    std::cout << get_version("/" + args->GetArgv0()) << std::endl;
+    std::cout << get_program_version("/" + args->GetArgv0()) << std::endl;
     return 0;
 }
 

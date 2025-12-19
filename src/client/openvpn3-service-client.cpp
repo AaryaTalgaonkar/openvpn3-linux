@@ -1593,7 +1593,7 @@ void start_client_thread(pid_t start_pid,
                          LogWriter *logwr)
 {
     InitProcess::Init init;
-    std::cout << get_version(argv0) << std::endl;
+    std::cout << get_program_version(argv0) << std::endl;
 
     try
     {

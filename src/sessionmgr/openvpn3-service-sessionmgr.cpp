@@ -25,7 +25,7 @@ using namespace openvpn;
 
 static int session_manager(ParsedArgs::Ptr args)
 {
-    std::cout << get_version(args->GetArgv0()) << std::endl;
+    std::cout << get_program_version(args->GetArgv0()) << std::endl;
 
     // Enable automatic shutdown if the config manager is
     // idling for 1 minute or more.  By idling, it means

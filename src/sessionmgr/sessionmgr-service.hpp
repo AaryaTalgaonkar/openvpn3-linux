@@ -77,7 +77,7 @@ class SrvHandler : public Object::Base
     Object::Manager::Ptr object_mgr = nullptr;
     LogWriter::Ptr logwr = nullptr;
     DBus::Credentials::Query::Ptr creds_qry = nullptr;
-    std::string version{package_version};
+    std::string version{get_package_version()};
     SessionManager::Log::Ptr sig_sessmgr = nullptr;
     DBus::Signals::Emit::Ptr broadcast_emitter = nullptr;
     ::Signals::SessionManagerEvent::Ptr sig_sessmgr_event = nullptr;

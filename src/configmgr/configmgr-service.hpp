@@ -143,7 +143,7 @@ class ConfigHandler : public DBus::Object::Base
     DBus::Connection::Ptr dbuscon_;
     DBus::Object::Manager::Ptr object_manager_;
     DBus::Credentials::Query::Ptr creds_qry_;
-    std::string prop_version_{package_version};
+    std::string prop_version_{get_package_version()};
     ConfigManager::Log::Ptr signals_;
     ::Signals::ConfigurationManagerEvent::Ptr sig_configmgr_event_;
     std::string state_dir_;
