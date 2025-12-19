@@ -192,7 +192,7 @@ Link::Ptr Link::Create(asio::io_context &asio_ctx,
                        const DBus::Object::Path &path,
                        const std::string &devname)
 {
-    return Link::Ptr(new Link(asio_ctx, errors, prx, if_index, path, devname));
+    return Link::Ptr(new Link(asio_ctx, std::move(errors), std::move(prx), if_index, path, devname));
 }
 
 
@@ -202,7 +202,7 @@ Link::Link(asio::io_context &asio_ctx,
            int32_t if_idx,
            const DBus::Object::Path &path,
            const std::string &devname)
-    : asio_proxy(asio_ctx), errors(errors_), proxy(prx),
+    : asio_proxy(asio_ctx), errors(std::move(errors_)), proxy(std::move(prx)),
       if_index(if_idx), device_name(devname)
 {
     tgt_link = DBus::Proxy::TargetPreset::Create(path,
@@ -474,8 +474,8 @@ struct background_call_data
                          const std::string &meth,
                          GVariant *prms,
                          std::function<void(const std::vector<std::string> &)> err_cb)
-        : proxy(std::move(prx)), object_path(std::move(objpath)), interface(std::move(interf)),
-          method(std::move(meth)), params(prms), error_callback(std::move(err_cb))
+        : proxy(std::move(prx)), object_path(objpath), interface(interf),
+          method(meth), params(prms), error_callback(std::move(err_cb))
     {
     }
 
@@ -663,7 +663,7 @@ void Link::BackgroundCall(DBus::Proxy::TargetPreset::Ptr &target,
 
 Manager::Ptr Manager::Create(DBus::Connection::Ptr conn)
 {
-    return Manager::Ptr(new Manager(conn));
+    return Manager::Ptr(new Manager(std::move(conn)));
 }
 
 
