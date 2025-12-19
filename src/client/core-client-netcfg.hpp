@@ -82,6 +82,12 @@ class NetCfgTunBuilder : public T
         {
             signals->LogCritical("Removing device failed: " + excp.GetError());
         }
+        catch (const DBus::Exception &excp)
+        {
+            signals->LogCritical(fmt::format(
+                FMT_COMPILE("Error tearing down interface: {}"),
+                excp.GetRawError()));
+        }
 
         try
         {
