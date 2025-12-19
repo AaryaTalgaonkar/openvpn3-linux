@@ -143,28 +143,6 @@ const std::string get_guiversion()
 }
 
 
-/**
- *  GLib2 interrupt/signal handler.  This is used to gracefully shutdown
- *  the GLib main loop.  This is called via the g_unix_signal_add() or
- *  similar interfaces which has access to the GMainLoop object.
- *
- * @param loop  GMainLoop object which is to be shut down.
- * @return See @GSourceFunc() declaration in glib2.  We return
- *         G_SOURCE_CONTINUE as we do not want to remove/disable the
- *         signal processing.
- */
-int stop_handler(void *loop)
-{
-#ifdef SHUTDOWN_NOTIF_PROCESS_NAME
-    std::cout << "** Shutting down ";
-    std::cout << SHUTDOWN_NOTIF_PROCESS_NAME << " ";
-    std::cout << "(pid: " << std::to_string(getpid()) << ")" << std::endl;
-#endif
-    g_main_loop_quit((GMainLoop *)loop);
-    return G_SOURCE_CONTINUE;
-}
-
-
 void set_console_echo(bool echo)
 {
     struct termios console;

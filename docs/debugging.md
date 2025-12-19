@@ -213,8 +213,8 @@ When compiling from source, there are more debug tools under
      signals towards a specific recipient.  It will also decode some
      of the OpenVPN 3 specific D-Bus signals.
 
-  * `log-listener`, `log-listener2`:  Variants of `signal-listener` which
-     only listens for `Log` signals.
+  * `log-listener`:  Variant of `signal-listener` which only listens
+     for `Log` signals.
 
   * `logservice1` and `openvpn3 log-service`:  Can be used to query and
      modify properties in the `openvpn3-service-log` service.  The

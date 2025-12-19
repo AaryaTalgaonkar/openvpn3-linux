@@ -61,7 +61,6 @@ const char * get_package_version();
  *         used in the IV_GUI_VER field.
  */
 const std::string get_guiversion();
-int stop_handler(void *loop);
 
 
 /**
