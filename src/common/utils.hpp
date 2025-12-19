@@ -62,6 +62,14 @@ const char * get_package_version();
  */
 const std::string get_guiversion();
 int stop_handler(void *loop);
+
+
+/**
+ *  Enables or disables the terminal input echo flag.  This
+ *  is used to mask password input.
+ *
+ * @param echo  Boolean, if true the console input will be echoed to console
+ */
 void set_console_echo(bool echo);
 
 static inline std::string simple_basename(const std::string &filename)
