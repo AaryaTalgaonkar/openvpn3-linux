@@ -17,6 +17,7 @@ configure_file(
 )
 
 subdir('openvpn3')
+subdir('session-watcher')
 
 custom_target('openvpn2',
         input: 'openvpn2',

@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenVPN 3 Linux Session watcher
+After=network.target dbus.service
+
+[Service]
+Type=simple
+ExecStart=@BINDIR@/openvpn3-desktop-session-watcher
+
+[Install]
+WantedBy=default.target

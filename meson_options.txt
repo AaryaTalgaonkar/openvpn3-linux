@@ -102,6 +102,8 @@ option('dbus_system_service_dir', type: 'string',
        description: 'Override D-Bus system service directory')
 option('systemd_system_unit_dir', type: 'string',
        description: 'Override path to systemd system unit directory')
+option('systemd_user_unit_dir', type: 'string',
+       description: 'Override path to systemd user unit directory')
 option('create_statedir', type: 'boolean', value: true,
        description: 'Create directory for OpenVPN 3 state during install phase')
 

@@ -19,6 +19,7 @@ manpage_sources = [
     ['openvpn3-config-manage.1.rst', mandir_1],
     ['openvpn3-config-remove.1.rst', mandir_1],
     ['openvpn3-configs-list.1.rst', mandir_1],
+    ['openvpn3-desktop-session-watcher.1.rst', mandir_1],
     ['openvpn3-log.1.rst', mandir_1],
     ['openvpn3-session-acl.1.rst', mandir_1],
     ['openvpn3-session-auth.1.rst', mandir_1],
