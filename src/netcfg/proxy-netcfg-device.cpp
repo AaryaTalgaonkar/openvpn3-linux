@@ -686,7 +686,7 @@ void DCO::NewKey(unsigned int key_slot,
 
 void DCO::SwapKeys(unsigned int peer_id) const
 {
-    GVariant *res = proxy->Call(dcotgt, "SwapKeys", glib2::Value::Create(peer_id));
+    GVariant *res = proxy->Call(dcotgt, "SwapKeys", glib2::Value::CreateTupleWrapped<uint32_t>(peer_id));
     if (res)
     {
         g_variant_unref(res);
