@@ -131,13 +131,16 @@ class ConfigHandler : public DBus::Object::Base
      *  Returns only those configurations which are accessable by caller,
      *  and for which also filter_fn returns true.
      *
-     * @param caller    D-Bus object caller ID
-     * @param filter_fn Predicate filtering configuration objects
+     * @param caller      D-Bus object caller ID
+     * @param filter_fn   Predicate filtering configuration objects
+     * @param grant_root  Don't filter out root (uid 0) in the ACL check
+     *                    if it is the caller
      *
      * @return A (possibly empty) container of configuration smart pointers
      */
     ConfigCollection helper_retrieve_configs(const std::string &caller,
-                                             fn_search_filter &&filter_fn) const;
+                                             fn_search_filter &&filter_fn,
+                                             bool grant_root = false) const;
 
   private:
     DBus::Connection::Ptr dbuscon_;

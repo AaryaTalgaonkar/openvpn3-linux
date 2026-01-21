@@ -397,11 +397,11 @@ void ConfigHandler::method_transfer_ownership(DBus::Object::Method::Arguments::P
     auto path = glib2::Value::Extract<DBus::Object::Path>(params, 0);
     uid_t new_owner_uid = glib2::Value::Extract<uid_t>(params, 1);
 
-    auto configs = helper_retrieve_configs(args->GetCallerBusName(),
-                                           [&path](Configuration::Ptr obj)
+    auto configs = helper_retrieve_configs(args->GetCallerBusName(), [&path](Configuration::Ptr obj)
                                            {
                                                return obj->GetPath() == path;
-                                           });
+                                           },
+                                           true);
 
     for (auto &config : configs)
     {
@@ -410,9 +410,9 @@ void ConfigHandler::method_transfer_ownership(DBus::Object::Method::Arguments::P
 }
 
 
-ConfigHandler::ConfigCollection
-ConfigHandler::helper_retrieve_configs(const std::string &caller,
-                                       fn_search_filter &&filter_fn) const
+ConfigHandler::ConfigCollection ConfigHandler::helper_retrieve_configs(const std::string &caller,
+                                                                       fn_search_filter &&filter_fn,
+                                                                       bool grant_root) const
 {
     ConfigCollection configurations;
 
@@ -423,7 +423,7 @@ ConfigHandler::helper_retrieve_configs(const std::string &caller,
         if (config_object)
         {
             // If the caller is empty, we don't do any ACL checks
-            bool caller_check = ((!caller.empty() && config_object->CheckACL(caller))
+            bool caller_check = ((!caller.empty() && config_object->CheckACL(caller, grant_root))
                                  || caller.empty());
 
             // If the device object is not null, the path should be valid
