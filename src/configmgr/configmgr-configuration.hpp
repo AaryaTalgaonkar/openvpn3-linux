@@ -167,11 +167,12 @@ class Configuration : public DBus::Object::Base
     /**
      *  Retrieve the configuration name
      *
-     * @param called D-Bus identifier for the caller object
+     * @param called      D-Bus identifier for the caller object
+     * @param grant_root  Grant the root (uid 0) user access to the object
      *
      * @return true if the caller is allowed to access this configuration
      */
-    bool CheckACL(const std::string &caller) const noexcept;
+    bool CheckACL(const std::string &caller, bool grant_root = false) const noexcept;
 
   private:
     void add_methods();

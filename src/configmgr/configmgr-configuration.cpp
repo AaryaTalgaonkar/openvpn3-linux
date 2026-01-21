@@ -646,9 +646,14 @@ void Configuration::TransferOwnership(uid_t new_owner_uid)
 }
 
 
-bool Configuration::CheckACL(const std::string &caller) const noexcept
+bool Configuration::CheckACL(const std::string &caller, bool grant_root) const noexcept
 {
-    return object_acl_->CheckACL(caller, {object_acl_->GetOwner()});
+    GDBusPP::Object::Extension::ACLList allow_list = {object_acl_->GetOwner()};
+    if (grant_root)
+    {
+        allow_list.push_back(0);
+    }
+    return object_acl_->CheckACL(caller, allow_list);
 }
 
 
