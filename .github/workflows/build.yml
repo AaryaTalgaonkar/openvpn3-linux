@@ -23,7 +23,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install build-essential git pkg-config meson libglib2.0-dev \
+          sudo apt-get install
+          sudo apt-get install build-essential git pkg-config meson libglib2.0-dev \
                   libjsoncpp-dev uuid-dev liblz4-dev libcap-ng-dev    \
                   libxml2-utils python3-minimal python3-dbus          \
                   python3-docutils python3-jinja2 libxml2-utils       \
