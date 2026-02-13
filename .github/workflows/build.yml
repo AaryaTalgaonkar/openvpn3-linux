@@ -20,18 +20,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Repository
+        run: |
+          sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc
+          DISTRO=$(lsb_release -c -s)
+          echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
+
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt-get install
-          sudo apt-get install build-essential git pkg-config meson libglib2.0-dev \
+          sudo apt install build-essential git pkg-config meson libglib2.0-dev \
                   libjsoncpp-dev uuid-dev liblz4-dev libcap-ng-dev    \
                   libxml2-utils python3-minimal python3-dbus          \
                   python3-docutils python3-jinja2 libxml2-utils       \
                   libtinyxml2-dev policykit-1 libsystemd-dev          \
                   python3-systemd libssl-dev libgdbuspp-dev \
                   libdbus-1-dev
-
       - name: Build
         run: |
           ./bootstrap.sh
