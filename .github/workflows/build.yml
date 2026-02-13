@@ -1,0 +1,45 @@
+name: Build Backend
+
+on:
+  pull_request:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install build-essential git pkg-config meson libglib2.0-dev \
+                  libjsoncpp-dev uuid-dev liblz4-dev libcap-ng-dev    \
+                  libxml2-utils python3-minimal python3-dbus          \
+                  python3-docutils python3-jinja2 libxml2-utils       \
+                  libtinyxml2-dev policykit-1 libsystemd-dev          \
+                  python3-systemd libssl-dev libgdbuspp-dev \
+                  libdbus-1-dev
+
+      - name: Build
+        run: |
+          ./bootstrap.sh
+          meson setup --prefix=/usr _builddir
+          meson compile -C _builddir
+          DESTDIR=$PWD/pkgroot meson install -C _builddir
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build-${{ matrix.os }}
+          path: pkgroot
