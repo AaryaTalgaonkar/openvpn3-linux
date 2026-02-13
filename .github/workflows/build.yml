@@ -36,6 +36,7 @@ jobs:
                   libtinyxml2-dev policykit-1 libsystemd-dev          \
                   python3-systemd libssl-dev libgdbuspp-dev \
                   libdbus-1-dev
+          sudo apt install libnl-3-dev libnl-genl-3-dev protobuf-compiler libprotobuf-dev
       - name: Build
         run: |
           ./bootstrap.sh
