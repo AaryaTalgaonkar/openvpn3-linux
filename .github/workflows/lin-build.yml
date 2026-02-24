@@ -1,4 +1,4 @@
-name: Build Backend
+name: Linux Build Backend
 
 on:
   workflow_dispatch:
