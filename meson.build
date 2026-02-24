@@ -24,7 +24,7 @@ dep_lz4 = dependency('liblz4', required: false)
 dep_selinux = dependency('libselinux', required: false)
 dep_systemd = dependency('libsystemd', version: '>218', required: false)
 dep_tinyxml2 = dependency('tinyxml2')
-dep_jsoncpp = dependency('jsoncpp', static: true)
+dep_jsoncpp = dependency('jsoncpp')
 
 libfmt = subproject('fmt', default_options: ['header-only=true'])
 dep_libfmt = libfmt.get_variable('fmt_header_only_dep')
