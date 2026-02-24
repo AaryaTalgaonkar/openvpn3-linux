@@ -24,7 +24,7 @@ dep_lz4 = dependency('liblz4', required: false)
 dep_selinux = dependency('libselinux', required: false)
 dep_systemd = dependency('libsystemd', version: '>218', required: false)
 dep_tinyxml2 = dependency('tinyxml2')
-dep_jsoncpp = dependency('jsoncpp')
+dep_jsoncpp = dependency('jsoncpp', static: true)
 
 libfmt = subproject('fmt', default_options: ['header-only=true'])
 dep_libfmt = libfmt.get_variable('fmt_header_only_dep')
@@ -40,7 +40,7 @@ base_dependencies = [
     dep_selinux,
     dep_systemd,
     dep_tinyxml2,
-    dependency('gdbuspp'),
+    dependency('gdbuspp', static: true)
     dependency('glib-2.0'),
     dependency('gio-2.0'),
     dependency('gio-unix-2.0'),
