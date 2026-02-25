@@ -40,7 +40,13 @@ jobs:
           meson setup --prefix=/usr _builddir
           meson compile -C _builddir
           DESTDIR=$PWD/pkgroot meson install -C _builddir
-
+          
+      - name: List permissions numerically
+        run: |
+          echo "==== Numeric permissions ===="
+          find pkgroot -type f -exec stat --format="%a %n" {} \;
+          find pkgroot -type d -exec stat --format="%a %n" {} \;
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
