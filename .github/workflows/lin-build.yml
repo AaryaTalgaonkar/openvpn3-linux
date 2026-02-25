@@ -43,7 +43,7 @@ jobs:
           
       - name: Create tarball
         run: |
-          tar -cvf backend-${{ matrix.os }}.tar -C pkgroot .
+          tar -cvf backend-build-${{ matrix.os }}.tar -C pkgroot .
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4
