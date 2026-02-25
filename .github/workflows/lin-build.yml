@@ -49,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-build-${{ matrix.os }}
-          path: backend-${{ matrix.os }}.tar
+          path: backend-build-${{ matrix.os }}.tar
