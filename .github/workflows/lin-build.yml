@@ -41,14 +41,12 @@ jobs:
           meson compile -C _builddir
           DESTDIR=$PWD/pkgroot meson install -C _builddir
           
-      - name: List permissions numerically
+      - name: Create tarball
         run: |
-          echo "==== Numeric permissions ===="
-          find pkgroot -type f -exec stat --format="%a %n" {} \;
-          find pkgroot -type d -exec stat --format="%a %n" {} \;
+          tar -czf backend-${{ matrix.os }}.tar.gz -C pkgroot .
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-build-${{ matrix.os }}
-          path: pkgroot
+          path: backend-${{ matrix.os }}.tar.gz
