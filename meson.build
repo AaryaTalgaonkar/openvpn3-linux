@@ -347,7 +347,7 @@ subdir('src/log')
 subdir('src/netcfg')
 subdir('src/sessionmgr')
 subdir('src/configmgr')
-
+subdir('src/python')
 subdir('src/ovpn3cli')
 subdir('src/dbus')
 subdir('src/selinux')
