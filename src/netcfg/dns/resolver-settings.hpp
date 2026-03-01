@@ -453,7 +453,7 @@ class ResolverSettings
     bool enabled = false;
     bool prepare_removal = false;
     std::string device_name;
-    Scope scope = DNS::Scope::GLOBAL;
+    Scope scope = DNS::Scope::TUNNEL;
     std::vector<std::string> name_servers;
     std::vector<std::string> search_domains;
     openvpn::DnsServer::Security dnssec_mode = openvpn::DnsServer::Security::Unset;
