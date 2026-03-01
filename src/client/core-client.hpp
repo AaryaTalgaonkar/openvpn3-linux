@@ -149,7 +149,7 @@ class DummyTunBuilder : public ClientAPI::OpenVPNClient
 
   protected:
     bool disabled_dns_config;
-    std::string dns_scope = "global";
+    std::string dns_scope = "tunnel";
 
 
   private:
