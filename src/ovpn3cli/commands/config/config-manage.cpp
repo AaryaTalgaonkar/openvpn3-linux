@@ -78,7 +78,7 @@ ConfigProfileDetails::ConfigProfileDetails(OpenVPN3ConfigurationProxy::Ptr cfgpr
         path = prx->GetConfigPath();
         name = prx->GetName();
         tags = extract_tags();
-        dns_scope = extract_override("dns-scope", "global (default)");
+        dns_scope = extract_override("dns-scope", "tunnel (default)");
         sealed = prx->GetSealed() ? "Yes" : "No";
         persistent = prx->GetPersistent() ? "Yes" : "No";
         dco = prx->GetDCO() ? "Yes" : "No";
