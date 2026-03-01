@@ -544,7 +544,7 @@ class BackendClientObject : public DBus::Object::Base
     DBus::Object::Path configpath;
     CoreVPNClient::Ptr vpnclient{nullptr};
     bool disabled_socket_protect;
-    std::string dns_scope = "global";
+    std::string dns_scope = "tunnel";
     bool ignore_dns_cfg{false};
     std::shared_ptr<std::thread> client_thread{nullptr};
     ClientAPI::Config vpnconfig{};
