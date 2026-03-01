@@ -219,7 +219,7 @@ class ResolvConfFile : public FileGenerator,
     std::vector<std::string> sys_name_servers;
     std::vector<std::string> sys_search_domains;
     std::vector<NetCfgChangeEvent> notification_queue;
-    bool dns_scope_non_global = false;
+    bool dns_scope_non_global = true;
     unsigned int modified_count = 0;
 
     /**
