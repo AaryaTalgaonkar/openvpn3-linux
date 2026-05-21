@@ -229,7 +229,7 @@ inline std::ostream &operator<<(std::ostream &os, const ClientAttentionType &obj
 }
 
 
-const uint8_t ClientAttentionGroupCount = 10;
+const uint8_t ClientAttentionGroupCount = 11;
 enum class ClientAttentionGroup : std::uint8_t
 {
     UNSET,
@@ -241,7 +241,8 @@ enum class ClientAttentionGroup : std::uint8_t
     CHALLENGE_AUTH_PENDING,
     PKCS11_SIGN,
     PKCS11_DECRYPT,
-    OPEN_URL
+    OPEN_URL,
+    PASSWORD_ONLY
 };
 
 
@@ -255,7 +256,8 @@ const std::array<const std::string, ClientAttentionGroupCount> ClientAttentionGr
      "Pending authentication", // AUTH_PENDING
      "PKCS#11 sign operation",
      "PKCS#11 decrypt operation",
-     "Web authentication"}};
+    "Web authentication",
+    "Password only"}};
 
 
 template <>

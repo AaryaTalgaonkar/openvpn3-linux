@@ -205,6 +205,7 @@ int main(int argc, char **argv)
     MAP(ClientAttentionGroup, client_att_group, "PKCS11_SIGN", PKCS11_SIGN);
     MAP(ClientAttentionGroup, client_att_group, "PKCS11_DECRYPT", PKCS11_DECRYPT);
     MAP(ClientAttentionGroup, client_att_group, "OPEN_URL", OPEN_URL);
+    MAP(ClientAttentionGroup, client_att_group, "PASSWORD_ONLY", PASSWORD_ONLY);
     Generator("ClientAttentionGroup", client_att_group);
 
     std::vector<ConstantMapping<NetCfgChangeType>> netcfg_changetype;

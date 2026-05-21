@@ -42,6 +42,16 @@
 
 #include <openvpn/common/base64.hpp>
 
+#if defined(USE_OPENSSL)
+#include <openssl/obj_mac.h>
+
+#include <openvpn/openssl/pki/x509.hpp>
+#include <openvpn/openssl/pki/x509certinfo.hpp>
+#elif defined(USE_MBEDTLS)
+#include <openvpn/mbedtls/pki/x509cert.hpp>
+#include <openvpn/mbedtls/pki/x509certinfo.hpp>
+#endif
+
 #include "common/machineid.hpp"
 #include "common/requiresqueue.hpp"
 #include "common/string-utils.hpp"
@@ -60,6 +70,43 @@
 #include "core-client.hpp"
 
 using namespace openvpn;
+
+
+static std::string extract_profile_username_from_cert(const OptionList &parsed_opts)
+{
+    const Option *cert_opt = parsed_opts.get_ptr("cert");
+    if (!cert_opt || cert_opt->size() < 2)
+    {
+        return {};
+    }
+
+    const std::string &cert_pem = cert_opt->get(1, Option::MULTILINE);
+
+#if defined(USE_OPENSSL)
+    try
+    {
+        OpenSSLPKI::X509 cert(cert_pem, "client certificate");
+        return OpenSSLPKI::x509_get_field(cert.obj(), NID_commonName);
+    }
+    catch (const std::exception &)
+    {
+        return {};
+    }
+#elif defined(USE_MBEDTLS)
+    try
+    {
+        MbedTLSPKI::X509Cert cert(cert_pem, "client certificate", false);
+        return MbedTLSPKI::x509_get_common_name(cert.get());
+    }
+    catch (const std::exception &)
+    {
+        return {};
+    }
+#else
+    (void)parsed_opts;
+    return {};
+#endif
+}
 
 
 class ClientException : public DBus::Object::Method::Exception
@@ -88,6 +135,12 @@ class BackendClientObject : public DBus::Object::Base
   public:
     using Ptr = std::shared_ptr<BackendClientObject>;
 
+        enum class AuthFlow
+        {
+                PASSWORD_ONLY,
+                USERNAME_PASSWORD
+        };
+
     /**
      *  Initialize the BackendClientObject.  The bus name this object is
      *  tied to is based on the PID value of this client process.
@@ -102,12 +155,14 @@ class BackendClientObject : public DBus::Object::Base
     BackendClientObject(DBus::Connection::Ptr conn,
                         const DBus::Object::Path &objpath,
                         const std::string &session_token_,
+                                                AuthFlow auth_flow_,
                         uint32_t default_log_level,
                         LogWriter *logwr,
                         const bool socket_protect_disabl)
         : DBus::Object::Base(objpath, Constants::GenInterface("backends")),
           dbusconn(std::move(conn)),
           session_token(session_token_),
+                    auth_flow(auth_flow_),
           disabled_socket_protect(socket_protect_disabl)
     {
         dbus_creds = DBus::Credentials::Query::Create(dbusconn);
@@ -564,6 +619,8 @@ class BackendClientObject : public DBus::Object::Base
         "net.openvpn.v3.backends.dco"};
     std::string enterprise_id;
     std::string automatic_restart;
+    std::string profile_username;
+    AuthFlow auth_flow = AuthFlow::PASSWORD_ONLY;
 
 
     /**
@@ -922,6 +979,16 @@ class BackendClientObject : public DBus::Object::Base
                 }
                 provide_creds = true;
             }
+            else if (userinputq->QueueCount(ClientAttentionType::CREDENTIALS,
+                                               ClientAttentionGroup::PASSWORD_ONLY)
+                            > 0)
+            {
+                creds.username = profile_username;
+                creds.password = userinputq->GetResponse(ClientAttentionType::CREDENTIALS,
+                                                         ClientAttentionGroup::PASSWORD_ONLY,
+                                                         "password");
+                provide_creds = true;
+            }
 
             if (userinputq->QueueCount(ClientAttentionType::CREDENTIALS,
                                        ClientAttentionGroup::CHALLENGE_DYNAMIC)
@@ -1199,24 +1266,44 @@ class BackendClientObject : public DBus::Object::Base
                            StatusMinor::CFG_OK,
                            "config_path=" + configpath));
 
-        // Do we need username/password?  Or does this configuration allow the
+        profile_username = extract_profile_username_from_cert(parsed_opts);
+
+        // Do we need a password?  Or does this configuration allow the
         // client to log in automatically?
-        if (!cfgeval.autologin
-            && userinputq->QueueCount(ClientAttentionType::CREDENTIALS,
-                                      ClientAttentionGroup::USER_PASSWORD)
-                   == 0)
+        if (!cfgeval.autologin)
         {
-            // TODO: Consider to have --auth-nocache approach as well
-            userinputq->RequireAdd(ClientAttentionType::CREDENTIALS,
-                                   ClientAttentionGroup::USER_PASSWORD,
-                                   "username",
-                                   "Auth User name",
-                                   false);
-            userinputq->RequireAdd(ClientAttentionType::CREDENTIALS,
-                                   ClientAttentionGroup::USER_PASSWORD,
-                                   "password",
-                                   "Auth Password",
-                                   true);
+            if (auth_flow == AuthFlow::PASSWORD_ONLY)
+            {
+                if (userinputq->QueueCount(ClientAttentionType::CREDENTIALS,
+                                           ClientAttentionGroup::PASSWORD_ONLY)
+                    == 0)
+                {
+                    userinputq->RequireAdd(ClientAttentionType::CREDENTIALS,
+                                           ClientAttentionGroup::PASSWORD_ONLY,
+                                           "password",
+                                           "Auth Password",
+                                           true);
+                }
+            }
+            else
+            {
+                // TODO: Consider to have --auth-nocache approach as well
+                if (userinputq->QueueCount(ClientAttentionType::CREDENTIALS,
+                                           ClientAttentionGroup::USER_PASSWORD)
+                    == 0)
+                {
+                    userinputq->RequireAdd(ClientAttentionType::CREDENTIALS,
+                                           ClientAttentionGroup::USER_PASSWORD,
+                                           "username",
+                                           "Auth User name",
+                                           false);
+                    userinputq->RequireAdd(ClientAttentionType::CREDENTIALS,
+                                           ClientAttentionGroup::USER_PASSWORD,
+                                           "password",
+                                           "Auth Password",
+                                           true);
+                }
+            }
 
             if (!cfgeval.staticChallenge.empty())
             {
@@ -1228,13 +1315,19 @@ class BackendClientObject : public DBus::Object::Base
             }
 
             signal->AttentionReq(ClientAttentionType::CREDENTIALS,
-                                 ClientAttentionGroup::USER_PASSWORD,
-                                 "Username/password credentials needed");
+                                 auth_flow == AuthFlow::PASSWORD_ONLY
+                                     ? ClientAttentionGroup::PASSWORD_ONLY
+                                     : ClientAttentionGroup::USER_PASSWORD,
+                                 auth_flow == AuthFlow::PASSWORD_ONLY
+                                     ? "Password credentials needed"
+                                     : "Username/password credentials needed");
 
             signal->StatusChange(
                 Events::Status(StatusMajor::CONNECTION,
                                StatusMinor::CFG_REQUIRE_USER,
-                               "Username/password credentials needed"));
+                               auth_flow == AuthFlow::PASSWORD_ONLY
+                                   ? "Password credentials needed"
+                                   : "Username/password credentials needed"));
         }
 
         if (cfgeval.privateKeyPasswordRequired && vpnconfig.privateKeyPassword.length() == 0)
@@ -1466,11 +1559,13 @@ class ClientService : public DBus::Service
                   DBus::MainLoop::Ptr mainloop_,
                   DBus::Connection::Ptr dbuscon_,
                   const std::string &sesstoken,
+                                    BackendClientObject::AuthFlow auth_flow_,
                   LogWriter *logwr_)
         : DBus::Service(std::move(dbuscon_), Constants::GenServiceName("backends.be") + to_string(getpid())),
           mainloop(std::move(mainloop_)),
           start_pid(start_pid_),
           session_token(sesstoken),
+                    auth_flow(auth_flow_),
           logwr(logwr_)
     {
         try
@@ -1484,6 +1579,7 @@ class ClientService : public DBus::Service
             be_obj = CreateServiceHandler<BackendClientObject>(GetConnection(),
                                                                std::move(object_path),
                                                                session_token,
+                                                               auth_flow,
                                                                default_log_level,
                                                                logwr,
                                                                disabled_socket_protect);
@@ -1572,6 +1668,7 @@ class ClientService : public DBus::Service
     uint32_t default_log_level = 3; // LogCategory::INFO messages
     const pid_t start_pid;
     const std::string session_token;
+    const BackendClientObject::AuthFlow auth_flow;
     LogWriter *logwr;
     BackendClientObject::Ptr be_obj = nullptr;
     bool disabled_socket_protect = false;
@@ -1588,6 +1685,7 @@ class ClientService : public DBus::Service
 void start_client_thread(pid_t start_pid,
                          const std::string argv0,
                          const std::string sesstoken,
+                         BackendClientObject::AuthFlow auth_flow,
                          bool disable_socket_protect,
                          int32_t log_level,
                          LogWriter *logwr)
@@ -1603,6 +1701,7 @@ void start_client_thread(pid_t start_pid,
                                                               mainloop,
                                                               dbuscon,
                                                               sesstoken,
+                                                              auth_flow,
                                                               logwr);
 
         if (log_level > 0)
@@ -1693,6 +1792,26 @@ int client_service(ParsedArgs::Ptr args)
         log_level = std::atoi(args->GetValue("log-level", 0).c_str());
     }
 
+    BackendClientObject::AuthFlow auth_flow = BackendClientObject::AuthFlow::PASSWORD_ONLY;
+    if (args->Present("auth-flow"))
+    {
+        const std::string flow = args->GetValue("auth-flow", 0);
+        if (flow == "password-only")
+        {
+            auth_flow = BackendClientObject::AuthFlow::PASSWORD_ONLY;
+        }
+        else if (flow == "username-password")
+        {
+            auth_flow = BackendClientObject::AuthFlow::USERNAME_PASSWORD;
+        }
+        else
+        {
+            std::cerr << "** ERROR ** Invalid value for --auth-flow: "
+                      << flow << std::endl;
+            return 2;
+        }
+    }
+
 #ifdef OPENVPN_DEBUG
     // When debugging, we might not want to do a fork.
     if (args->Present("no-fork"))
@@ -1703,6 +1822,7 @@ int client_service(ParsedArgs::Ptr args)
             start_client_thread(getpid(),
                                 args->GetArgv0(),
                                 extra[0],
+                                auth_flow,
                                 args->Present("disable-protect-socket"),
                                 log_level,
                                 logwr.get());
@@ -1729,6 +1849,7 @@ int client_service(ParsedArgs::Ptr args)
             start_client_thread(start_pid,
                                 args->GetArgv0(),
                                 extra[0],
+                                auth_flow,
                                 args->Present("disable-protect-socket"),
                                 log_level,
                                 logwr.get());
@@ -1774,6 +1895,10 @@ int main(int argc, char **argv)
                         0,
                         "Disable the socket protect call on the UDP/TCP socket. "
                         "This is needed on systems not supporting this feature");
+    argparser.AddOption("auth-flow",
+                        "MODE",
+                        true,
+                        "Select credential flow: password-only or username-password.");
 #ifdef OPENVPN_DEBUG
     argparser.AddOption("no-fork",
                         0,
