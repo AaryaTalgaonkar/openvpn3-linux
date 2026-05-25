@@ -41,12 +41,10 @@
 #include "log/core-dbus-logger.hpp"
 
 #include <openvpn/common/base64.hpp>
+#include <openvpn/common/numeric_cast.hpp>
 
 #if defined(USE_OPENSSL)
 #include <openssl/obj_mac.h>
-namespace openvpn {
-using numeric_util::numeric_cast;
-}
 #include <openvpn/openssl/pki/x509.hpp>
 #include <openvpn/openssl/pki/x509certinfo.hpp>
 #elif defined(USE_MBEDTLS)
