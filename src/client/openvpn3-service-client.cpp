@@ -44,7 +44,9 @@
 
 #if defined(USE_OPENSSL)
 #include <openssl/obj_mac.h>
-
+namespace openvpn {
+using numeric_util::numeric_cast;
+}
 #include <openvpn/openssl/pki/x509.hpp>
 #include <openvpn/openssl/pki/x509certinfo.hpp>
 #elif defined(USE_MBEDTLS)
@@ -162,8 +164,8 @@ class BackendClientObject : public DBus::Object::Base
         : DBus::Object::Base(objpath, Constants::GenInterface("backends")),
           dbusconn(std::move(conn)),
           session_token(session_token_),
-                    auth_flow(auth_flow_),
-          disabled_socket_protect(socket_protect_disabl)
+                    disabled_socket_protect(socket_protect_disabl),
+                    auth_flow(auth_flow_)
     {
         dbus_creds = DBus::Credentials::Query::Create(dbusconn);
         signal = DBus::Signals::Group::Create<BackendSignals>(dbusconn,
