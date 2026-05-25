@@ -43,6 +43,10 @@
 #include <openvpn/common/base64.hpp>
 #include <openvpn/common/numeric_cast.hpp>
 
+namespace openvpn {
+using numeric_util::numeric_cast;
+}
+
 #if defined(USE_OPENSSL)
 #include <openssl/obj_mac.h>
 #include <openvpn/openssl/pki/x509.hpp>
