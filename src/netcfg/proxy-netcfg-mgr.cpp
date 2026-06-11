@@ -14,7 +14,7 @@
  * @file   proxy-netcfg-mgr.cpp
  *
  * @brief  Implementation of D-Bus proxy for the main manager object
- *         of the net.openvpn.v3.netcfg service
+ *         of the net.iitdvpn.netcfg service
  */
 
 #include <string>
@@ -65,7 +65,7 @@ Manager::Manager(DBus::Connection::Ptr dbuscon_)
     catch (const DBus::Exception &)
     {
         throw NetCfgProxyException(
-            "Init", "Could not connect to net.openvpn.v3.netcfg service");
+            "Init", "Could not connect to net.iitdvpn.netcfg service");
     }
 }
 
@@ -75,7 +75,7 @@ std::string Manager::GetConfigFile()
     if (!GDBusPP::Proxy::Utils::LookupObject(proxy, tgt_mgr->object_path))
     {
         throw NetCfgProxyException("GetConfigFile",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
     return proxy->GetProperty<std::string>(tgt_mgr, "config_file");
 }
@@ -107,7 +107,7 @@ bool Manager::ProtectSocket(int socket, const std::string &remote, bool ipv6, co
     if (!GDBusPP::Proxy::Utils::LookupObject(proxy, tgt_mgr->object_path))
     {
         throw NetCfgProxyException("ProtectSocket",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
 
     bool ret;
@@ -159,7 +159,7 @@ void Manager::Cleanup()
     if (!GDBusPP::Proxy::Utils::LookupObject(proxy, tgt_mgr->object_path))
     {
         throw NetCfgProxyException("Cleanup",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
     try
     {
@@ -182,7 +182,7 @@ DBus::Object::Path::List Manager::FetchInterfaceList()
     if (!proxy_helper->Ping())
     {
         throw NetCfgProxyException("FetchInterfaceList",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
     try
     {
@@ -203,7 +203,7 @@ void Manager::NotificationSubscribe(NetCfgChangeType filter_flags)
     if (!proxy_helper->Ping())
     {
         throw NetCfgProxyException("NotificationSubscribe",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
     try
     {
@@ -234,7 +234,7 @@ void Manager::NotificationUnsubscribe(const std::string &subscriber)
     if (!proxy_helper->Ping())
     {
         throw NetCfgProxyException("NotificationUnsubscribe",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
     try
     {
@@ -262,7 +262,7 @@ NetCfgSubscriptions::NetCfgNotifSubscriptions Manager::NotificationSubscriberLis
     if (!proxy_helper->Ping())
     {
         throw NetCfgProxyException("NotificationSubscriberList",
-                                   "net.openvpn.v3.netcfg service unavailable");
+                                   "net.iitdvpn.netcfg service unavailable");
     }
     try
     {

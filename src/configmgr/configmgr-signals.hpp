@@ -13,7 +13,7 @@
  * @file configmgr-signals.hpp
  *
  * @brief Declaration helper classes handling D-Bus signals for
- *        net.openvpn.v3.configuration
+ *        net.iitdvpn.configuration
  */
 
 #pragma once
@@ -70,7 +70,7 @@ namespace Signals {
 
 /**
  *  Provides an implementation to send the
- *  net.openvpn.v3.configuration.ConfigurationManagerEvent signal.
+ *  net.iitdvpn.configuration.ConfigurationManagerEvent signal.
  *
  * This is a fairly simple signal, only emitted by the Configuration
  * Manager when a new configuration is created or destroyed.

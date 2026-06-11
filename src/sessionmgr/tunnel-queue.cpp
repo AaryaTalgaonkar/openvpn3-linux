@@ -108,7 +108,7 @@ const DBus::Object::Path NewTunnelQueue::AddTunnel(const std::string &config_pat
         if (!be_prxqry->CheckServiceAvail(Constants::GenInterface("backends")))
         {
             throw DBus::Exception(__func__,
-                                  "Could not connect to net.openvpn.v3.backends");
+                                  "Could not connect to net.iitdvpn.backends");
         }
         auto be_start = DBus::Proxy::Client::Create(dbuscon,
                                                     Constants::GenServiceName("backends"));

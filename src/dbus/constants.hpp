@@ -25,9 +25,9 @@
 namespace Constants {
 
 namespace Base {
-constexpr std::string_view BUSNAME{"net.openvpn.v3."};
-constexpr std::string_view ROOT_PATH{"/net/openvpn/v3/"};
-constexpr std::string_view INTERFACE{"net.openvpn.v3."};
+constexpr std::string_view BUSNAME{"net.iitdvpn."};
+constexpr std::string_view ROOT_PATH{"/net/iitdvpn/"};
+constexpr std::string_view INTERFACE{"net.iitdvpn."};
 } // namespace Base
 
 #include <gdbuspp/gen-constants.hpp>

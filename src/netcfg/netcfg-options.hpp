@@ -38,7 +38,7 @@ struct NetCfgOptions
 
     /**
      *  Log destination for log events. If empty, only logging
-     *  via openvpn3-service-log
+     *  via iitdvpn-service-log
      */
     std::string log_file;
 
@@ -92,7 +92,7 @@ struct NetCfgOptions
         }
         catch (const ExclusiveOptionError &excp)
         {
-            throw CommandException("openvpn3-service-netcfg",
+            throw CommandException("iitdvpn-service-netcfg",
                                    excp.what());
         }
 

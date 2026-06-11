@@ -40,9 +40,9 @@ int main(int argc, char **argv)
     GDBusProxy *p = g_dbus_proxy_new_sync(conn,
                                           G_DBUS_PROXY_FLAGS_NONE,
                                           NULL,                           // GDBusInterfaceInfo
-                                          "net.openvpn.v3.configuration", // name
+                                          "net.iitdvpn.configuration", // name
                                           argv[1],                        // object path
-                                          "net.openvpn.v3.configuration", // interface name
+                                          "net.iitdvpn.configuration", // interface name
                                           NULL,                           // GCancellable
                                           &error);
     if (!p || error)

@@ -26,10 +26,10 @@ namespace Signals {
 
 /**
  *  Provides an implementation to send and proxy the
- *  net.openvpn.v3.*.AttentionRequired signal.
+ *  net.iitdvpn.*.AttentionRequired signal.
  *
  *  This class implements a signal proxy, subscribing to the same
- *  signal from the net.openvpn.v3.backends.be* client backend service
+ *  signal from the net.iitdvpn.backends.be* client backend service
  *  and forwarding it to the user front-ends needing to respond to
  *  such events.  This proxying will only be enabled if a SubscriptionManager
  *  and Signals::Target objects are provided.

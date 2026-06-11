@@ -11,9 +11,9 @@ PrivateTmp=true
 ProtectSystem=true
 ProtectHome=true
 Environment="PYTHONUNBUFFERED=on"
-ExecStart=@LIBEXECDIR@/openvpn3-systemd --start %i
-ExecReload=@LIBEXECDIR@/openvpn3-systemd --restart %i
-ExecStop=@LIBEXECDIR@/openvpn3-systemd --stop %i
+ExecStart=@LIBEXECDIR@/iitdvpn-systemd --start %i
+ExecReload=@LIBEXECDIR@/iitdvpn-systemd --restart %i
+ExecStop=@LIBEXECDIR@/iitdvpn-systemd --stop %i
 
 [Install]
 WantedBy=multi-user.target

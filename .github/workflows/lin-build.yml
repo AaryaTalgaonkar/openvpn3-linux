@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: |
           ./bootstrap.sh
-          meson setup --prefix=/usr _builddir
+          meson setup --prefix=/usr -Dopenvpn_username=iitdvpn -Dopenvpn_group=iitdvpn -Dopenvpn3_statedir=/var/lib/iitdvpn _builddir
           meson compile -C _builddir
           DESTDIR=$PWD/pkgroot meson install -C _builddir
 

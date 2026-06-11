@@ -10,7 +10,7 @@
  * @file   logfwd-listener.cpp
  *
  * @brief  Attaches to Log signals on a running session.  This requires
- *         the net.openvpn.v3.log service to support ProxyLogEvents
+ *         the net.iitdvpn.log service to support ProxyLogEvents
  *
  */
 

@@ -11,7 +11,7 @@
  *
  * @brief  Simple unit test, calling the
  *         LookupConfigName D-Bus method in either
- *         net.openvpn3.v3.configuration or net.openvpn.v3.sessions services
+ *         net.openvpn3.v3.configuration or net.iitdvpn.sessions services
  *         through their respective OpenVPN3*Proxy objects
  */
 

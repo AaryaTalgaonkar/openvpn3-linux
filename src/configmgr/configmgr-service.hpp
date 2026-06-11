@@ -12,7 +12,7 @@
 /**
  * @file configmgr-service.hpp
  *
- * @brief Declaration of the net.openvpn.v3.configuration D-Bus service
+ * @brief Declaration of the net.iitdvpn.configuration D-Bus service
  */
 
 #pragma once

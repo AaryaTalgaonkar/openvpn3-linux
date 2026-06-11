@@ -675,7 +675,7 @@ Manager::Manager(DBus::Connection::Ptr conn)
 
     // Check for presence of org.freedesktop.PolicyKit1
     // This service is needed to be allowed to send update requests
-    // to systemd-resolved as the 'openvpn' user which net.openvpn.v3.netcfg
+    // to systemd-resolved as the 'openvpn' user which net.iitdvpn.netcfg
     // run as
     try
     {

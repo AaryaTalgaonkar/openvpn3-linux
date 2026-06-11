@@ -315,13 +315,13 @@ class Configuration : public DBus::Object::Base
      *  of the object can modify it.
      */
     const std::set<std::string> write_methods_ = {
-        "net.openvpn.v3.configuration.AccessGrant",
-        "net.openvpn.v3.configuration.AccessRevoke",
-        "net.openvpn.v3.configuration.SetOption",
-        "net.openvpn.v3.configuration.SetOverride",
-        "net.openvpn.v3.configuration.UnsetOverride",
-        "net.openvpn.v3.configuration.AddTag",
-        "net.openvpn.v3.configuration.RemoveTag"};
+        "net.iitdvpn.configuration.AccessGrant",
+        "net.iitdvpn.configuration.AccessRevoke",
+        "net.iitdvpn.configuration.SetOption",
+        "net.iitdvpn.configuration.SetOverride",
+        "net.iitdvpn.configuration.UnsetOverride",
+        "net.iitdvpn.configuration.AddTag",
+        "net.iitdvpn.configuration.RemoveTag"};
 };
 
 } // namespace ConfigManager

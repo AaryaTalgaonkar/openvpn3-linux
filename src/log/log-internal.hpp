@@ -9,7 +9,7 @@
 /**
  *  @file log-internal.hpp
  *
- *  @brief Internal functions used by the net.openvpn.v3.log service
+ *  @brief Internal functions used by the net.iitdvpn.log service
  *         implementation
  */
 

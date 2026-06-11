@@ -9,7 +9,7 @@
 /**
  * @file   log-service.cpp
  *
- * @brief  Command for managing the openvpn3-service-log
+ * @brief  Command for managing the iitdvpn-service-log
  */
 
 #include <gdbuspp/connection.hpp>
@@ -136,7 +136,7 @@ static int manage_config_file(DBus::Connection::Ptr dbuscon,
                 config.Save(config_file);
                 std::cout << "Configuration file updated.  "
                           << "Changes will be activated next time "
-                          << "openvpn3-service-log restarts"
+                          << "iitdvpn-service-log restarts"
                           << std::endl;
             }
             catch (const ExclusiveOptionError &err)
@@ -262,9 +262,9 @@ static void print_logger_settings(LogServiceProxy::Ptr logsrvprx)
 }
 
 /**
- *  openvpn3 log-service
+ *  iitdvpn log-service
  *
- *  This command is used to query and manage the net.openvpn.v3.log service
+ *  This command is used to query and manage the net.iitdvpn.log service
  *  This service is a global service responsible for all logging.  Changes
  *  here affects all logging being done by this service on all attached
  *  log subscriptions.
@@ -399,7 +399,7 @@ SingleCommand::Ptr prepare_command_log_service()
                    "CONFIG-FILE",
                    true,
                    "Overrides the default configuration file (default file "
-                   "provivded by openvpn3-service-log)");
+                   "provivded by iitdvpn-service-log)");
 
 
     return cmd;

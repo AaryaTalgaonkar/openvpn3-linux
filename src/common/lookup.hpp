@@ -42,7 +42,7 @@ class LookupException : public std::exception
 #ifdef __GIO_TYPES_H__ // Only add GLib/GDBus methods if this is already use
     void SetDBusError(GDBusMethodInvocation *invocation) const noexcept
     {
-        GError *dbuserr = g_dbus_error_new_for_dbus_error("net.openvpn.v3.error.lookup",
+        GError *dbuserr = g_dbus_error_new_for_dbus_error("net.iitdvpn.error.lookup",
                                                           message.c_str());
         g_dbus_method_invocation_return_gerror(invocation, dbuserr);
         g_error_free(dbuserr);

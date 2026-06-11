@@ -494,7 +494,7 @@ static int cmd_config_manage(ParsedArgs::Ptr args)
                 catch (const DBus::Exception &err)
                 {
                     std::string e(err.what());
-                    if (e.find("net.openvpn.v3.error.OverrideNotSet") != std::string::npos)
+                    if (e.find("net.iitdvpn.error.OverrideNotSet") != std::string::npos)
                     {
                         if (!quiet)
                         {

@@ -11,7 +11,7 @@
  * @file   netcfg-changeevent.hpp
  *
  * @brief  Defines constants and provides structs/object capable of handling
- *         network change events from net.openvpn.v3.netcfg
+ *         network change events from net.iitdvpn.netcfg
  */
 
 #pragma once

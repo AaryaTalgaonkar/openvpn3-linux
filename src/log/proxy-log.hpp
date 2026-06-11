@@ -9,7 +9,7 @@
 /**
  * @file   proxy-log.hpp
  *
- * @brief  D-Bus proxy interface to the net.openvpn.v3.log service
+ * @brief  D-Bus proxy interface to the net.iitdvpn.log service
  */
 
 #pragma once
@@ -151,7 +151,7 @@ class LogProxy
 
 /**
  *  Client proxy implementation interacting with a
- *  the net.openvpn.v3.log service
+ *  the net.iitdvpn.log service
  */
 class LogServiceProxy
 {

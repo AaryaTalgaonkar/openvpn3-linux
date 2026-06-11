@@ -50,12 +50,12 @@ enum class LogGroup : std::uint8_t
     MASTERPROC,   /**< Master process (main openvpn-manager) */
     CONFIGMGR,    /**< Configuration Manager process (child of openvpn-manager)*/
     SESSIONMGR,   /**< Session manager process (child of openvpn-manager) */
-    BACKENDSTART, /**< Backend starter process (openvpn3-service-backendstart) */
+    BACKENDSTART, /**< Backend starter process (iitdvpn-service-backendstart) */
     LOGGER,       /**< Logger process (child of openvpn-manager) */
     BACKENDPROC,  /**< Session process (openvpn-service-client) */
     CLIENT,       /**< OpenVPN 3 Core tunnel object in the session process */
-    NETCFG,       /**< Network Configuration service (openvpn3-service-netcfg)*/
-    EXTSERVICE    /**< External services integrating with openvpn3-service-log */
+    NETCFG,       /**< Network Configuration service (iitdvpn-service-netcfg)*/
+    EXTSERVICE    /**< External services integrating with iitdvpn-service-log */
 };
 
 const std::array<const std::string, LogGroupCount> LogGroup_str = {

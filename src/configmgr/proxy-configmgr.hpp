@@ -39,7 +39,7 @@ enum CfgMgrFeatures : std::uint32_t
     // clang-format off
         UNDEFINED        = 0,        //< Version not identified
         TAGS             = 1,        //< Supports configuration tags
-        VALIDATE         = 2,        //< Provides net.openvpn.v3.configuration.Validate method
+        VALIDATE         = 2,        //< Provides net.iitdvpn.configuration.Validate method
         DEVBUILD         = std::numeric_limits<std::uint32_t>::max()  //< Development build; unreleased
     // clang-format on
 };
@@ -357,7 +357,7 @@ class OpenVPN3ConfigurationProxy
      *  Lock down the configuration profile.  This removes the possibility
      *  for other users than the owner to retrieve the configuration profile
      *  in clear-text or JSON.  The exception is the root user account,
-     *  which the openvpn3-service-client process runs as and needs to
+     *  which the iitdvpn-service-client process runs as and needs to
      *  be able to retrieve the configuration for the VPN connection.
      *
      * @param lockdown  Boolean flag, if set to true the configuration is

@@ -307,7 +307,7 @@ class ReqQueueService : public DBus::Service
 {
   public:
     ReqQueueService(DBus::Connection::Ptr conn)
-        : DBus::Service(conn, "net.openvpn.v3.tests.requiresqueue")
+        : DBus::Service(conn, "net.iitdvpn.tests.requiresqueue")
     {
     }
 
@@ -471,7 +471,7 @@ int main(int argc, char **argv)
     auto service = DBus::Service::Create<ReqQueueService>(conn);
     service->CreateServiceHandler<ReqQueueMain>(conn,
                                                 "/net/openvpn/v3/tests/features/requiresqueue",
-                                                "net.openvpn.v3.tests.requiresqueue",
+                                                "net.iitdvpn.tests.requiresqueue",
                                                 log);
     service->Run();
     return 0;

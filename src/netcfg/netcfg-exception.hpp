@@ -12,7 +12,7 @@
  * @file   netcfg-exception.hpp
  *
  * @brief  Exception classes related to error handling in the
- *         net.openvpn.v3.netcfg service
+ *         net.iitdvpn.netcfg service
  */
 
 #pragma once
@@ -29,7 +29,7 @@ class NetCfgException : public DBus::Object::Method::Exception
     NetCfgException(const std::string &err)
         : DBus::Object::Method::Exception(err)
     {
-        error_domain = "net.openvpn.v3.netcfg.error";
+        error_domain = "net.iitdvpn.netcfg.error";
     }
 };
 
@@ -46,7 +46,7 @@ class NetCfgDeviceException : public DBus::Object::Method::Exception
           device_name(devname),
           errormsg(errmsg)
     {
-        error_domain = "net.openvpn.v3.netcfg.device.error";
+        error_domain = "net.iitdvpn.netcfg.device.error";
         user_error = device_name + ": " + errormsg;
     }
 
@@ -76,7 +76,7 @@ class NetCfgProxyException : public DBus::Proxy::Exception
         : DBus::Proxy::Exception(err),
           method(meth), errormsg(err)
     {
-        error_domain = "net.openvpn.v3.netcfg.proxy";
+        error_domain = "net.iitdvpn.netcfg.proxy";
         user_error = method + "(): " + errormsg;
     }
 

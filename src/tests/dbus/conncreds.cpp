@@ -11,7 +11,7 @@
  *
  * @brief  Simple test program reporting back the credentials of
  *         a running D-Bus service.  Input is the D-Bus bus name,
- *         either the well known bus name (like net.openvpn.v3.sessions)
+ *         either the well known bus name (like net.iitdvpn.sessions)
  *         or the unique bus name (:1.39).  The output is PID and the users
  *         UID providing this service.
  */

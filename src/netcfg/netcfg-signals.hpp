@@ -9,7 +9,7 @@
 /**
  * @file   netcfg-signals.hpp
  *
- * @brief  D-Bus signals the net.openvpn.v3.netcfg service can send
+ * @brief  D-Bus signals the net.iitdvpn.netcfg service can send
  */
 
 #pragma once

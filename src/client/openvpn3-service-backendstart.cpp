@@ -9,12 +9,12 @@
 //
 
 /**
- * @file   openvpn3-service-backendstart.cpp
+ * @file   iitdvpn-service-backendstart.cpp
  *
  * @brief  Service side implementation of the Backend Starter service
- *         (net.openvpn.v3.backends).
+ *         (net.iitdvpn.backends).
  *
- *         This service starts openvpn3-service-client processes with a
+ *         This service starts iitdvpn-service-client processes with a
  *         token provided via the StartClient D-Bus method call.  This
  *         service is supposed to be automatically started by D-Bus, with
  *         root privileges.  This ensures the client process this service
@@ -37,7 +37,7 @@
 #include "common/utils.hpp"
 
 #ifndef BACKEND_CLIENT_BIN
-#define BACKEND_CLIENT_BIN "openvpn3-service-client"
+#define BACKEND_CLIENT_BIN "iitdvpn-service-client"
 #endif
 
 /**
@@ -130,11 +130,11 @@ class BackendStarterHandler : public DBus::Object::Base
     using Ptr = std::shared_ptr<BackendStarterHandler>;
 
     /**
-     *  Prepare the service handler object for net.openvpn.v3.backends
+     *  Prepare the service handler object for net.iitdvpn.backends
      *
      * @param dbuscon_        DBus::Connection::Ptr where the service is hosted
      * @param client_args     Client command line arguments, with the full path
-     *                        to the openvpn3-service-client binary
+     *                        to the iitdvpn-service-client binary
      * @param client_envvars  Additional environment variables set when starting
      *                        the binary
      * @param log_level       Log verbosity level this service uses
@@ -157,7 +157,7 @@ class BackendStarterHandler : public DBus::Object::Base
         sig_statuschg = be_signals->CreateSignal<::Signals::StatusChange>();
         be_signals->ProvideStatusChangeSender(sig_statuschg);
 
-        // Target all signals only towards the net.openvpn.v3.log service
+        // Target all signals only towards the net.iitdvpn.log service
         be_signals->AddTarget(creds->GetUniqueBusName(Constants::GenServiceName("log")));
 
         RegisterSignals(be_signals);
@@ -181,7 +181,7 @@ class BackendStarterHandler : public DBus::Object::Base
 
     ~BackendStarterHandler()
     {
-        be_signals->LogInfo("openvpn3-service-backendstart: Shutting down");
+        be_signals->LogInfo("iitdvpn-service-backendstart: Shutting down");
     }
 
 
@@ -215,7 +215,7 @@ class BackendStarterHandler : public DBus::Object::Base
 
 
     /**
-     * Forks out a child thread which starts the openvpn3-service-client
+     * Forks out a child thread which starts the iitdvpn-service-client
      * process with the provided backend start token.
      *
      * @param token  String containing the start token identifying the session
@@ -251,7 +251,7 @@ class BackendStarterHandler : public DBus::Object::Base
             args[i++] = nullptr;
 
 #ifdef OPENVPN_DEBUG
-            std::cerr << "[openvpn3-service-backend] {" << getpid() << "} "
+            std::cerr << "[iitdvpn-service-backend] {" << getpid() << "} "
                       << "Command line to be started: ";
             for (unsigned int j = 0; j < i; j++)
             {
@@ -380,7 +380,7 @@ class BackendStarterSrv : public DBus::Service
     void BusNameLost(const std::string &busname) override
     {
         throw DBus::Service::Exception(
-            "openvpn3-service-backendstart lost the '"
+            "iitdvpn-service-backendstart lost the '"
             + busname + "' registration on the D-Bus");
     };
 
@@ -513,7 +513,7 @@ int main(int argc, char **argv)
                   0,
                   "DEBUG_PROGAM",
                   true,
-                  "Debug option: Run openvpn3-service-client via provided executable (full path required)");
+                  "Debug option: Run iitdvpn-service-client via provided executable (full path required)");
     cmd.AddOption("debugger-arg",
                   0,
                   "ARG",
@@ -521,36 +521,36 @@ int main(int argc, char **argv)
                   "Debug option: Argument to pass to the DEBUG_PROGAM");
     cmd.AddOption("client-no-fork",
                   0,
-                  "Debug option: Adds the --no-fork argument to openvpn3-service-client");
+                  "Debug option: Adds the --no-fork argument to iitdvpn-service-client");
     cmd.AddOption("client-no-setsid",
                   0,
-                  "Debug option: Adds the --no-setsid argument to openvpn3-service-client");
+                  "Debug option: Adds the --no-setsid argument to iitdvpn-service-client");
     cmd.AddOption("client-binary",
                   0,
                   "CLIENT_BINARY",
                   true,
-                  "Debug option: Full path to openvpn3-service-client binary; "
+                  "Debug option: Full path to iitdvpn-service-client binary; "
                   "default: " LIBEXEC_PATH "/" BACKEND_CLIENT_BIN);
     cmd.AddOption("client-setenv",
                   "ENVVAR=VALUE",
                   true,
-                  "Debug option: Sets an environment variable passed to the openvpn3-service-client. "
+                  "Debug option: Sets an environment variable passed to the iitdvpn-service-client. "
                   "Can be used multiple times.");
 #endif
     cmd.AddOption("client-log-level",
                   "LEVEL",
                   true,
-                  "Adds the --log-level LEVEL argument to openvpn3-service-client");
+                  "Adds the --log-level LEVEL argument to iitdvpn-service-client");
     cmd.AddOption("client-log-file",
                   "FILE",
                   true,
-                  "Adds the --log-file FILE argument to openvpn3-service-client");
+                  "Adds the --log-file FILE argument to iitdvpn-service-client");
     cmd.AddOption("client-colour",
                   0,
-                  "Adds the --colour argument to openvpn3-service-client");
+                  "Adds the --colour argument to iitdvpn-service-client");
     cmd.AddOption("client-disable-protect-socket",
                   0,
-                  "Adds the --disable-protect argument to openvpn3-service-client");
+                  "Adds the --disable-protect argument to iitdvpn-service-client");
 
     try
     {

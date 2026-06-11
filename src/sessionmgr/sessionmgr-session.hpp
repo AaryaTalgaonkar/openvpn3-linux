@@ -79,7 +79,7 @@ class Session : public DBus::Object::Base
      *  more information from the VPN session owner.
      *  Used by method_ready().
      *
-     *  Throws: net.openvpn.v3.error.ready with a human readable string
+     *  Throws: net.iitdvpn.error.ready with a human readable string
      *          if the session owner needs to provide more information.
      */
     void Ready();
@@ -149,14 +149,14 @@ class Session : public DBus::Object::Base
     bool dco = false;
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.Ready
+     *  D-Bus method: net.iitdvpn.sessions.Ready
      *      Checks if the VPN tunnel is ready to be started or if it needs
      *      more information from the VPN session owner.
      *
      *  Input:   n/a
      *  Output:  n/a
      *
-     *  Throws: net.openvpn.v3.error.ready with a human readable string
+     *  Throws: net.iitdvpn.error.ready with a human readable string
      *          if the session owner need to provide more information.
      *
      * @param args  DBus::Object::Method::Arguments
@@ -166,12 +166,12 @@ class Session : public DBus::Object::Base
     /**
      *  Generic backend VPN client method callback handler
      *
-     *  D-Bus method: net.openvpn.v3.sessions.Restart
+     *  D-Bus method: net.iitdvpn.sessions.Restart
      *      Restarts the VPN session
      *  Input:   n/a
      *  Output:  n/a
      *
-     *  D-Bus method: net.openvpn.v3.sessions.Pause
+     *  D-Bus method: net.iitdvpn.sessions.Pause
      *      Pauses a VPN session, which results in a stateful disconnect.
      *      The VPN backend client disconnects completely and closes the session
      *      but the client process can be resumed later on to re-establish the
@@ -180,12 +180,12 @@ class Session : public DBus::Object::Base
      *      s - reason: A brief explanation of why the session was paused
      *  Output:  n/a
      *
-     *  D-Bus method: net.openvpn.v3.sessions.Resume
+     *  D-Bus method: net.iitdvpn.sessions.Resume
      *      Resumes a paused VPN session
      *  Input:   n/a
      *  Output:  n/a
      *
-     *  D-Bus method: net.openvpn.v3.sessions.Resume
+     *  D-Bus method: net.iitdvpn.sessions.Resume
      *      Resumes a paused VPN session
      *  Input:   n/a
      *  Output:  n/a
@@ -202,7 +202,7 @@ class Session : public DBus::Object::Base
                          const bool no_response);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.Connect
+     *  D-Bus method: net.iitdvpn.sessions.Connect
      *      Tells the backend VPN client service to start connecting to the
      *      configured VPN servers
      *
@@ -214,14 +214,14 @@ class Session : public DBus::Object::Base
     void method_connect(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.LogForward
+     *  D-Bus method: net.iitdvpn.sessions.LogForward
      *      Enables or disables Log and StatusChange events from the
      *      backend VPN client service to the caller of this method.  This
-     *      will be handled by the net.openvpn.v3.log service, which will
+     *      will be handled by the net.iitdvpn.log service, which will
      *      do a unicast to the bus name of the caller to this method.
      *
      *      Each enabled log forwarding will be assigned a log proxy path
-     *      within the net.openvpn.v3.log service.  These paths are also
+     *      within the net.iitdvpn.log service.  These paths are also
      *      tracked in the the log_forwards property in the
      *      SessionManager::Session object.
      *
@@ -234,7 +234,7 @@ class Session : public DBus::Object::Base
     void method_log_forward(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.AccessGrant
+     *  D-Bus method: net.iitdvpn.sessions.AccessGrant
      *      Adds a user to the ACL list who can access and manage this
      *      Session object
      *
@@ -247,7 +247,7 @@ class Session : public DBus::Object::Base
     void method_access_grant(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.AccessRevoke
+     *  D-Bus method: net.iitdvpn.sessions.AccessRevoke
      *      Removes a user from the ACL list who can access and manage this
      *      Session object
      *
@@ -267,7 +267,7 @@ class Session : public DBus::Object::Base
      *
      *  This method is also used by the Disconnect D-Bus method
      *
-     *  D-Bus method: net.openvpn.v3.sessions.Disconnect
+     *  D-Bus method: net.iitdvpn.sessions.Disconnect
      *  Input:   n/a
      *  Output:  n/a
      *

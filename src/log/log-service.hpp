@@ -9,7 +9,7 @@
 /**
  *  @file log-service.hpp
  *
- *  @brief Declares the basic net.openvpn.v3.log service handler object and
+ *  @brief Declares the basic net.iitdvpn.log service handler object and
  *         configuration setup.
  */
 
@@ -40,7 +40,7 @@
 namespace LogService {
 
 /**
- *  Initial configuration for the net.openvpn.v3.log service.  This
+ *  Initial configuration for the net.iitdvpn.log service.  This
  *  is being populated after the command line arguments and optionally
  *  the configuration file has been parsed and merged into the ParsedArgs
  *  object.
@@ -144,7 +144,7 @@ class ServiceHandler : public DBus::Object::Base
 
 
     /**
-     *  D-Bus method: net.openvpn.v3.log.Attach
+     *  D-Bus method: net.iitdvpn.log.Attach
      *
      *  Requests the log service to listen for Log events from the
      *  calling remote D-Bus service.
@@ -157,12 +157,12 @@ class ServiceHandler : public DBus::Object::Base
     void method_attach(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.log.AssignSession
+     *  D-Bus method: net.iitdvpn.log.AssignSession
      *
-     *  Used by the net.openvpn.v3.backends.be$PID services to inform
+     *  Used by the net.iitdvpn.backends.be$PID services to inform
      *  the log service about the session path it is assigned to use.
      *
-     *  When end-users are requesting (via net.openvpn.v3.sessions) to
+     *  When end-users are requesting (via net.iitdvpn.sessions) to
      *  receive log and status signals, the reference provided is the
      *  session path the VPN client session has been assigned.  This
      *  method provides the needed link to lookup the session path tox
@@ -180,7 +180,7 @@ class ServiceHandler : public DBus::Object::Base
     void method_assign_session(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.log.Detach
+     *  D-Bus method: net.iitdvpn.log.Detach
      *
      *  Services who has attached to the logging session should clean up
      *  their attachment when it no longer wants to do any logging via
@@ -196,7 +196,7 @@ class ServiceHandler : public DBus::Object::Base
     void method_detach(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.log.GetSubscriberList
+     *  D-Bus method: net.iitdvpn.log.GetSubscriberList
      *
      *  Provides a complete list of all the D-Bus services this logger is
      *  attached to and has subscribed to.
@@ -216,10 +216,10 @@ class ServiceHandler : public DBus::Object::Base
     void method_get_subscr_list(DBus::Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.log.ProxyLogEvents
+     *  D-Bus method: net.iitdvpn.log.ProxyLogEvents
      *
      *  This method is only available by the OPENVPN_USERNAME user and
-     *  the net.openvpn.v3.sessions service.  End users can, via the session
+     *  the net.iitdvpn.sessions service.  End users can, via the session
      *  manager, request to receive log and signal events for a VPN session
      *  they have access to.
      *

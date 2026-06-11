@@ -11,7 +11,7 @@
 /**
  * @file sessionmgr-service.cpp
  *
- * @brief Implementation of the net.openvpn.v3.sessions D-Bus service
+ * @brief Implementation of the net.iitdvpn.sessions D-Bus service
  */
 
 #include <gdbuspp/connection.hpp>

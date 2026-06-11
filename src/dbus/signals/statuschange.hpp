@@ -25,10 +25,10 @@ namespace Signals {
 
 
 /**
- *  Provides an implementation to send the net.openvpn.v3.*.StatusChange signal
+ *  Provides an implementation to send the net.iitdvpn.*.StatusChange signal
  *
  *  This class implements a signal proxy, subscribing to the same
- *  signal from the net.openvpn.v3.backends.be* client backend service
+ *  signal from the net.iitdvpn.backends.be* client backend service
  *  and forwarding it to the user front-ends needing to respond to
  *  such events.  This proxying will only be enabled if a SubscriptionManager
  *  and Signals::Target objects are provided.

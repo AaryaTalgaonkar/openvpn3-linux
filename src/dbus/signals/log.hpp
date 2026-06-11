@@ -24,7 +24,7 @@
 namespace Signals {
 
 /**
- *  Provides an implementation to send the net.openvpn.v3.*.Log signal
+ *  Provides an implementation to send the net.iitdvpn.*.Log signal
  *
  *  This class implements a signal proxy, subscribing to the same
  *  signal.  This proxying will only be enabled if a SubscriptionManager

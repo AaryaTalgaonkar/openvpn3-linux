@@ -10,12 +10,12 @@
 //
 
 /**
- * @file   openvpn3-service-client.cpp
+ * @file   iitdvpn-service-client.cpp
  *
  * @brief  Service side implementation the OpenVPN 3 based VPN client
  *
  *         This service is supposed to be started by the
- *         openvpn3-service-backendstart service.  One client service
+ *         iitdvpn-service-backendstart service.  One client service
  *         represents a single VPN tunnel and is managed only by the session
  *         manager service.  When starting, this service will signal the
  *         session manager about its presence and the session manager will
@@ -118,7 +118,7 @@ class ClientException : public DBus::Object::Method::Exception
   public:
     ClientException(const std::string &method,
                     const std::string &msg,
-                    const std::string &err_domain = "net.openvpn.v3.error.client",
+                    const std::string &err_domain = "net.iitdvpn.error.client",
                     GError *gliberr = nullptr)
         : DBus::Object::Method::Exception(msg, gliberr)
     {
@@ -131,7 +131,7 @@ class ClientException : public DBus::Object::Method::Exception
 /**
  *  Class managing a specific VPN client tunnel.  This object has its own
  *  unique D-Bus bus name and object path and is designed to only be
- *  accessible by the user running the openvpn3-service-sessiongmr process.
+ *  accessible by the user running the iitdvpn-service-sessiongmr process.
  *  This session manager is the front-end users access point to this object.
  */
 class BackendClientObject : public DBus::Object::Base
@@ -154,7 +154,7 @@ class BackendClientObject : public DBus::Object::Base
      * @param session_token  String based token which is used to register
      *                       itself with the session manager.  This token
      *                       is provided on the command line when starting
-     *                       this openvpn3-service-client process.
+     *                       this iitdvpn-service-client process.
      */
     BackendClientObject(DBus::Connection::Ptr conn,
                         const DBus::Object::Path &objpath,
@@ -205,14 +205,14 @@ class BackendClientObject : public DBus::Object::Base
                       {
                           throw ClientException("Ready",
                                                 "Missing user credentials",
-                                                "net.openvpn.v3.error.ready");
+                                                "net.iitdvpn.error.ready");
                       }
                       if (self->vpnclient
                           && StatusMinor::SESS_AUTH_URL == self->vpnclient->GetRunStatus())
                       {
                           throw ClientException("Ready",
                                                 "Pending web authentication",
-                                                "net.openvpn.v3.error.ready");
+                                                "net.iitdvpn.error.ready");
                       }
                       args->SetMethodReturn(nullptr);
                   });
@@ -613,14 +613,14 @@ class BackendClientObject : public DBus::Object::Base
     std::mutex connect_guard{};
     DBus::Object::Path session_path = "/__unknown";
     const std::vector<std::string> restricted_acl_prop_get{
-        "net.openvpn.v3.backends.statistics",
-        "net.openvpn.v3.backends.stats",
-        "net.openvpn.v3.backends.device_name",
-        "net.openvpn.v3.backends.session_name",
-        "net.openvpn.v3.backends.last_log_line"};
+        "net.iitdvpn.backends.statistics",
+        "net.iitdvpn.backends.stats",
+        "net.iitdvpn.backends.device_name",
+        "net.iitdvpn.backends.session_name",
+        "net.iitdvpn.backends.last_log_line"};
     const std::vector<std::string> restricted_acl_prop_set{
-        "net.openvpn.v3.backends.log_level",
-        "net.openvpn.v3.backends.dco"};
+        "net.iitdvpn.backends.log_level",
+        "net.iitdvpn.backends.dco"};
     std::string enterprise_id;
     std::string automatic_restart;
     std::string profile_username;
@@ -629,7 +629,7 @@ class BackendClientObject : public DBus::Object::Base
 
     /**
      *  Verify that the proxy caller (D-Bus client) is the
-     *  OpenVPN 3 Session Manager (net.openvpn.v3.sessions).
+     *  OpenVPN 3 Session Manager (net.iitdvpn.sessions).
      *
      * @param sender  String containing the unique bus ID of the sender
      * @return true if the caller is the session manager, otherwise false.
@@ -671,7 +671,7 @@ class BackendClientObject : public DBus::Object::Base
         {
             throw ClientException("RegistrationConfirmation",
                                   "Backend service is already registered",
-                                  "net.openvpn.v3.error.be-registration");
+                                  "net.iitdvpn.error.be-registration");
         }
 
         glib2::Utils::checkParams(__func__, params, "(soo)", 3);
@@ -718,7 +718,7 @@ class BackendClientObject : public DBus::Object::Base
         {
             throw ClientException("RegistrationConfirmation",
                                   "Invalid registration token",
-                                  "net.openvpn.v3.error.be-registration");
+                                  "net.iitdvpn.error.be-registration");
         }
     }
 
@@ -1227,7 +1227,7 @@ class BackendClientObject : public DBus::Object::Base
 
         // Enforce --dhcp-option DOMAIN{-SEARCH} to not be treated as split domains
         // by default.  This can be overriden by setting the `--dns-scope` via
-        // openvpn3 config-manage.
+        // iitdvpn config-manage.
         vpnconfig.dhcpSearchDomainsAsSplitDomains = false;
 
         // We need to provide a copy of the vpnconfig object, as vpnclient
@@ -1407,7 +1407,7 @@ class BackendClientObject : public DBus::Object::Base
         catch (std::exception &e)
         {
             // This should normally not happen
-            signal->LogFATAL("** EXCEPTION ** openvpn3-service-client/fetch_config():"
+            signal->LogFATAL("** EXCEPTION ** iitdvpn-service-client/fetch_config():"
                              + std::string(e.what()));
         }
         return config_name;
@@ -1599,7 +1599,7 @@ class ClientService : public DBus::Service
         catch (const DBus::Exception &excp)
         {
             throw DBus::Service::Exception(
-                "FATAL ERROR: openvpn3-service-client failed to start: "
+                "FATAL ERROR: iitdvpn-service-client failed to start: "
                 + std::string(excp.what()));
         }
     };
@@ -1662,7 +1662,7 @@ class ClientService : public DBus::Service
     void BusNameLost(const std::string &busname) override
     {
         throw DBus::Service::Exception(
-            "openvpn3-service-client lost the '"
+            "iitdvpn-service-client lost the '"
             + busname + "' registration on the D-Bus");
     };
 

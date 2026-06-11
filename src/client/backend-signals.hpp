@@ -102,15 +102,15 @@ class BackendSignals : public LogSender
         sig_statuschg = CreateSignal<::Signals::StatusChange>();
 
         // Default targets for D-Bus signals are the
-        // Session Manager (net.openvpn.v3.sessions) and the
-        // Log service (net.openvpn.v3.log).
+        // Session Manager (net.iitdvpn.sessions) and the
+        // Log service (net.iitdvpn.log).
         auto creds = DBus::Credentials::Query::Create(conn);
         auto sessmgr_busn = creds->GetUniqueBusName(Constants::GenServiceName("sessions"));
         AddTarget(sessmgr_busn);
         AddTarget(creds->GetUniqueBusName(Constants::GenServiceName("log")));
 
         // Prepare the RegistrationRequest signal; this is only to be sent
-        // to the Session Manager (net.openvpn.v3.sessions).  A dedicated signal
+        // to the Session Manager (net.iitdvpn.sessions).  A dedicated signal
         // group is created for this, with only the session manager as the
         // recipient.  This Signal Group is used in RegistrationRequest()
         GroupCreate("sessionmgr");

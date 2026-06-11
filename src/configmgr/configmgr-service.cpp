@@ -12,7 +12,7 @@
 /**
  * @file configmgr-service.cpp
  *
- * @brief Implementation of the net.openvpn.v3.configuration D-Bus service
+ * @brief Implementation of the net.iitdvpn.configuration D-Bus service
  */
 
 #include "build-config.h"
@@ -481,7 +481,7 @@ void Service::BusNameLost(const std::string &busname)
 {
     using namespace std::string_literals;
 
-    throw DBus::Service::Exception("openvpn3-service-"s + SERVICE_ID + " lost the '"
+    throw DBus::Service::Exception("iitdvpn-service-"s + SERVICE_ID + " lost the '"
                                    + busname + "' registration on the D-Bus");
 }
 

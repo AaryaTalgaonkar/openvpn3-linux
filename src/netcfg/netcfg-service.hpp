@@ -12,7 +12,7 @@
 /**
  * @file   netcfg.hpp
  *
- * @brief  The implementation of the net.openvpn.v3.netcfg D-Bus service
+ * @brief  The implementation of the net.iitdvpn.netcfg D-Bus service
  */
 
 #pragma once

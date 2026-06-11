@@ -13,7 +13,7 @@
  * @file   proxy-netcfg-device.cpp
  *
  * @brief  Implementation of D-Bus proxy for the device objects
- *         of the net.openvpn.v3.netcfg service
+ *         of the net.iitdvpn.netcfg service
  */
 
 #include "build-config.h"

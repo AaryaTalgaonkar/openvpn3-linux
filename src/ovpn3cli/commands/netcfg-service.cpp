@@ -9,7 +9,7 @@
 /**
  * @file   netcfg.cpp
  *
- * @brief  Management commands for the net.openvpn.v3.netcfg service
+ * @brief  Management commands for the net.iitdvpn.netcfg service
  */
 
 #include <gdbuspp/connection.hpp>
@@ -206,7 +206,7 @@ int cmd_netcfg_service(ParsedArgs::Ptr args)
                     config.Save(config_file);
                     std::cout << "Configuration file updated.  "
                               << "Changes will be activated next time "
-                              << "openvpn3-service-netcfg restarts"
+                              << "iitdvpn-service-netcfg restarts"
                               << std::endl;
                 }
                 catch (const ExclusiveOptionError &err)
@@ -267,7 +267,7 @@ SingleCommand::Ptr prepare_command_netcfg_service()
 {
     SingleCommand::Ptr cmd;
     cmd.reset(new SingleCommand("netcfg-service",
-                                "Management of net.openvpn.v3.netcfg "
+                                "Management of net.iitdvpn.netcfg "
                                 "(requires root)",
                                 cmd_netcfg_service));
     cmd->AddOption("config-show",
@@ -289,7 +289,7 @@ SingleCommand::Ptr prepare_command_netcfg_service()
                    "CONFIG-FILE",
                    true,
                    "Overrides the default configuration file (default file "
-                   "provivded by openvpn3-service-netcfg)");
+                   "provivded by iitdvpn-service-netcfg)");
     cmd->AddOption("list-subscribers",
                    "List all D-Bus services subscribed to "
                    "NetworkChange signals");

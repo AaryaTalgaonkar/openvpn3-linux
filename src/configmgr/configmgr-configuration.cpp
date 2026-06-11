@@ -194,8 +194,8 @@ const bool Configuration::Authorize(const DBus::Authz::Request::Ptr authzreq)
                 return !prop_readonly_ && object_acl_->CheckOwnerAccess(authzreq->caller);
             }
 
-            if ("net.openvpn.v3.configuration.Fetch" == authzreq->target
-                || "net.openvpn.v3.configuration.FetchJSON" == authzreq->target)
+            if ("net.iitdvpn.configuration.Fetch" == authzreq->target
+                || "net.iitdvpn.configuration.FetchJSON" == authzreq->target)
             {
                 if (prop_locked_down_)
                 {
@@ -216,8 +216,8 @@ const bool Configuration::Authorize(const DBus::Authz::Request::Ptr authzreq)
 
             // Only the owner is allowed to seal and remove configuration profiles
             static const std::set<std::string> owner_methods = {
-                "net.openvpn.v3.configuration.Seal",
-                "net.openvpn.v3.configuration.Remove"};
+                "net.iitdvpn.configuration.Seal",
+                "net.iitdvpn.configuration.Remove"};
             if (owner_methods.end() != owner_methods.find(authzreq->target))
             {
                 return object_acl_->CheckOwnerAccess(authzreq->caller);
@@ -229,23 +229,23 @@ const bool Configuration::Authorize(const DBus::Authz::Request::Ptr authzreq)
 
     case DBus::Object::Operation::PROPERTY_GET:
         {
-            if ("net.openvpn.v3.configuration.owner" == authzreq->target)
+            if ("net.iitdvpn.configuration.owner" == authzreq->target)
                 return true;
 
             // Owner + openvpn - optionally public access.
             static const std::set<std::string> props = {
-                "net.openvpn.v3.configuration.name",
-                "net.openvpn.v3.configuration.transfer_owner_session",
-                "net.openvpn.v3.configuration.overrides",
-                "net.openvpn.v3.configuration.dco",
-                "net.openvpn.v3.configuration.persistent",
-                "net.openvpn.v3.configuration.import_timestamp",
-                "net.openvpn.v3.configuration.last_used_timestamp",
-                "net.openvpn.v3.configuration.locked_down",
-                "net.openvpn.v3.configuration.readonly",
-                "net.openvpn.v3.configuration.used_count",
-                "net.openvpn.v3.configuration.valid",
-                "net.openvpn.v3.configuration.tags"};
+                "net.iitdvpn.configuration.name",
+                "net.iitdvpn.configuration.transfer_owner_session",
+                "net.iitdvpn.configuration.overrides",
+                "net.iitdvpn.configuration.dco",
+                "net.iitdvpn.configuration.persistent",
+                "net.iitdvpn.configuration.import_timestamp",
+                "net.iitdvpn.configuration.last_used_timestamp",
+                "net.iitdvpn.configuration.locked_down",
+                "net.iitdvpn.configuration.readonly",
+                "net.iitdvpn.configuration.used_count",
+                "net.iitdvpn.configuration.valid",
+                "net.iitdvpn.configuration.tags"};
             if (props.end() != props.find(authzreq->target))
             {
                 return object_acl_->CheckACL(authzreq->caller,
@@ -255,9 +255,9 @@ const bool Configuration::Authorize(const DBus::Authz::Request::Ptr authzreq)
 
             // Owner only.
             static const std::set<std::string> owner_props = {
-                "net.openvpn.v3.configuration.public_access",
-                "net.openvpn.v3.configuration.acl",
-                "net.openvpn.v3.configuration.single_use"};
+                "net.iitdvpn.configuration.public_access",
+                "net.iitdvpn.configuration.acl",
+                "net.iitdvpn.configuration.single_use"};
             if (owner_props.end() != owner_props.find(authzreq->target))
             {
                 return object_acl_->CheckACL(authzreq->caller,
@@ -279,9 +279,9 @@ const bool Configuration::Authorize(const DBus::Authz::Request::Ptr authzreq)
                 return false;
 
             static const std::set<std::string> props = {
-                "net.openvpn.v3.configuration.name",
-                "net.openvpn.v3.configuration.locked_down",
-                "net.openvpn.v3.configuration.public_access"};
+                "net.iitdvpn.configuration.name",
+                "net.iitdvpn.configuration.locked_down",
+                "net.iitdvpn.configuration.public_access"};
             if (props.end() != props.find(authzreq->target))
             {
                 return object_acl_->CheckOwnerAccess(authzreq->caller);

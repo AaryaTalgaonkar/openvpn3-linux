@@ -10,7 +10,7 @@
  * @file   netcfg-configfile.hpp
  *
  * @brief  Configuration of the JSON configuration file to be used by
- *         openvpn3-service-netcfg.
+ *         iitdvpn-service-netcfg.
  */
 
 #pragma once

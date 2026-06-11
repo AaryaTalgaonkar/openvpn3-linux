@@ -11,7 +11,7 @@
 /**
  * @file sessionmgr-service.hpp
  *
- * @brief Declaration of the net.openvpn.v3.sessions D-Bus service
+ * @brief Declaration of the net.iitdvpn.sessions D-Bus service
  */
 
 #include <functional>
@@ -85,7 +85,7 @@ class SrvHandler : public Object::Base
 
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.NewTunnel
+     *  D-Bus method: net.iitdvpn.sessions.NewTunnel
      *  Creates a new VPN tunnel session
      *
      *  Input:   (o)
@@ -100,7 +100,7 @@ class SrvHandler : public Object::Base
     void method_new_tunnel(Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.FetchAvailableSessions
+     *  D-Bus method: net.iitdvpn.sessions.FetchAvailableSessions
      *  Retrieve a list of object paths to accessible VPN sessions.  Only
      *  sessions available to the calling user will be provided.
      *
@@ -114,7 +114,7 @@ class SrvHandler : public Object::Base
     void method_fetch_avail_sessions(Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.FetchManagedInterfaces
+     *  D-Bus method: net.iitdvpn.sessions.FetchManagedInterfaces
      *  Retrieve a list of virtual interface names in use by the calling
      *  user.
 
@@ -128,7 +128,7 @@ class SrvHandler : public Object::Base
     void method_fetch_managed_interf(Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.LookupConfigName
+     *  D-Bus method: net.iitdvpn.sessions.LookupConfigName
      *  Retrieve a list of VPN session objects which was started by a given
      *  configuration profile name.  Only VPN sessions available to the calling
      *  user will be returned
@@ -146,7 +146,7 @@ class SrvHandler : public Object::Base
     void method_lookup_config(Object::Method::Arguments::Ptr args);
 
     /**
-     *  D-Bus method: net.openvpn.v3.sessions.LookupInterface
+     *  D-Bus method: net.iitdvpn.sessions.LookupInterface
      *  Retrieve the VPN session path used by a specific virtual interface
      *  name.  This will only return a single object path, since there must
      *  be a 1:1 relation between the interface name and the session object.
@@ -206,7 +206,7 @@ class SrvHandler : public Object::Base
 
 
 /**
- *  The net.openvpn.v3.sessions service manages all OpenVPN 3 VPN
+ *  The net.iitdvpn.sessions service manages all OpenVPN 3 VPN
  *  client sessions on the system.  This service is the main interface
  *  for all users who is granted privileges to start and manage VPN sessions
  *

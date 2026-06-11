@@ -10,7 +10,7 @@
  *  @file log-proxylog.hpp
  *
  *  @brief Declares LogService::ProxyLogEvents object, created via the
- *         the net.openvpn.v3.log.ProxyLogEvents D-Bus method
+ *         the net.iitdvpn.log.ProxyLogEvents D-Bus method
  */
 
 #pragma once

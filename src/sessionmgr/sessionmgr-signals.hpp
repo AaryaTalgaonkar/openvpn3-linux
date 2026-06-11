@@ -12,7 +12,7 @@
  * @file sessionmgr-signals.hpp
  *
  * @brief Declaration helper classes handling D-Bus signals for
- *        net.openvpn.v3.sessions
+ *        net.iitdvpn.sessions
  */
 
 #pragma once
@@ -73,7 +73,7 @@ namespace Signals {
 
 /**
  *  Provides an implementation to send the
- *  net.openvpn.v3.sessions.SessionManagerEvent signal.
+ *  net.iitdvpn.sessions.SessionManagerEvent signal.
  *
  * This is a fairly simple signal, only emitted by the Session Manager
  * when a new session is created or destroyed.

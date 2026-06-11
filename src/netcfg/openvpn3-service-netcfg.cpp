@@ -51,7 +51,7 @@ static void drop_root_ng()
     }
     catch (const LookupException &excp)
     {
-        throw CommandException("openvpn3-service-netcfg", excp.str());
+        throw CommandException("iitdvpn-service-netcfg", excp.str());
     }
 
     capng_flags_t flags = (capng_flags_t)(CAPNG_DROP_SUPP_GRP | CAPNG_CLEAR_BOUNDING);
@@ -137,7 +137,7 @@ int netcfg_main(ParsedArgs::Ptr args)
 {
     if (0 != getegid() || 0 != geteuid())
     {
-        throw CommandException("openvpn3-service-netcfg",
+        throw CommandException("iitdvpn-service-netcfg",
                                "This program must be started as root");
     }
 
@@ -205,7 +205,7 @@ int netcfg_main(ParsedArgs::Ptr args)
     {
         auto dbuscon = DBus::Connection::Create(DBus::BusType::SYSTEM);
 
-        // Register this service for logging via net.openvpn.v3.log
+        // Register this service for logging via net.iitdvpn.log
         logservice = LogServiceProxy::AttachInterface(dbuscon,
                                                       Constants::GenInterface("netcfg"));
 

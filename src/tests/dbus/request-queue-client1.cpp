@@ -49,17 +49,17 @@ int main(int argc, char **argv)
 
     auto conn = DBus::Connection::Create(DBus::BusType::SESSION);
     DBusRequiresQueueProxy queue(conn,
-                                 "net.openvpn.v3.tests.requiresqueue",
-                                 "net.openvpn.v3.tests.requiresqueue",
+                                 "net.iitdvpn.tests.requiresqueue",
+                                 "net.iitdvpn.tests.requiresqueue",
                                  "/net/openvpn/v3/tests/features/requiresqueue",
                                  "t_QueueCheckTypeGroup",
                                  "t_QueueFetch",
                                  "t_QueueCheck",
                                  "t_ProvideResponse");
 
-    auto proxy = DBus::Proxy::Client::Create(conn, "net.openvpn.v3.tests.requiresqueue");
+    auto proxy = DBus::Proxy::Client::Create(conn, "net.iitdvpn.tests.requiresqueue");
     auto prxtgt = DBus::Proxy::TargetPreset::Create("/net/openvpn/v3/tests/features/requiresqueue",
-                                                    "net.openvpn.v3.tests.requiresqueue");
+                                                    "net.iitdvpn.tests.requiresqueue");
 
     GVariant *r = proxy->Call(prxtgt, "ServerDumpResponse");
     g_variant_unref(r);

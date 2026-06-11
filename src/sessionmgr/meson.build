@@ -6,7 +6,7 @@
 #  Copyright (C) 2024-  David Sommerseth <davids@openvpn.net>
 
 bin_backend_sessionmgr = executable(
-    'openvpn3-service-sessionmgr',
+    'iitdvpn-service-sessionmgr',
     [
         'openvpn3-service-sessionmgr.cpp',
         'sessionmgr-service.cpp',
@@ -31,7 +31,7 @@ bin_backend_sessionmgr = executable(
 # D-Bus policy
 configure_file(
     input: '../policy/net.openvpn.v3.sessions.conf.in',
-    output: 'net.openvpn.v3.sessions.conf',
+    output: 'net.iitdvpn.sessions.conf',
     configuration: configuration_data(dbus_config),
     install: true,
     install_dir: dbus_policy_dir,
@@ -40,11 +40,11 @@ configure_file(
 # D-Bus service autostart config
 configure_file(
     input: '../service-autostart/template.service.in',
-    output: 'net.openvpn.v3.sessions.service',
+    output: 'net.iitdvpn.sessions.service',
     configuration: configuration_data(
         dbus_config +
         {
-            'BUSNAME': 'net.openvpn.v3.sessions',
+            'BUSNAME': 'net.iitdvpn.sessions',
             'SERVICE_BIN': bin_backend_sessionmgr.name(),
             'SERVICE_ARGS': '',
         }

@@ -8,7 +8,7 @@
 /**
  *  @file tunnel-queue.hpp
  *
- *  @brief  Internal queuing mechanism for net.openvpn.v3.sessions.NewTunnel
+ *  @brief  Internal queuing mechanism for net.iitdvpn.sessions.NewTunnel
  *          handling.  When a new tunnel is requested, the Session Manager
  *          will request a new backend client process to be started.  This
  *          is handled by the tunnel queueing which creates the a new
@@ -74,10 +74,10 @@ using QueuedTunnels = std::map<std::string, std::shared_ptr<TunnelRecord>>;
 
 /**
  *  This class will keep track of all newly requested VPN tunnels, via
- *  the net.openvpn.v3.sessions.NewTunnel D-Bus method.
+ *  the net.iitdvpn.sessions.NewTunnel D-Bus method.
  *
  *  When a new tunnel is added to the queue, it wil call the
- *  net.openvpn.v3.backends.StartClient method (openvpn3-service-backendstart).
+ *  net.iitdvpn.backends.StartClient method (openvpn3-service-backendstart).
  *  This service will start an openvpn3-service-client process (the VPN client)
  *  which will send a "RegistrationRequest" signal to this SessionManager
  *

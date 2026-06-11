@@ -39,7 +39,7 @@ class ReadyException : public DBus::Object::Method::Exception
 {
   public:
     ReadyException(const std::string &msg,
-                   const std::string &err_domain = "net.openvpn.v3.error.ready",
+                   const std::string &err_domain = "net.iitdvpn.error.ready",
                    GError *gliberr = nullptr)
         : DBus::Object::Method::Exception(extract_error(msg), gliberr)
     {
@@ -327,7 +327,7 @@ Session::Session(DBus::Connection::Ptr dbuscon,
             return be_prx->GetPropertyGVariant(be_target, "statistics");
         });
 
-    // device path: D-Bus path to the interface in net.openvpn.v3.netcfg
+    // device path: D-Bus path to the interface in net.iitdvpn.netcfg
     AddPropertyBySpec(
         "device_path",
         // Ideally, the data type here should be DBus::Object::Path,
@@ -534,7 +534,7 @@ void Session::Ready()
     {
         std::string err(excp.what());
 
-        if (err.find("net.openvpn.v3.error.ready") != std::string::npos)
+        if (err.find("net.iitdvpn.error.ready") != std::string::npos)
         {
 
             throw ReadyException(excp.what());
@@ -607,8 +607,8 @@ const bool Session::Authorize(DBus::Authz::Request::Ptr authzreq)
         {
             // These methods are always restricted to the owner only;
             // we don't provide sharing user admin rights to sessions
-            for (const auto &method : {"net.openvpn.v3.sessions.AccessGrant",
-                                       "net.openvpn.v3.sessions.AccessRevoke"})
+            for (const auto &method : {"net.iitdvpn.sessions.AccessGrant",
+                                       "net.iitdvpn.sessions.AccessRevoke"})
 
             {
                 if (method == authzreq->target)
@@ -616,7 +616,7 @@ const bool Session::Authorize(DBus::Authz::Request::Ptr authzreq)
                     return object_acl->CheckOwnerAccess(authzreq->caller);
                 }
             }
-            if ("net.openvpn.v3.sessions.LogForward" == authzreq->target
+            if ("net.iitdvpn.sessions.LogForward" == authzreq->target
                 && restrict_log_access)
             {
                 return object_acl->CheckOwnerAccess(authzreq->caller);
@@ -639,16 +639,16 @@ const bool Session::Authorize(DBus::Authz::Request::Ptr authzreq)
             // The log verbosity can only be chanced by the session owner
             // unless the session grants users via the ACL access to log
             // events (!restrict_log_access)
-            if (("net.openvpn.v3.log_verbosity" == authzreq->target)
+            if (("net.iitdvpn.log_verbosity" == authzreq->target)
                 && restrict_log_access)
             {
                 return object_acl->CheckOwnerAccess(authzreq->caller);
             }
-            else if ("net.openvpn.v3.sessions.restrict_log_access" == authzreq->target)
+            else if ("net.iitdvpn.sessions.restrict_log_access" == authzreq->target)
             {
                 return object_acl->CheckOwnerAccess(authzreq->caller);
             }
-            else if ("net.openvpn.v3.sessions.public_access" == authzreq->target)
+            else if ("net.iitdvpn.sessions.public_access" == authzreq->target)
             {
                 return object_acl->CheckOwnerAccess(authzreq->caller);
             }

@@ -11,7 +11,7 @@
  * @file   configmgr-events.hpp
  *
  * @brief  Definition of the ConfigManager::Event class, which maps to the
- *         ConfigurationManagerEvent signal the main net.openvpn.v3.configuration
+ *         ConfigurationManagerEvent signal the main net.iitdvpn.configuration
  *         object can send.
  */
 

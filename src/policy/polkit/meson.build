@@ -12,7 +12,7 @@ endif
 
 configure_file(
     input: 'net.openvpn.v3.rules.in',
-    output: 'net.openvpn.v3.rules',
+    output: 'net.iitdvpn.rules',
     configuration: configuration_data(dbus_config),
     install: true,
     install_dir: polkit_rulesdir,

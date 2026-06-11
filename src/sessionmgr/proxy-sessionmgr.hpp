@@ -235,7 +235,7 @@ class Session : public DBusRequiresQueueProxy
         {
             // Throw D-Bus errors related to "Ready" errors as ReadyExceptions
             std::string e(excp.what());
-            if (e.find("net.openvpn.v3.error.ready") != std::string::npos)
+            if (e.find("net.iitdvpn.error.ready") != std::string::npos)
             {
                 throw ReadyException(excp.GetRawError());
             }

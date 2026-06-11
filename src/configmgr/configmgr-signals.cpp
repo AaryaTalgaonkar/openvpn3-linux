@@ -13,7 +13,7 @@
  * @file configmgr-signals.cpp
  *
  * @brief Implementation of helper classes handling D-Bus signals for
- *        net.openvpn.v3.configuration
+ *        net.iitdvpn.configuration
  */
 
 #include <gdbuspp/connection.hpp>

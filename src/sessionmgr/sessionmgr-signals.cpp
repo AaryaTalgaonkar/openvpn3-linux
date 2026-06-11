@@ -12,7 +12,7 @@
  * @file sessionmgr-signals.cpp
  *
  * @brief Implementation of helper classes handling D-Bus signals for
- *        net.openvpn.v3.sessions
+ *        net.iitdvpn.sessions
  */
 
 #include <memory>

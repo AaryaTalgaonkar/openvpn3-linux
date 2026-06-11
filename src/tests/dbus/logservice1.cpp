@@ -83,7 +83,7 @@ int cmd_send(ParsedArgs::Ptr args)
     LogCategory lctg = static_cast<LogCategory>(std::atoi(args->GetValue("category", 0).c_str()));
 
     std::string path = (args->Present("object-path") ? args->GetValue("object-path", 0) : "/net/openvpn/v3/logtest");
-    std::string intf = (args->Present("interface") ? args->GetValue("interface", 0) : "net.openvpn.v3.logtest");
+    std::string intf = (args->Present("interface") ? args->GetValue("interface", 0) : "net.iitdvpn.logtest");
 
     auto extra = args->GetAllExtraArgs();
     std::string msg = "(empty message)";
@@ -137,7 +137,7 @@ int main(int argc, char **argv)
 {
     Commands cmds("openvpn3-service-log service tester",
                   "Simple program to test the interfaces exposted by "
-                  "openvpn3-service-log (net.openvpn.v3.log)");
+                  "openvpn3-service-log (net.iitdvpn.log)");
 
     SingleCommand::Ptr props;
     props.reset(new SingleCommand("props", "Gets and sets properties", cmd_props));
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     send->AddOption("use-session-bus", 'S', "Use session bus instead of system bus");
     send->AddOption("attach", 'a', "Do an Attach() method call before sending log event");
     send->AddOption("object-path", 'o', "PATH", true, "D-Bus path to use as the signal origin (default: /net/openvpn/v3/logtest)");
-    send->AddOption("interface", 'i', "STRING", true, "Interface string to use when sending log events (default: net.openvpn.v3.logtest");
+    send->AddOption("interface", 'i', "STRING", true, "Interface string to use when sending log events (default: net.iitdvpn.logtest");
     send->AddOption("group", 'g', "INTEGER", true, "LogGroup value to use for the log event");
     send->AddOption("category", 'c', "INTEGER", true, "LogCategory value to use for the log event");
     send->AddOption("allow-newline", 'n', "Allow newlines to be passed on");

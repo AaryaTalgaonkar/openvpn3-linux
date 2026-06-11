@@ -189,12 +189,12 @@ const bool NetCfgServiceHandler::Authorize(const DBus::Authz::Request::Ptr authz
             //    By default, the subscribe method access is managed by
             //    the D-Bus policy.  The default policy will only allow
             //    this by the openvpn user account.
-            if ("net.openvpn.v3.netcfg.NotificationSubscriberList" == authzreq->target)
+            if ("net.iitdvpn.netcfg.NotificationSubscriberList" == authzreq->target)
             {
                 // Only allow root to access the subscriber list
                 return caller_uid == 0;
             }
-            else if ("net.openvpn.v3.netcfg.NotificationUnsubscribe" == authzreq->target)
+            else if ("net.iitdvpn.netcfg.NotificationUnsubscribe" == authzreq->target)
             {
                 if (!subscriptions)
                 {
@@ -202,7 +202,7 @@ const bool NetCfgServiceHandler::Authorize(const DBus::Authz::Request::Ptr authz
                 }
                 uid_t sub_owner = subscriptions->GetSubscriptionOwner(authzreq->caller);
                 sub_owner_valid = true;
-                signals->Debug("net.openvpn.v3.netcfg.NotificationUnsubscribe: "
+                signals->Debug("net.iitdvpn.netcfg.NotificationUnsubscribe: "
                                "owner_uid="
                                + std::to_string(sub_owner)
                                + ", caller_uid=" + std::to_string(caller_uid));
@@ -309,9 +309,9 @@ void NetCfgServiceHandler::method_fetch_interface_list(DBus::Object::Method::Arg
     bool root_path_found = false;
     for (const auto &[path, dev_obj] : object_manager->GetAllObjects())
     {
-        if (!root_path_found && "/net/openvpn/v3/netcfg" == path)
+        if (!root_path_found && "/net/iitdvpn/netcfg" == path)
         {
-            // We skip "/net/openvpn/v3/netcfg" - that is not a device path
+            // We skip "/net/iitdvpn/netcfg" - that is not a device path
             root_path_found = true;
             continue;
         }

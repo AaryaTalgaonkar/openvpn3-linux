@@ -6,7 +6,7 @@
 #  Copyright (C)  David Sommerseth <davids@openvpn.net>
 
 
-# openvpn3-service-client
+# iitdvpn-service-client
 
 libcore_epoch = static_library(
     'core-epoch',
@@ -18,7 +18,7 @@ libcore_epoch = static_library(
 )
 
 bin_backend_client = executable(
-    'openvpn3-service-client',
+    'iitdvpn-service-client',
     [
         'openvpn3-service-client.cpp',
         dco_keyconfig_cc,
@@ -42,16 +42,16 @@ bin_backend_client = executable(
 # D-Bus policy
 configure_file(
     input: '../policy/net.openvpn.v3.client.conf.in',
-    output: 'net.openvpn.v3.client.conf',
+    output: 'net.iitdvpn.client.conf',
     configuration: configuration_data(dbus_config),
     install: true,
     install_dir: dbus_policy_dir,
 )
 
 
-#  openvpn3-service-backendstart
+#  iitdvpn-service-backendstart
 bin_backend_start = executable(
-    'openvpn3-service-backendstart',
+    'iitdvpn-service-backendstart',
     [
         'openvpn3-service-backendstart.cpp',
     ],
@@ -70,7 +70,7 @@ bin_backend_start = executable(
 # D-Bus policy
 configure_file(
     input: '../policy/net.openvpn.v3.backends.conf.in',
-    output: 'net.openvpn.v3.backends.conf',
+    output: 'net.iitdvpn.backends.conf',
     configuration: configuration_data(dbus_config),
     install: true,
     install_dir: dbus_policy_dir,
@@ -78,11 +78,11 @@ configure_file(
 # D-Bus service autostart config
 configure_file(
     input: '../service-autostart/template.service.in',
-    output: 'net.openvpn.v3.backends.service',
+    output: 'net.iitdvpn.backends.service',
     configuration: configuration_data(
         dbus_config +
         {
-            'BUSNAME': 'net.openvpn.v3.backends',
+            'BUSNAME': 'net.iitdvpn.backends',
             'SERVICE_BIN': bin_backend_start.name(),
             'SERVICE_ARGS': '',
         }

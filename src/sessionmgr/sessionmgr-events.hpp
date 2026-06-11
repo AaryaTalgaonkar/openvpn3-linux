@@ -10,7 +10,7 @@
  * @file   sessionmgr-events.hpp
  *
  * @brief  Definition of the SessionManager::Event class, which maps to the
- *         SessionManagerEvent signal the main net.openvpn.v3.sessions
+ *         SessionManagerEvent signal the main net.iitdvpn.sessions
  *         object can send.
  */
 

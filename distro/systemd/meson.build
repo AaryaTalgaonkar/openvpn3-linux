@@ -22,7 +22,7 @@ endif
 
 configure_file(
     input: 'openvpn3-autoload.service.in',
-    output: 'openvpn3-autoload.service',
+    output: 'iitdvpn-autoload.service',
     configuration: systemd_cfg,
     install: true,
     install_dir: systemd_system_unit_dir,
@@ -30,15 +30,15 @@ configure_file(
 
 configure_file(
     input: 'openvpn3-session@.service.in',
-    output: 'openvpn3-session@.service',
+    output: 'iitdvpn-session@.service',
     configuration: systemd_cfg,
     install: true,
     install_dir: systemd_system_unit_dir,
 )
 
-custom_target('openvpn3-systemd',
+custom_target('iitdvpn-systemd',
     input: 'openvpn3-systemd',
-    output: 'openvpn3-systemd',
+    output: 'iitdvpn-systemd',
     command: [cp_prog, '@INPUT@', '@OUTPUT@'],
     install: true,
     install_dir: libexec_dir,

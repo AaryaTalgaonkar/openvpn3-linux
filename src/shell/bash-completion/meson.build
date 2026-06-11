@@ -12,7 +12,7 @@ custom_target(
     command: [
                 find_program('gen-openvpn2-completion.py'),
                 '--python-source-dir',
-                meson.project_source_root() / 'src' / 'python' / 'openvpn3',
+                meson.project_source_root() / 'src' / 'python' / 'iitdvpn',
              ],
     output: 'openvpn2',
     capture: true,
@@ -22,11 +22,11 @@ custom_target(
 )
 
 install_data(
-    'openvpn3',
+    'iitdvpn',
     install_dir: get_option('prefix') / bashcompl_dir,
 )
 
 # NOTE: Can be replaced with install_symlink() when Meson 0.61 or newer
 #       is available on all supported distros
 meson.add_install_script('sh','-c',
-        'cd $MESON_INSTALL_DESTDIR_PREFIX/@0@; ln -sf openvpn3 openvpn3-admin'.format(bashcompl_dir))
+        'cd $MESON_INSTALL_DESTDIR_PREFIX/@0@; ln -sf iitdvpn iitdvpn-admin'.format(bashcompl_dir))

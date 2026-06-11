@@ -6,7 +6,7 @@
 #  Copyright (C)  David Sommerseth <davids@openvpn.net>
 
 project(
-        'openvpn3-linux','cpp',
+        'iitdvpn','cpp',
         default_options : [ 'cpp_std=c++17', 'werror=true' ],
         license: 'AGPL-3.0-only',
         version: run_command(['scripts/get-version','--prod-version'], check: true).stdout().strip(),
@@ -96,17 +96,17 @@ add_project_arguments('-Wno-non-virtual-dtor',
 #
 openvpn3_statedir = get_option('openvpn3_statedir')
 if openvpn3_statedir == ''
-    openvpn3_statedir = get_option('sharedstatedir') / 'openvpn3'
+    openvpn3_statedir = get_option('sharedstatedir') / 'iitdvpn'
 endif
 
 devposture_profiledir = get_option('devposture_profiledir')
 if devposture_profiledir == ''
-    devposture_profiledir = get_option('sharedstatedir') + '/openvpn3/deviceposture/profiles'
+    devposture_profiledir = get_option('sharedstatedir') + '/iitdvpn/deviceposture/profiles'
 endif
 
 docdir = get_option('docdir')
 if docdir == ''
-    docdir = get_option('prefix') / get_option('datadir') / 'doc' / 'openvpn3'
+    docdir = get_option('prefix') / get_option('datadir') / 'doc' / 'iitdvpn'
 endif
 message('Documentation install directory: ' + docdir)
 
@@ -318,7 +318,7 @@ sessionmgr_lib = static_library(
 #  their own policy on top of this one
 configure_file(
     input: 'src/policy/net.openvpn.v3.conf.in',
-    output: 'net.openvpn.v3.conf',
+    output: 'net.iitdvpn.conf',
     configuration: configuration_data(dbus_config),
     install: true,
     install_dir: dbus_policy_dir,

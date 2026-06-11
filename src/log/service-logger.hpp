@@ -14,7 +14,7 @@
  *  @brief This is a wrapper around the LogWriter object to provide
  *         a logging API similar to what LogSender provides.  LogSender
  *         will send log events over a D-Bus connection.  But for the
- *         net.openvpn.v3.log, it is expected to receive such log events
+ *         net.iitdvpn.log, it is expected to receive such log events
  *         and log it to the log destination configured in the LogWriter.
  *
  *         Thus there is no API for the log service itself to write log

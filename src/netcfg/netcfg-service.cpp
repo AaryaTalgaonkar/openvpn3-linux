@@ -73,6 +73,6 @@ void NetCfgService::BusNameAcquired(const std::string &busname)
 void NetCfgService::BusNameLost(const std::string &busname)
 {
     throw DBus::Service::Exception(
-        "openvpn3-service-netcfg lost the '"
+        "iitdvpn-service-netcfg lost the '"
         + busname + "' registration on the D-Bus");
 };

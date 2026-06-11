@@ -14,7 +14,7 @@
  * @file   proxy-netcfg-mgr.hpp
  *
  * @brief  Declaration of the D-Bus proxy for the main manager object
- *         of the net.openvpn.v3.netcfg service
+ *         of the net.iitdvpn.netcfg service
  */
 
 #pragma once

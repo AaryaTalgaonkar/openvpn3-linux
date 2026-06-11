@@ -172,7 +172,7 @@ command:
 
 This should produce the same version string for all services.  If some
 of them fails to start, some Linux installations might not have the
-`sssd` or `nscd` service running.  Often the `net.openvpn.v3.netcfg`
+`sssd` or `nscd` service running.  Often the `net.iitdvpn.netcfg`
 service (provided  by `openvpn3-service-netcfg`) fails to start properly.
 If your system is configured to use `sssd`, please read the comments in
 `/etc/nsswitch.conf` carefully if you want to try to start `nscd`.

@@ -11,7 +11,7 @@
 # @file  netcfg-subscription-test
 #
 # @brief Simple test utility which subscribes to specific NetworkChange
-#        signals from net.openvpn.v3.netcfg
+#        signals from net.iitdvpn.netcfg
 
 import sys
 import os
@@ -33,10 +33,10 @@ def subscription_test_main(prog_args):
 
     dbusloop = DBusGMainLoop(set_as_default=True)
     bus = dbus.SystemBus(mainloop=dbusloop)
-    bus.add_signal_receiver(NetworkChangeHandler, 'NetworkChange', 'net.openvpn.v3.netcfg', 'net.openvpn.v3.netcfg')
+    bus.add_signal_receiver(NetworkChangeHandler, 'NetworkChange', 'net.iitdvpn.netcfg', 'net.iitdvpn.netcfg')
 
-    netcfgmgr_obj = bus.get_object('net.openvpn.v3.netcfg', '/net/openvpn/v3/netcfg', introspect=False)
-    netcfgmgr_intf = dbus.Interface(netcfgmgr_obj, 'net.openvpn.v3.netcfg')
+    netcfgmgr_obj = bus.get_object('net.iitdvpn.netcfg', '/net/openvpn/v3/netcfg', introspect=False)
+    netcfgmgr_intf = dbus.Interface(netcfgmgr_obj, 'net.iitdvpn.netcfg')
 
     subscription_enabled = True
     try:

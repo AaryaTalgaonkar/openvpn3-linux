@@ -7,11 +7,11 @@
 #
 
 ##
-# @file  bash_completion_openvpn3
+# @file  bash_completion_iitdvpn
 #
-# @brief  A bash_completion helper script for the openvpn3 command line
+# @brief  A bash_completion helper script for the iitdvpn command line
 #         programs.  This script makes use of the shell-completion command
-#         provided by openvpn3 or openvpn3-admin, which provides up-to-date
+#         provided by iitdvpn or iitdvpn-admin, which provides up-to-date
 #         insight on the various commands, options and arguments.
 #
 #         Also works with zsh after loading bascomphinit
@@ -38,7 +38,7 @@ _openvpn3_generic_completion()
        # If the requested command is not "version", attach the '--' now
        COMPREPLY=( "$first --")
     elif [ $COMP_CWORD -eq 1 ]; then
-        # The first argument is always an openvpn3 command
+        # The first argument is always an iitdvpn command
         # and it never starts with - or --
         COMPREPLY=( $( compgen -W "$o3cmds" $cur ) )
     elif [ $COMP_CWORD -gt 1 ]; then
@@ -98,13 +98,13 @@ _openvpn3_generic_completion()
 
 _openvpn3_completion()
 {
-    _openvpn3_generic_completion openvpn3
+    _openvpn3_generic_completion iitdvpn
 }
-complete -F _openvpn3_completion -o nospace openvpn3
+complete -F _openvpn3_completion -o nospace iitdvpn
 
 
 _openvpn3admin_completion()
 {
-    _openvpn3_generic_completion openvpn3-admin
+    _iitdvpn_generic_completion iitdvpn-admin
 }
-complete -F _openvpn3admin_completion -o nospace openvpn3-admin
+complete -F _openvpn3admin_completion -o nospace iitdvpn-admin

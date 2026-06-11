@@ -225,7 +225,7 @@ GVariant *RequiresQueue::QueueFetchGVariant(GVariant *parameters) const
             {
                 if (e.provided)
                 {
-                    throw RequiresQueueException("net.openvpn.v3.already-provided",
+                    throw RequiresQueueException("net.iitdvpn.already-provided",
                                                  "User input already provided");
                 }
 
@@ -241,7 +241,7 @@ GVariant *RequiresQueue::QueueFetchGVariant(GVariant *parameters) const
             }
         }
     }
-    throw RequiresQueueException("net.openvpn.v3.element-not-found",
+    throw RequiresQueueException("net.iitdvpn.element-not-found",
                                  "No requires queue element found");
 }
 
@@ -272,13 +272,13 @@ void RequiresQueue::UpdateEntry(ClientAttentionType type,
             }
             else
             {
-                throw RequiresQueueException("net.openvpn.v3.error.input-already-provided",
+                throw RequiresQueueException("net.iitdvpn.error.input-already-provided",
                                              "Request ID " + std::to_string(id)
                                                  + " has already been provided");
             }
         }
     }
-    throw RequiresQueueException("net.openvpn.v3.invalid-input",
+    throw RequiresQueueException("net.iitdvpn.invalid-input",
                                  "No matching entry found in the request queue");
 }
 
@@ -297,7 +297,7 @@ void RequiresQueue::UpdateEntry(GVariant *indata)
 
     if (value.empty())
     {
-        throw RequiresQueueException("net.openvpn.v3.error.invalid-input",
+        throw RequiresQueueException("net.iitdvpn.error.invalid-input",
                                      "No value provided for RequiresSlot ID "
                                          + std::to_string(id));
     }

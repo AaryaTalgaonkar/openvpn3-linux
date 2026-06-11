@@ -396,15 +396,15 @@ LogEntries Parse::Retrieve()
 
     //  These are the common identifiers OpenVPN 3 Linux logger service
     //  identifiers on Linux
-    sd_journal_add_match(journal, "O3_LOG_SENDER=net.openvpn.v3.log", 0);
+    sd_journal_add_match(journal, "O3_LOG_SENDER=net.iitdvpn.log", 0);
     sd_journal_add_disjunction(journal);
-    sd_journal_add_match(journal, "SYSLOG_IDENTIFIER=net.openvpn.v3.log", 0);
+    sd_journal_add_match(journal, "SYSLOG_IDENTIFIER=net.iitdvpn.log", 0);
     sd_journal_add_disjunction(journal);
 
     // TODO: These two matches can be removed in v25
-    sd_journal_add_match(journal, "SYSLOG_IDENTIFIER=openvpn3-service-logger", 0);
+    sd_journal_add_match(journal, "SYSLOG_IDENTIFIER=iitdvpn-service-logger", 0);
     sd_journal_add_disjunction(journal);
-    sd_journal_add_match(journal, "SYSLOG_IDENTIFIER=openvpn3-service-log-dev", 0);
+    sd_journal_add_match(journal, "SYSLOG_IDENTIFIER=iitdvpn-service-log-dev", 0);
 
     while (sd_journal_next(journal) > 0)
     {

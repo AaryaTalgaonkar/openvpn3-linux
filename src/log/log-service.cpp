@@ -9,7 +9,7 @@
 /**
  *  @file log-service.cpp
  *
- *  @brief Implements the basic net.openvpn.v3.log service handler
+ *  @brief Implements the basic net.iitdvpn.log service handler
  */
 
 #include <string>
@@ -358,10 +358,10 @@ const bool ServiceHandler::Authorize(const DBus::Authz::Request::Ptr req)
 {
     if (DBus::Object::Operation::METHOD_CALL == req->operation)
     {
-        if ("net.openvpn.v3.log.AssignSession" == req->target)
+        if ("net.iitdvpn.log.AssignSession" == req->target)
         {
             // All VPN backend client processes (openvpn3-service-client) have
-            // a well-known D-Bus name being net.openvpn.v3.backends.be$PID,
+            // a well-known D-Bus name being net.iitdvpn.backends.be$PID,
             // where $PID is the process ID of the proccess.  This process
             // owner should also be the OPENVPN_USERNAME.
             //
@@ -369,9 +369,9 @@ const bool ServiceHandler::Authorize(const DBus::Authz::Request::Ptr req)
             // proper credentials
             return check_busname_vpn_client(req->caller);
         }
-        else if ("net.openvpn.v3.log.ProxyLogEvents" == req->target)
+        else if ("net.iitdvpn.log.ProxyLogEvents" == req->target)
         {
-            // This is only available to the net.openvpn.v3.session service
+            // This is only available to the net.iitdvpn.session service
             // when accessed as the OPENVPN_USERNAME
             return check_busname_service_name(req->caller,
                                               Constants::GenServiceName("sessions"));

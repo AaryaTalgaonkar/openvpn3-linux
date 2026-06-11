@@ -22,5 +22,5 @@ custom_target(
     command: gen_constants_bin,
     capture: true,
     install: true,
-    install_dir: get_option('includedir') / 'openvpn3'
+    install_dir: get_option('includedir') / 'iitdvpn'
 )

@@ -13,7 +13,7 @@
  * @file   netcfg-device.cpp
  *
  * @brief  D-Bus object representing a single virtual network device
- *         the net.openvpn.v3.netcfg service manages
+ *         the net.iitdvpn.netcfg service manages
  */
 
 #include "build-config.h"

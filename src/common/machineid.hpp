@@ -37,7 +37,7 @@ class MachineIDException : public std::exception
  *  host the application is running on.  It will by default attempt to us
  *  /etc/machine-id as the source of information.  If not, it will generate
  *  it's own UUID based ID and preserve it in the OpenVPN 3 state directory
- *  (typically /var/lib/openvpn3).
+ *  (typically /var/lib/iitdvpn).
  *
  *  If it fails preserve the generated machine-id value, the result will be
  *  random for each time this class is initiated.  To check whether the result

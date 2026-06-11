@@ -13,7 +13,7 @@
  * @file   netcfg-service-handler.hpp
  *
  * @brief  Declaration the NetCfgServiceHandler.  This is the root service
- *         object of the net.openvpn.v3.netcfg service.
+ *         object of the net.iitdvpn.netcfg service.
  */
 
 #pragma once
@@ -38,7 +38,7 @@ class NetCfgDevice;
 
 
 /**
- *  Root D-Bus object for the net.openvpn.v3.netcfg service, the main
+ *  Root D-Bus object for the net.iitdvpn.netcfg service, the main
  *  starting point for accessing this service
  *
  */

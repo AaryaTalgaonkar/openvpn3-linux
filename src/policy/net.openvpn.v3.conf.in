@@ -10,7 +10,7 @@
          privileges.
 
          FIXME: Reduce this very broad privilege access.  It should be limited
-                to only net.openvpn.v3.* send_destinations
+                to only net.iitdvpn.* send_destinations
     -->
     <allow send_interface="org.freedesktop.DBus.Properties"
            send_type="method_call"
