@@ -110,6 +110,20 @@ static int cmd_session_start(ParsedArgs::Ptr args)
             cfgprx->SetOverride(o, true);
         }
 
+        // If --connection-timeout is given on the command line, set
+        // it as a configuration override so the core library uses
+        // its own connection timeout mechanism rather than the CLI
+        // polling loop.
+        if (args->Present("connection-timeout"))
+        {
+            int conn_timeout = std::atoi(args->GetValue("connection-timeout", 0).c_str());
+            if (conn_timeout > 0)
+            {
+                const Override &o = cfgprx->LookupOverride("connection-timeout");
+                cfgprx->SetOverride(o, std::to_string(conn_timeout));
+            }
+        }
+
         // Create a new tunnel session
         auto session = sessmgr->NewTunnel(cfgpath);
         std::cout << "Session path: " << session->GetPath() << std::endl;
@@ -191,6 +205,11 @@ SingleCommand::Ptr prepare_command_session_start()
                    "SECS",
                    true,
                    "Connection attempt timeout (default: infinite)");
+    cmd->AddOption("connection-timeout",
+                   0,
+                   "SECS",
+                   true,
+                   "Core library connection timeout in seconds (default: infinite)");
     cmd->AddOption("background",
                    0,
                    "Starts the connection in the background after basic credentials are provided");

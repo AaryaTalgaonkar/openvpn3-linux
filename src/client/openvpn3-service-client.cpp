@@ -1516,6 +1516,17 @@ class BackendClientObject : public DBus::Object::Base
             {
                 automatic_restart = std::get<std::string>(override.value);
             }
+            else if (override.key == "connection-timeout")
+            {
+                try
+                {
+                    vpnconfig.connTimeout = std::stoi(std::get<std::string>(override.value));
+                }
+                catch (const std::exception &)
+                {
+                    signal->LogError("Invalid connection-timeout value, must be an integer");
+                }
+            }
             else
             {
                 valid_override = false;

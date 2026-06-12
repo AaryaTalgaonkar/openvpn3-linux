@@ -119,7 +119,10 @@ const Override configProfileOverrides[] = {
 
     {"automatic-restart", std::string {},
      "Restart policy for backend client processes",
-     [] {return std::string("no on-failure");}}
+     [] {return std::string("no on-failure");}},
+
+    {"connection-timeout", std::string {},
+     "Timeout in seconds for the connection attempt (default: infinite)"}
     // clang-format on
 };
 
