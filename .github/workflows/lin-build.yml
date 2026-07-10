@@ -1,4 +1,4 @@
-name: Linux Build Backend
+name: Linux Build
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Repository
         run: |
@@ -53,10 +53,10 @@ jobs:
           
       - name: Create tarball
         run: |
-          tar -cvf backend-build-${{ matrix.os }}.tar -C pkgroot .
+          tar -cvf iitdvpn-backend-lin-${{ matrix.os }}.tar -C pkgroot .
           
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: backend-build-${{ matrix.os }}
-          path: backend-build-${{ matrix.os }}.tar
+          name: iitdvpn-backend-lin-${{ matrix.os }}
+          path: iitdvpn-backend-lin-${{ matrix.os }}.tar
